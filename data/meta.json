@@ -1,0 +1,20 @@
+{
+  "title": "Songs decay",
+  "description": "Songs will decay and here's how!",
+  "site": "https://pudding.cool",
+  "siteName": "The Pudding",
+  "url": "https://pudding.cool/2020/06/songs-decay/",
+  "keywords": "songs music decay rate culture",
+  "imgFacebook": "https://pudding.cool/2020/06/songs-decay/assets/social/social-facebook.jpg",
+  "imgTwitter": "https://pudding.cool/2020/06/songs-decay/assets/social/social-twitter.jpg",
+  "author": {
+    "name1": "Matt Daniels",
+    "url1": "https://pudding.cool/author/matt-daniels",
+    "twitterHandle1": "@matthew_daniels",
+    "name2": "Ilia Blinderman",
+    "url2": "https://pudding.cool/author/ilia-blinderman",
+    "twitterHandle2": "@iliablinderman"
+  },
+  "analytics": "",
+  "lorem": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis mollis neque sit amet sollicitudin vehicula. Maecenas fringilla mi non lacus mattis elementum. Curabitur dignissim faucibus justo."
+}

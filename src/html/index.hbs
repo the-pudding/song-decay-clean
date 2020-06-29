@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang='en' data-version='{{timestamp}}'>
+
+<head>
+
+    {{> base/meta}}
+
+    <link inline rel='stylesheet' href='bundle.css' />
+
+    {{> base/font}}
+
+    {{> base/analytics }}
+
+</head>
+
+<body>
+
+    {{> base/header}}
+
+    <main id='content'>
+
+        {{> story/intro }}
+        {{> story/main }}
+
+    </main>
+
+    {{> base/footer }}
+
+
+    <script src='{{basepath}}assets/scripts/d3.v5.12.0.min.js'></script>
+    {{!-- <script src='assets/scripts/swoopy-drag.js'></script> --}}
+    {{!-- <script src='assets/scripts/annotationsNoDiggity.js'></script> --}}
+    <script src='main.js?version={{timestamp}}' async></script>
+</body>
+
+</html>

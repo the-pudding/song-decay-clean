@@ -1,0 +1,143 @@
+<section class='story intro'>
+
+
+    <div class='chart-container__proclaimers-dre'>
+        <div class='chart-text'>
+            <div class='chart-hed'>{{doc.chart-text-hed-proclaimers-dre}}</div>
+            <div class='chart-subhed'>{{doc.chart-text-subhed-proclaimers-dre}}</div>
+        </div>
+        <svg class='chart__proclaimers-dre'></svg>
+    </div>
+
+
+
+    {{#each doc.intro-no-diggity}}
+    <p class='story-text'>{{{text}}}</p>
+    {{/each}}
+
+    <div class='chart-container__no-diggity'>
+        <div class='chart-text'>
+            <div class='chart-hed'>{{doc.chart-text-hed-no-diggity}}</div>
+            <div class='chart-subhed'>{{doc.chart-text-subhed-no-diggity}}</div>
+        </div>
+        <svg class='chart__no-diggity'></svg>
+    </div>
+
+
+    {{#each doc.no-diggity-the-sign}}
+    <p class='story-text'>{{{text}}}</p>
+    {{/each}}
+
+
+    <div class='chart-container__ace-of-base'>
+        <div class='chart-text'>
+            <div class='chart-hed'>{{doc.chart-text-hed-ace-of-base}}</div>
+            <div class='chart-subhed'>{{doc.chart-text-subhed-ace-of-base}}</div>
+        </div>
+        <svg class='chart__ace-of-base'></svg>
+    </div>
+
+    {{#each doc.scroll-intro}}
+    <p class='story-text'>{{{text}}}</p>
+    {{/each}}
+    {{#each doc.intro-mean}}
+    <p class='story-text'>{{{text}}}</p>
+    {{/each}}
+</section>
+
+<section class='story scroll'>
+    <figure class='mean-recognition'>
+        <div class='chart-container__mean-recognition'>
+            <div class='chart-text'>
+                <div class='chart-hed'>{{doc.chart-text-hed-scroll}}</div>
+                <div class='chart-subhed'>{{doc.chart-text-subhed-scroll}}</div>
+            </div>
+            <svg class='chart__mean-recognition'></svg>
+        </div>
+        <div class='song-examples mean-recognition'>
+
+        </div>
+    </figure>
+
+    {{#each doc.wild-west}}
+    <p class='story-text'>{{{text}}}</p>
+    {{/each}}
+    <figure class='underperforming-songs'>
+        <div class='chart-container__underperforming-songs'>
+            <div class='chart-text'>
+                <div class='chart-hed'>{{doc.chart-text-hed-scroll}}</div>
+                <div class='chart-subhed'>{{doc.chart-text-subhed-scroll}}</div>
+            </div>
+
+            <div class='chart-contents underperforming-songs'>
+                <svg class='chart__underperforming-songs'></svg>
+                <div class='song-examples underperforming-songs'></div>
+            </div>
+
+        </div>
+    </figure>
+
+    {{#each doc.popular}}
+    <p class='story-text'>{{{text}}}</p>
+    {{/each}}
+    <figure class='overperforming-songs'>
+        <div class='chart-container__overperforming-songs'>
+            <div class='chart-text'>
+                <div class='chart-hed'>{{doc.chart-text-hed-scroll}}</div>
+                <div class='chart-subhed'>{{doc.chart-text-subhed-scroll}}</div>
+            </div>
+
+            <div class='chart-contents overperforming-songs'>
+                <svg class='chart__overperforming-songs'></svg>
+                <div class='song-examples overperforming-songs'></div>
+            </div>
+
+        </div>
+    </figure>
+
+    {{#each doc.millennial-only}}
+    <p class='story-text'>{{{text}}}</p>
+    {{/each}}
+    <figure class='millennial-only-songs'>
+        <div class='chart-container__millennial-only-songs'>
+            <div class='chart-text'>
+                <div class='chart-hed'>{{doc.chart-text-hed-scroll}}</div>
+                <div class='chart-subhed'>{{doc.chart-text-subhed-scroll}}</div>
+            </div>
+
+            <div class='chart-contents millennial-only-songs'>
+                <svg class='chart__millennial-only-songs'></svg>
+                <div class='song-examples millennial-only-songs'></div>
+            </div>
+
+        </div>
+    </figure>
+
+
+</section>
+
+<section class='story lollipop'>
+
+
+    {{#each doc.lollipop-intro}}
+    <p class='story-text'>{{{text}}}</p>
+    {{/each}}
+
+    <div class='chart-container__lollipop'>
+        <div class='chart-text'>
+            <div class='chart-hed'>{{doc.chart-text-hed-lollipop}}</div>
+            <div class='chart-subhed'>{{doc.chart-text-subhed-lollipop}}</div>
+        </div>
+        <div class='chart__lollipop-top-axis'>
+            <svg class='lollipop-x-axis-svg'></svg>
+        </div>
+        <svg class='chart__lollipop'>
+            <defs>
+                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:rgb(197,185,166);stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:rgb(163,205,219);stop-opacity:1" />
+                </linearGradient>
+            </defs>
+        </svg>
+    </div>
+</section>
