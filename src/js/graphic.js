@@ -152,13 +152,11 @@
 
  let lollipopOrder = 'btn-millennial-order'
 
- //  let scaleX = {};
- //  let scaleY = {};
  const margin = {
    left: 50,
-   right: 50,
-   top: 30,
-   bottom: 20
+   right: 30,
+   top: 60,
+   bottom: 60
  }
 
 
@@ -238,7 +236,9 @@
 
    width = window.innerWidth;
    height = window.innerHeight;
-
+   if(width < 550){
+     margin.left = 50;
+   }
    d3.selectAll('.story-step')
      .style('height', `${height}px`)
  }
@@ -290,124 +290,6 @@
  // making charts
  function makeProclaimersDreChart(data) {
 
-   let scaleProclaimersDreX;
-   let scaleProclaimersDreY;
-
-
-
-
-   const chartHeight = 0.6 * height
-   const CHART_SCREEN_PCT_WIDTH = mob ? 0.95 : 0.75
-
-   const thisChartPaddingLeft = +d3.select('section.story.intro').style('padding-left').split('px')[0]
-   const thisChartPaddingRight = +d3.select('section.story.intro').style('padding-right').split('px')[0]
-
-   const chartWidth = mob ? CHART_SCREEN_PCT_WIDTH * width - thisChartPaddingLeft - thisChartPaddingRight : CHART_SCREEN_PCT_WIDTH * width
-   const chartWidthPadding = (1 - CHART_SCREEN_PCT_WIDTH) * width / 2
-
-
-   const svgWidth = mob ? chartWidth : width
-   $svgProclaimersDre
-     .attr('width', svgWidth)
-     .attr('height', height)
-
-
-   $svgProclaimersDreG = $svgProclaimersDre
-     .append('g')
-     .attr('class', 'chart proclaimers-dre-g')
-     .attr('transform', `translate(${chartWidthPadding},${margin.top})`)
-
-   const proclaimersDreData = data.filter(song => {
-     return proclaimersDreSongs.includes(song.key)
-   })
-
-
-   //    console.log(proclaimersDreData)
-
-   const scaleObj = getScaleMinMax(proclaimersDreData)
-
-   scaleProclaimersDreX = d3.scaleLinear()
-     .domain([scaleObj.xMin, scaleObj.xMax])
-     .range([0, chartWidth - margin.left - margin.right])
-
-   scaleProclaimersDreY = d3.scaleLinear()
-     .domain([0, scaleObj.yMax])
-     .range([chartHeight - margin.top - margin.bottom, 0])
-
-
-   const line = d3.line()
-     .curve(d3.curveCardinal)
-     .x(d =>
-       scaleProclaimersDreX(d.generation))
-     .y(d => scaleProclaimersDreY(d.recognition))
-
-
-
-   const ticksNum = mob ? 5 : 10
-
-   $svgProclaimersDreG
-     .append('g')
-     .attr('class', 'axis x proclaimers-dre')
-     .call(d3.axisBottom(scaleProclaimersDreX).tickFormat(d3.format('')).ticks(ticksNum))
-     .attr('transform', `translate(${margin.left},${chartHeight-margin.top})`)
-
-   $svgProclaimersDreG.selectAll('.x.axis')
-     .selectAll('g.tick')
-     .select('text')
-     .attr('class', d => {
-       console.log(d);
-       return 'class'
-     })
-     .text(d => yearToBirthYear(d))
-
-
-   $svgProclaimersDreG
-     .append('g')
-     .attr('class', 'axis y proclaimers-dre')
-     .call(
-       d3.axisLeft(scaleProclaimersDreY)
-       .tickSize(-chartWidth + margin.left + margin.right)
-       .tickFormat(d3.format('.0%'))
-       .ticks(5))
-     .attr('transform', `translate(${margin.left},${margin.bottom})`)
-
-
-   $svgProclaimersDreG.append("text")
-     .attr("y", 0)
-     .attr("x", 0)
-     .attr("dy", "1em")
-     .attr('class', 'label-axis')
-     .style("text-anchor", "middle")
-     .attr('transform', `translate(${mob? margin.left+chartWidth/3 : margin.left+chartWidth/2},${chartHeight+margin.bottom/2})`)
-     .text("Age when song was released");
-
-   let $svgProclaimersDreSongGs = $svgProclaimersDreG
-     .selectAll('g.song-g')
-     .data(proclaimersDreData)
-     .join('g')
-     .attr('class', d => `song-g ${cleanSongName(d.key)}`)
-     .attr('transform', `translate(${margin.left},${margin.top})`)
-
-
-
-   //adding circles to each song path
-   $svgProclaimersDreSongGs
-     .selectAll('circle.song-year')
-     .data(d => d.values)
-     .join('circle')
-     .attr('class', d => `${cleanSongName(d.artist_song)} song-year-circles`)
-     .attr('cx', d => scaleProclaimersDreX(d.generation))
-     .attr('cy', d => scaleProclaimersDreY(d.recognition))
-     .attr('r', 5)
-
-   //adding line paths
-   $svgProclaimersDreSongGs
-     .append('path')
-     .attr('class', 'line proclaimers-dre')
-     .attr('d', d => line(d.values))
-
-
-
    const annotations = [{
        note: {
          label: "Dr. Dre - Nuthin' But A G Thang",
@@ -438,6 +320,101 @@
      }
    ]
 
+   let scaleProclaimersDreX;
+   let scaleProclaimersDreY;
+
+   let chartWidth = Math.min(width, 800) - margin.left - margin.right;
+   let chartHeight = chartWidth*.66 - margin.top - margin.bottom;
+
+   $svgProclaimersDre
+     .attr('width', chartWidth+margin.left + margin.right)
+     .attr('height', chartHeight+margin.top+margin.bottom)
+     .style('width', chartWidth+margin.left + margin.right+"px")
+     .style('height', chartHeight+margin.top+margin.bottom+"px")
+     .attr("class","line-chart")
+
+   $svgProclaimersDreG = $svgProclaimersDre
+     .append('g')
+     .attr('class', 'chart proclaimers-dre-g')
+     .attr('transform', `translate(${margin.left},${margin.top})`)
+
+   const proclaimersDreData = data.filter(song => {
+     return proclaimersDreSongs.includes(song.key)
+   })
+
+   const scaleObj = getScaleMinMax(proclaimersDreData)
+
+   scaleProclaimersDreX = d3.scaleLinear()
+     .domain([scaleObj.xMin, scaleObj.xMax])
+     .range([0, chartWidth])
+
+   scaleProclaimersDreY = d3.scaleLinear()
+     .domain([0, 1])
+     .range([chartHeight, 0])
+
+   const line = d3.line()
+     .curve(d3.curveCardinal)
+     .x(d =>
+       scaleProclaimersDreX(d.generation))
+     .y(d => scaleProclaimersDreY(d.recognition))
+
+   const ticksNum = mob ? 5 : 10
+
+   $svgProclaimersDreG
+     .append('g')
+     .attr('transform', `translate(0,${chartHeight})`)
+     .attr('class', 'axis x proclaimers-dre')
+     .call(d3.axisBottom(scaleProclaimersDreX).tickFormat(d3.format('')).ticks(ticksNum))
+
+   $svgProclaimersDreG.selectAll('.x.axis')
+     .selectAll('g.tick')
+     .select('text')
+     .attr('class', d => {
+       return 'class'
+     })
+     .text(d => yearToBirthYear(d))
+
+   $svgProclaimersDreG
+     .append('g')
+     .attr('class', 'axis y proclaimers-dre')
+     .call(
+       d3.axisLeft(scaleProclaimersDreY)
+       .tickSize(-chartWidth)
+       .tickFormat(d3.format('.0%'))
+       .ticks(5))
+
+   $svgProclaimersDreG.select(".y").selectAll(".tick").select("text")
+    .attr("transform", "translate(-10,0)")
+
+   $svgProclaimersDreG.append("text")
+     .attr("y", 0)
+     .attr("x", 0)
+     .attr("dy", "1em")
+     .attr('class', 'label-axis')
+     .style("text-anchor", "middle")
+     .attr('transform', `translate(${chartWidth/2},${chartHeight+40})`)
+     .text("Age when song was released");
+
+   let $svgProclaimersDreSongGs = $svgProclaimersDreG
+     .selectAll('g.song-g')
+     .data(proclaimersDreData)
+     .join('g')
+     .attr('class', d => `song-g ${cleanSongName(d.key)}`)
+
+   $svgProclaimersDreSongGs
+     .selectAll('circle.song-year')
+     .data(d => d.values)
+     .join('circle')
+     .attr('class', d => `${cleanSongName(d.artist_song)} song-year-circles`)
+     .attr('cx', d => scaleProclaimersDreX(d.generation))
+     .attr('cy', d => scaleProclaimersDreY(d.recognition))
+     .attr('r', 5)
+
+   $svgProclaimersDreSongGs
+     .append('path')
+     .attr('class', 'line proclaimers-dre')
+     .attr('d', d => line(d.values))
+
    const makeAnnotations = setupAnnotations(scaleProclaimersDreX, scaleProclaimersDreY, annotations)
 
    $svgProclaimersDreG
@@ -445,44 +422,61 @@
      .attr("class", "annotation-group")
      .call(makeAnnotations)
 
-   $svgProclaimersDreG.select('.annotation-group')
-     .attr('transform', `translate(${margin.left},${margin.top})`)
+   $svgProclaimersDreG.select(".annotation-group").clone("deep");
 
+   $svgProclaimersDreG.selectAll(".annotation-group").classed("background-fill",function(d,i){
+     if(i==0){
+       return true;
+     }
+     return false;
+   })
 
-
-   const yAxisAnnotation = [{
-     note: {
-       title: "% of People Who Know Song",
-       bgPadding: 20,
-       wrap: mob ? 300 : 0
-     },
-     //can use x, y directly instead of data
-     data: {
-       generation: (-15),
-       recognition: 1
-     },
-     className: "show-bg"
-     // dy: chartHeight / 7,
-     //   dx: 162
-   }]
-
-   const makeYAxisLabel = setupAnnotations(scaleProclaimersDreX, scaleProclaimersDreY, yAxisAnnotation)
-
-   $svgProclaimersDreG
+   const $svgProclaimersDreYLabels = $svgProclaimersDreG
      .append("g")
-     .attr("class", "annotation-y-axis")
-     .call(makeYAxisLabel)
+     .attr("class","labels-axis-y")
 
-   $svgProclaimersDreG.select('.annotation-y-axis')
-     .attr('transform', `translate(${mob? 0: -margin.left},${mob ? 0 : margin.top })`)
+   $svgProclaimersDreYLabels
+      .append("text")
+      .attr("y", -40)
+      .attr("x", 0)
+      .attr("dx", 0)
+      .attr('class', 'label-axis label-axis-y-bg')
+      .style("text-anchor", "start")
+      .attr('transform', `translate(-34,0)`)
+      .selectAll("tspan")
+      .data(["% of People","Who Know","Song"])
+      .enter()
+      .append("tspan")
+      .text(function(d){
+        return d;
+      })
+      .attr("dy",function(d,i){
+        return 1.1+"em";
+      })
+      .attr("x",-10)
+      ;
 
+   $svgProclaimersDreYLabels
+       .append("text")
+       .attr("y", -40)
+       .attr("x", 0)
+       .attr("dx", 0)
+       .attr('class', 'label-axis label-axis-y')
+       .style("text-anchor", "start")
+       .attr('transform', `translate(-34,0)`)
+       .selectAll("tspan")
+       .data(["% of People","Who Know","Song"])
+       .enter()
+       .append("tspan")
+       .text(function(d){
+         return d;
+       })
+       .attr("dy",function(d,i){
+         return 1.1+"em";
+       })
+       .attr("x",-10)
+       ;
 
-   if (mob) {
-     $svgProclaimersDreG
-       .select('.annotation-y-axis')
-       .select('.annotation-note-content')
-       .attr('transform', 'translate(0,0)')
-   }
  }
 
  function makeNoDiggityChart() {
@@ -590,7 +584,7 @@
      .attr('cy', d => scaleNoDiggityY(d.recognition))
      .attr('r', 5)
 
-   // adding line paths to song group elements     
+   // adding line paths to song group elements
    $svgNoDiggitySongGs
      .append('path')
      .attr('class', 'line no-diggity')
@@ -1042,7 +1036,7 @@
      .data(voronoi.polygons(flatArray))
      .enter()
      .append('path')
-     .attr("d", d => (d ? "M" + d.join("L") + "Z" : null)) //this step draws the paths from the voronoi data 
+     .attr("d", d => (d ? "M" + d.join("L") + "Z" : null)) //this step draws the paths from the voronoi data
      .on('mouseenter', song => {
        console.log(song)
        const currentSongs = ['mean', song.data.artist_song];
@@ -1363,7 +1357,7 @@
      .data(voronoi.polygons(flatArray))
      .enter()
      .append('path')
-     .attr("d", d => (d ? "M" + d.join("L") + "Z" : null)) //this step draws the paths from the voronoi data 
+     .attr("d", d => (d ? "M" + d.join("L") + "Z" : null)) //this step draws the paths from the voronoi data
      .on('mouseenter', d => {
        const currentSong = cleanSongName(d.data.artist_song);
        $svgMeanG
