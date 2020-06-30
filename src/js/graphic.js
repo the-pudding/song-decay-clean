@@ -353,7 +353,7 @@
      .range([chartHeight, 0])
 
    const line = d3.line()
-     .curve(d3.curveCardinal)
+     .curve(d3.curveBasis)
      .x(d =>
        scaleProclaimersDreX(d.generation))
      .y(d => scaleProclaimersDreY(d.recognition))
@@ -1038,7 +1038,7 @@
      .append('path')
      .attr("d", d => (d ? "M" + d.join("L") + "Z" : null)) //this step draws the paths from the voronoi data
      .on('mouseenter', song => {
-       console.log(song)
+       console.log(song.data)
        const currentSongs = ['mean', song.data.artist_song];
        $svgObjSongLines
          .style('opacity', d => {
