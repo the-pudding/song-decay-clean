@@ -373,6 +373,12 @@
        return 'class'
      })
      .text(d => yearToBirthYear(d))
+     .each(function(d,i){
+       if(i==0){
+         d3.select(this).append("tspan").text("yers old")
+       }
+    //   console.log(d3.select(this).node());
+     })
 
    $svgProclaimersDreG
      .append('g')
@@ -421,6 +427,7 @@
      .append("g")
      .attr("class", "annotation-group")
      .call(makeAnnotations)
+
 
    $svgProclaimersDreG.select(".annotation-group").clone("deep");
 
