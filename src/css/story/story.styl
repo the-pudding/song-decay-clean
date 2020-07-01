@@ -12,7 +12,10 @@ body
     path
         fill none
         stroke black
-
+        
+section.story
+    .intro
+        padding-top 1rem
 
 .scroll
     margin: 0 auto
@@ -329,7 +332,7 @@ text.lollipop-x-axis-label
 
  .chart__mean-recognition
      rect.annotation-note-bg
-        fill-opacity: .8;
+        fill-opacity: 0;
         fill #feefd7
     .annotation-y-axis
         rect.annotation-note-bg
@@ -358,7 +361,24 @@ text.lollipop-x-axis-label
                             tspan
                               text-anchor end
 
+.background-line
+    opacity 0
+    stroke rgb(254, 239, 215)
+    fill-opacity 0
+    stroke-width 7
 
+.background-line-highlight
+    opacity 1
+    stroke rgb(254, 239, 215)
+    fill-opacity 0
+    stroke-width 7
+
+.annotation-group-mean-background
+    .annotation-note-content
+        tspan
+            fill rgb(254, 239, 215)
+            stroke rgb(254, 239, 215)
+            stroke-width: 8px
 
 .g-voronoi
     path
