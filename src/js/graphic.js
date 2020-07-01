@@ -726,25 +726,21 @@
    let scaleAceOfBaseY;
 
 
-   const chartHeight = 0.6 * height
-   const CHART_SCREEN_PCT_WIDTH = mob ? 0.95 : 0.75
-   const thisChartPaddingLeft = +d3.select('section.story.intro').style('padding-left').split('px')[0]
-   const thisChartPaddingRight = +d3.select('section.story.intro').style('padding-right').split('px')[0]
 
-   const chartWidth = mob ? CHART_SCREEN_PCT_WIDTH * width - thisChartPaddingLeft - thisChartPaddingRight : CHART_SCREEN_PCT_WIDTH * width
-   const chartWidthPadding = (1 - CHART_SCREEN_PCT_WIDTH) * width / 2
+   let chartWidth = Math.min(width, 800) - margin.left - margin.right;
+   let chartHeight = mob ? chartWidth - margin.top - margin.bottom : chartWidth * .6 - margin.top - margin.bottom
 
 
    const svgWidth = mob ? chartWidth : width
    $svgAceOfBase
-     .attr('width', svgWidth)
-     .attr('height', height)
+     .attr('width', chartWidth + margin.left + margin.right)
+     .attr('height', chartHeight + margin.top + margin.bottom)
 
 
    $svgAceOfBaseG = $svgAceOfBase
      .append('g')
      .attr('class', 'chart ace-of-base-g')
-     .attr('transform', `translate(${chartWidthPadding},${margin.top})`)
+     .attr('transform', `translate(${margin.left},${margin.top})`)
 
    const AceOfBaseData = data.filter(song => {
      return AceOfBaseSongs.includes(song.key)
@@ -754,11 +750,11 @@
 
    scaleAceOfBaseX = d3.scaleLinear()
      .domain([scaleObj.xMin, scaleObj.xMax])
-     .range([0, chartWidth - margin.left - margin.right])
+     .range([0, chartWidth])
 
    scaleAceOfBaseY = d3.scaleLinear()
      .domain([0, scaleObj.yMax])
-     .range([chartHeight - margin.top - margin.bottom, 0])
+     .range([chartHeight, 0])
 
 
    const line = d3.line()
@@ -771,9 +767,10 @@
 
    $svgAceOfBaseG
      .append('g')
+     .attr('transform', `translate(0,${chartHeight})`)
      .attr('class', 'axis x ace-of-base')
      .call(d3.axisBottom(scaleAceOfBaseX).tickFormat(d3.format('')).ticks(ticksNum))
-     .attr('transform', `translate(${margin.left},${chartHeight-margin.bottom})`)
+
 
 
    $svgAceOfBaseG.selectAll('.x.axis')
@@ -785,16 +782,48 @@
      })
      .text(d => yearToBirthYear(d))
 
+
+   $svgAceOfBaseG.selectAll('.x.axis')
+     .selectAll('g.tick')
+     .select('text')
+     .text(d => yearToBirthYear(d))
+     .attr('text-anchor', (d, i, n) => {
+       if (i === 0) {
+         return 'middle'
+       }
+       if (i === 10) {
+         return 'end'
+       } else return
+     })
+     .each((d, i, n) => {
+       console.log(i)
+       if (i === 0) {
+         d3.select(n[i]).append('tspan').text('years old').attr('dy', '1em').attr('x', '0')
+       }
+       if (i === 10) {
+         d3.select(n[i])
+           .append('tspan')
+           .text('years old')
+           .attr('dy', '1em').attr('x', -1)
+       }
+     })
+
+
+
    $svgAceOfBaseG
      .append('g')
      .attr('class', 'axis y ace-of-base')
      .call(
        d3.axisLeft(scaleAceOfBaseY)
-       .tickSize(-chartWidth + margin.left + margin.right)
+       .tickSize(-chartWidth)
        .tickFormat(d3.format('.0%'))
        .ticks(5))
-     .attr('transform', `translate(${margin.left},${margin.bottom})`)
+   //  .attr('transform', `translate(${margin.left},${margin.bottom})`)
 
+
+
+   $svgAceOfBaseG.select(".y").selectAll(".tick").select("text")
+     .attr("transform", "translate(-10,0)")
 
    $svgAceOfBaseG.append("text")
      .attr("y", 0)
@@ -802,7 +831,7 @@
      .attr("dy", "1em")
      .attr('class', 'label-axis')
      .style("text-anchor", "middle")
-     .attr('transform', `translate(${mob? margin.left+chartWidth/3 : margin.left+chartWidth/2},${chartHeight+margin.bottom/2})`)
+     .attr('transform', `translate(${chartWidth/2},${chartHeight+40})`)
      .text("Age when song was released");
 
 
@@ -811,7 +840,7 @@
      .data(AceOfBaseData)
      .join('g')
      .attr('class', d => `song-g ${cleanSongName(d.key)}`)
-     .attr('transform', `translate(${margin.left},${margin.top})`)
+
 
 
    //adding circles to each song path
