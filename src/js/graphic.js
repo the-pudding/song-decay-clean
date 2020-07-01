@@ -343,8 +343,6 @@
    $svgProclaimersDre
      .attr('width', chartWidth + margin.left + margin.right)
      .attr('height', chartHeight + margin.top + margin.bottom)
-     .style('width', chartWidth + margin.left + margin.right + "px")
-     .style('height', chartHeight + margin.top + margin.bottom + "px")
      .attr("class", "line-chart")
 
    $svgProclaimersDreG = $svgProclaimersDre
@@ -415,6 +413,8 @@
      .style("text-anchor", "middle")
      .attr('transform', `translate(${chartWidth/2},${chartHeight+40})`)
      .text("Birth year");
+
+
 
    let $svgProclaimersDreSongGs = $svgProclaimersDreG
      .selectAll('g.song-g')
@@ -501,12 +501,14 @@
 
  function makeNoDiggityChart() {
 
-   const chartHeight = 0.6 * height
+   let chartWidth = Math.min(width, 800) - margin.left - margin.right;
+   let chartHeight = mob ? chartWidth - margin.top - margin.bottom : chartWidth * .6 - margin.top - margin.bottom
+
    const CHART_SCREEN_PCT_WIDTH = mob ? 0.95 : 0.75
    const thisChartPaddingLeft = +d3.select('section.story.intro').style('padding-left').split('px')[0]
    const thisChartPaddingRight = +d3.select('section.story.intro').style('padding-right').split('px')[0]
 
-   const chartWidth = mob ? CHART_SCREEN_PCT_WIDTH * width - thisChartPaddingLeft - thisChartPaddingRight : CHART_SCREEN_PCT_WIDTH * width
+
    const chartWidthPadding = (1 - CHART_SCREEN_PCT_WIDTH) * width / 2
    let scaleNoDiggityX;
    let scaleNoDiggityY;
@@ -525,24 +527,24 @@
 
    const svgWidth = mob ? chartWidth : width
    $svgNoDiggity
-     .attr('width', svgWidth)
-     .attr('height', height)
+     .attr('width', chartWidth + margin.left + margin.right)
+     .attr('height', chartHeight + margin.top + margin.bottom)
 
 
    $svgNoDiggityG = $svgNoDiggity
      .append('g')
      .attr('class', 'chart no-diggity-g')
-     .attr('transform', `translate(${chartWidthPadding},${margin.top})`)
+     .attr('transform', `translate(${margin.left},${margin.top})`)
 
    const scaleObj = getScaleMinMax(noDiggityData)
 
    scaleNoDiggityX = d3.scaleLinear()
      .domain([scaleObj.xMin, scaleObj.xMax])
-     .range([0, chartWidth - margin.left - margin.right])
+     .range([0, chartWidth])
 
    scaleNoDiggityY = d3.scaleLinear()
      .domain([0, scaleObj.yMax])
-     .range([chartHeight - margin.top - margin.bottom, 0])
+     .range([chartHeight, 0])
 
 
    const line = d3.line()
@@ -555,22 +557,24 @@
    const tickNum = mob ? 4 : 8
    $svgNoDiggityG
      .append('g')
+     .attr('transform', `translate(0,${chartHeight})`)
      .attr('class', 'axis x no-diggity')
      .call(d3.axisBottom(scaleNoDiggityX).tickFormat(d3.format('')).ticks(tickNum))
-     .attr('transform', `translate(${margin.left},${chartHeight-margin.top})`)
+
 
    $svgNoDiggityG
      .append('g')
      .attr('class', 'axis y no-digity')
      .call(
        d3.axisLeft(scaleNoDiggityY)
-       .tickSize(-chartWidth + margin.left + margin.right)
+       .tickSize(-chartWidth)
        .tickFormat(d3.format('.0%'))
        .ticks(5))
-     .attr('transform', `translate(${margin.left},${margin.bottom})`)
+   //  .attr('transform', `translate(${margin.left},${margin.bottom})`)
 
 
-
+   $svgNoDiggityG.select(".y").selectAll(".tick").select("text")
+     .attr("transform", "translate(-10,0)")
 
 
 
@@ -581,7 +585,7 @@
      .attr("dy", "1em")
      .attr('class', 'label-axis')
      .style("text-anchor", "middle")
-     .attr('transform', `translate(${mob? margin.left+chartWidth/3 : margin.left+chartWidth/2},${chartHeight+margin.bottom/2})`)
+     .attr('transform', `translate(${chartWidth/2},${chartHeight+40})`)
      .text("Birth Year");
 
 
@@ -591,7 +595,7 @@
      .data(noDiggityData)
      .join('g')
      .attr('class', d => `song-g ${cleanSongName(d.key)}`)
-     .attr('transform', `translate(${margin.left},${margin.top})`)
+   //  .attr('transform', `translate(${margin.left},${margin.top})`)
 
 
    //adding circles to each song path
@@ -666,42 +670,53 @@
      .attr("class", "annotation-group")
      .call(makeAnnotations)
 
-   $svgNoDiggityG.select('.annotation-group')
-     .attr('transform', `translate(${margin.left},${margin.top })`)
+   //    $svgNoDiggityG.select('.annotation-group')
+   //  .attr('transform', `translate(${margin.left},${margin.top })`)
 
 
-   const yAxisAnnotation = [{
-     note: {
-       title: "% of People Who Know Song",
-       bgPadding: 20,
-       wrap: mob ? 300 : 0
-     },
-     //can use x, y directly instead of data
-     data: {
-       generation: (-15 + 1996),
-       recognition: 1
-     },
-     className: "show-bg"
-     // dy: chartHeight / 7,
-     //   dx: 162
-   }]
-
-   const makeYAxisLabel = setupAnnotations(scaleNoDiggityX, scaleNoDiggityY, yAxisAnnotation)
-
-   $svgNoDiggityG
+   const $svgNoDiggityYLabels = $svgNoDiggityG
      .append("g")
-     .attr("class", "annotation-y-axis")
-     .call(makeYAxisLabel)
+     .attr("class", "labels-axis-y")
 
-   $svgNoDiggityG.select('.annotation-y-axis')
-     .attr('transform', `translate(${0},${margin.top })`)
+   $svgNoDiggityYLabels
+     .append("text")
+     .attr("y", -40)
+     .attr("x", 0)
+     .attr("dx", 0)
+     .attr('class', 'label-axis label-axis-y-bg')
+     .style("text-anchor", "start")
+     .attr('transform', `translate(-34,0)`)
+     .selectAll("tspan")
+     .data(["% of People", "Who Know", "Song"])
+     .enter()
+     .append("tspan")
+     .text(function (d) {
+       return d;
+     })
+     .attr("dy", function (d, i) {
+       return 1.1 + "em";
+     })
+     .attr("x", -10);
 
-   if (mob) {
-     $svgNoDiggityG
-       .select('.annotation-y-axis')
-       .select('.annotation-note-content')
-       .attr('transform', 'translate(0,0)')
-   }
+   $svgNoDiggityYLabels
+     .append("text")
+     .attr("y", -40)
+     .attr("x", 0)
+     .attr("dx", 0)
+     .attr('class', 'label-axis label-axis-y')
+     .style("text-anchor", "start")
+     .attr('transform', `translate(-34,0)`)
+     .selectAll("tspan")
+     .data(["% of People", "Who Know", "Song"])
+     .enter()
+     .append("tspan")
+     .text(function (d) {
+       return d;
+     })
+     .attr("dy", function (d, i) {
+       return 1.1 + "em";
+     })
+     .attr("x", -10);
 
  }
 
@@ -817,37 +832,49 @@
 
 
 
-   const yAxisAnnotation = [{
-     note: {
-       title: "% of People Who Know Song",
-       bgPadding: 20,
-       wrap: mob ? 300 : 0
-     },
-     //can use x, y directly instead of data
-     data: {
-       generation: (-15),
-       recognition: 1
-     },
-     className: "show-bg"
-     // dy: chartHeight / 7,
-     //   dx: 162
-   }]
-
-   const makeYAxisLabel = setupAnnotations(scaleAceOfBaseX, scaleAceOfBaseY, yAxisAnnotation)
-
-   $svgAceOfBaseG
+   const $svgAceOfBaseGYLabels = $svgAceOfBaseG
      .append("g")
-     .attr("class", "annotation-y-axis")
-     .call(makeYAxisLabel)
+     .attr("class", "labels-axis-y")
 
-   $svgAceOfBaseG.select('.annotation-y-axis')
-     .attr('transform', `translate(${mob ? 0 :-margin.left},${0 })`)
+   $svgAceOfBaseGYLabels
+     .append("text")
+     .attr("y", -40)
+     .attr("x", 0)
+     .attr("dx", 0)
+     .attr('class', 'label-axis label-axis-y-bg')
+     .style("text-anchor", "start")
+     .attr('transform', `translate(-34,0)`)
+     .selectAll("tspan")
+     .data(["% of People", "Who Know", "Song"])
+     .enter()
+     .append("tspan")
+     .text(function (d) {
+       return d;
+     })
+     .attr("dy", function (d, i) {
+       return 1.1 + "em";
+     })
+     .attr("x", -10);
 
-   if (mob) {
-     $svgAceOfBaseG.select('.annotation-y-axis')
-       .select('.annotation-note-content')
-       .attr('transform', 'translate(0,0)')
-   }
+   $svgAceOfBaseGYLabels
+     .append("text")
+     .attr("y", -40)
+     .attr("x", 0)
+     .attr("dx", 0)
+     .attr('class', 'label-axis label-axis-y')
+     .style("text-anchor", "start")
+     .attr('transform', `translate(-34,0)`)
+     .selectAll("tspan")
+     .data(["% of People", "Who Know", "Song"])
+     .enter()
+     .append("tspan")
+     .text(function (d) {
+       return d;
+     })
+     .attr("dy", function (d, i) {
+       return 1.1 + "em";
+     })
+     .attr("x", -10);
 
  }
 
