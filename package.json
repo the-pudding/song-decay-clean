@@ -11,6 +11,7 @@
     "d3-svg-annotation": "^2.5.1",
     "d3-swoopy-drag": "0.0.3",
     "enter-view": "^2.0.0",
+    "howler": "^2.2.0",
     "lodash.debounce": "4.0.8",
     "nouislider": "14.2.0",
     "superagent": "5.2.2"

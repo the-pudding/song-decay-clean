@@ -4,7 +4,7 @@
  import * as Annotate from 'd3-svg-annotation';
  import isMobile from './utils/is-mobile.js'
  import truncate from './utils/truncate';
-
+ import howler from 'howler';
 
 
 
@@ -16,6 +16,11 @@
 
  // data variables
  let data;
+ let previewData;
+
+ const howlerList = []
+ let currentlyPlayingSong;
+
  const proclaimersDreSongs = ["Proclaimers, The|||I'm Gonna Be", "Dr. Dre|||Nuthin' But A G Thang"]
  const noDiggitySongs = ["BLACKstreet|||No Diggity"]
  const AceOfBaseSongs = ["Ace Of Base|||The Sign"]
@@ -116,7 +121,7 @@
  ]
 
 
- console.log(masterPopularSongList)
+
 
  // chart svgs
  let $svgProclaimersDre;
@@ -211,6 +216,53 @@
 
  }
 
+ function setupHowlerList() {
+
+
+   for (let i = 0; i < previewData.length; i++) {
+     howlerList[previewData[i].artist_song] = new Howl({
+       src: [`${previewData[i].song_url}.mp3`]
+     });
+   }
+
+
+   //    const sound = new Howl({
+   //      src: [`${d.song_url}.mp3`],
+   //      volume: 0.8
+   //    });
+   //    sound.play()
+   //  })
+
+
+ }
+
+ function setupHowlerPlayback() {
+   d3.selectAll('div.song-example').on('click', d => {
+     Object.keys(howlerList).forEach(key => howlerList[key].stop());
+     if (d.key === currentlyPlayingSong) {
+       howlerList[d.key].stop()
+       currentlyPlayingSong = null
+       return
+     }
+     howlerList[d.key].play()
+     currentlyPlayingSong = d.key
+   })
+
+   d3.selectAll('g.lollipop-song-g').on('click', d => {
+     Object.keys(howlerList).forEach(key => howlerList[key].stop());
+
+     if (d.artist_song === currentlyPlayingSong) {
+       howlerList[d.artist_song].stop()
+       currentlyPlayingSong = null
+       return
+     }
+     howlerList[d.artist_song].play()
+     currentlyPlayingSong = d.artist_song
+   })
+
+
+ }
+
  // setup
  function setupDOM() {
 
@@ -240,6 +292,7 @@
    d3.select('svg.chart__mean-recognition').selectAll('g').remove()
    d3.selectAll('div.chart-contents').select('svg').selectAll('g').remove()
    d3.selectAll('div.song-examples').selectAll('div.song-example').remove()
+   d3.select('svg.chart__lollipop').selectAll('g').remove()
  }
 
  function resize() {
@@ -796,7 +849,6 @@
        } else return
      })
      .each((d, i, n) => {
-       console.log(i)
        if (i === 0) {
          d3.select(n[i]).append('tspan').text('years old').attr('dy', '1em').attr('x', '0')
        }
@@ -914,9 +966,12 @@
 
 
    //non-reusable //TODO make these ternary operator assignments that are dependent on mob/not mob (if mob, full-width chart + stacked song titles; if desktop, half widht)
-   const chartHeight = 0.6 * height
+
+   const chartWidth = Math.min(width, 800) - margin.left - margin.right;
+   const chartHeight = mob ? chartWidth - margin.top - margin.bottom : chartWidth * .6 - margin.top - margin.bottom
+
    const CHART_SCREEN_PCT_WIDTH = mob ? 0.95 : 0.65
-   const chartWidth = CHART_SCREEN_PCT_WIDTH * width
+
 
    const chartWidthPadding = mob ? (1 - CHART_SCREEN_PCT_WIDTH) * width / 2 : (0.7 - CHART_SCREEN_PCT_WIDTH) * width / 2
 
@@ -937,24 +992,24 @@
    let $svgObjSongLines;
 
    $svgObj
-     .attr('width', chartWidth)
-     .attr('height', height)
+     .attr('width', chartWidth + margin.left + margin.right)
+     .attr('height', chartHeight + margin.top + margin.bottom)
 
    $svgObjG
      .attr('class', `chart ${songChart}-g`) //TODO change out variable
-     .attr('transform', `translate(${chartWidthPadding},${margin.top})`)
+     .attr('transform', `translate(${margin.left},${margin.top})`)
 
 
    const scaleObj = getScaleMinMax(popularSongs)
 
    scaleXObj = d3.scaleLinear()
      .domain([scaleObj.xMin, scaleObj.xMax])
-     .range([0, chartWidth - margin.left - margin.right])
+     .range([0, chartWidth])
 
 
    scaleYObj = d3.scaleLinear()
      .domain([0, scaleObj.yMax])
-     .range([chartHeight - margin.top - margin.bottom, 0])
+     .range([chartHeight, 0])
 
    const line = d3.line()
      .curve(d3.curveCardinal)
@@ -966,9 +1021,10 @@
 
    $svgObjG
      .append('g')
+     .attr('transform', `translate(0,${chartHeight})`)
      .attr('class', `axis x ${songChart}`) //TODO change out variable
      .call(d3.axisBottom(scaleXObj).tickFormat(d3.format('')).ticks(ticksNum))
-     .attr('transform', `translate(${margin.left},${chartHeight-margin.bottom})`)
+
 
    $svgObjG.selectAll('.x.axis')
      .selectAll('g.tick')
@@ -1001,11 +1057,11 @@
      .append('g')
      .attr('class', `axis y ${songChart}`) //TODO change out variable
      .call(d3.axisLeft(scaleYObj)
-       .tickSize(-chartWidth + margin.left + margin.right)
+       .tickSize(-chartWidth)
        .tickFormat(d3.format('.0%'))
        .ticks(5)
      )
-     .attr('transform', `translate(${margin.left},${margin.bottom})`)
+   //  .attr('transform', `translate(${margin.left},${margin.bottom})`)
 
 
    //  AXES
@@ -1016,7 +1072,7 @@
      .attr("dy", "1em")
      .attr('class', 'label-axis')
      .style("text-anchor", "middle")
-     .attr('transform', `translate(${mob? margin.left+chartWidth/3 : margin.left+chartWidth/2.5},${chartHeight+margin.bottom/2})`)
+     .attr('transform', `translate(${chartWidth/2},${chartHeight+40})`)
      .text("Age when song was released");
 
 
@@ -1026,7 +1082,7 @@
      .data(popularSongs)
      .join('g')
      .attr('class', d => `song-g ${cleanSongName(d.key)}`)
-     .attr('transform', `translate(${margin.left},${margin.top})`)
+   //  .attr('transform', `translate(${margin.left},${margin.top})`)
 
 
 
@@ -1054,50 +1110,14 @@
        return color
      })
 
-   $svgObjG.select(`.${songChart}`)
-     .select('.mean')
-     .select('path')
-     .attr('id', 'mean-path')
-
-   $svgObjG.append("text")
-     .attr("id", "curve-text")
-     .append("textPath")
-     .attr("xlink:href", "#mean-path")
-     .text("We go up, then we go down, then up again.");
-
-   $svgObjG.append("use")
-     .attr("id", "curve-line")
-     .attr("xlink:href", "#mean-path");
 
 
-   //TODO for mob, orient this sideways
 
-   const yAxisAnnotation = [{
-     note: {
-       title: "% of People Who Know Song",
-       bgPadding: 0,
-       wrap: mob ? 300 : 250
-     },
-     //can use x, y directly instead of data
-     data: {
-       generation: (-15),
-       recognition: 1.03
-     },
-     className: "show-bg"
-     // dy: chartHeight / 7,
-     //   dx: 162
-   }]
 
-   const makeYAxisLabel = setupAnnotations(scaleXObj, scaleYObj, yAxisAnnotation)
-
-   $svgObjG
-     .append("g")
-     .attr("class", "annotation-y-axis")
-     .call(makeYAxisLabel)
 
    $svgObjG.select('.annotation-note-content')
      .attr('transform', `translate(0,0)`)
-   //  .attr('transform', `translate(${margin.left + chartWidthPadding},${0 })`)
+
 
    // Adding song examples
    const $songExamplesBox = d3.select(`.song-examples.${songChart}-songs`) //TODO change variable
@@ -1111,16 +1131,87 @@
      .attr('class', 'song-example')
 
 
+
+
    const $songExamplesTitles = $songExamples
      .append('p')
      .attr('class', 'song-example__title')
-     .text(d => d.key.split('|||')[1])
+
+   d3.xml('assets/images/sound.svg')
+     .then(svg => {
+       console.log(`${songChart}`)
+
+       d3.select(`figure.${songChart}-songs`)
+         .select('div.song-examples')
+         .selectAll('.song-example')
+         .selectAll('p.song-example__title')
+         .append('span')
+         .attr('class', 'sound-icon-span')
+         .nodes()
+         .forEach(n => n.append(svg.documentElement.cloneNode(true)))
+
+     })
+     .then(() => {
+       $songExamplesTitles
+         .append('span')
+         .attr('class', 'song-example__title-text')
+         .text(d => d.key.split('|||')[1])
+     })
+
+
 
    const $songExamplesArtists = $songExamples
      .append('p')
      .attr('class', 'song-example__artist')
      .text(d => d.key.split('|||')[0])
 
+
+
+
+
+   const $svgObjGYLabels = $svgObjG
+     .append("g")
+     .attr("class", "labels-axis-y")
+
+   $svgObjGYLabels
+     .append("text")
+     .attr("y", -40)
+     .attr("x", 0)
+     .attr("dx", 0)
+     .attr('class', 'label-axis label-axis-y-bg')
+     .style("text-anchor", "start")
+     .attr('transform', `translate(-34,0)`)
+     .selectAll("tspan")
+     .data(["% of People", "Who Know", "Song"])
+     .enter()
+     .append("tspan")
+     .text(function (d) {
+       return d;
+     })
+     .attr("dy", function (d, i) {
+       return 1.1 + "em";
+     })
+     .attr("x", -10);
+
+   $svgObjGYLabels
+     .append("text")
+     .attr("y", -40)
+     .attr("x", 0)
+     .attr("dx", 0)
+     .attr('class', 'label-axis label-axis-y')
+     .style("text-anchor", "start")
+     .attr('transform', `translate(-34,0)`)
+     .selectAll("tspan")
+     .data(["% of People", "Who Know", "Song"])
+     .enter()
+     .append("tspan")
+     .text(function (d) {
+       return d;
+     })
+     .attr("dy", function (d, i) {
+       return 1.1 + "em";
+     })
+     .attr("x", -10);
 
 
    //creating voronoi
@@ -1268,7 +1359,7 @@
          return -1
        } else return 1
      })
-   console.log(popularSongs)
+
 
 
    const annotationsMean = popularSongs.map(song => {
@@ -1788,6 +1879,16 @@
      mean_millennial_recognition: +song.mean_millennial_recognition
    })).sort((a, b) => b.mean_gen_z_recognition - a.mean_gen_z_recognition)
 
+   lollipopData.forEach(item => {
+
+     const currentKey = item.artist_song
+     const previewSong = previewData.filter(previewItem => previewItem.artist_song === currentKey)[0]
+     if (previewSong) {
+       item.song_url = previewSong.song_url
+     } else item.song_url = ''
+
+   })
+
 
    const numSongs = lollipopData.length
    // todo check if mobile and decide on the right multiplier
@@ -1795,26 +1896,28 @@
    const chartHeight = (numSongs * songHeight) + margin.top + margin.bottom
    const thisChartPaddingLeft = +d3.select('.chart-container__lollipop').style('padding-left').split('px')[0]
    const thisChartPaddingRight = +d3.select('.chart-container__lollipop').style('padding-right').split('px')[0]
-   const chartWidth = width - thisChartPaddingLeft - thisChartPaddingRight
+   let chartWidth = Math.min(width, 800) - margin.left - margin.right;
 
 
 
-   const scaleWidth = mob ? chartWidth / 3 : chartWidth / 4;
+   const scaleWidth = margin.left
 
    scaleLollipopX = d3.scaleLinear()
      .domain([0, 1])
-     .range([mob ? chartWidth - margin.left / 2 : width - margin.left - margin.right, scaleWidth])
+     .range([chartWidth, scaleWidth * 4.5])
+
+
 
 
    $svgLollipop
-     .attr('width', chartWidth)
-     .attr('height', chartHeight)
+     .attr('width', chartWidth + margin.left + margin.right)
+     .attr('height', chartHeight + margin.top + margin.bottom)
 
 
    $svgLollipopG = $svgLollipop
      .append('g')
      .attr('class', 'chart lollipop-g')
-     .attr('transform', `translate(${mob? 0 : margin.left},${margin.top})`)
+     .attr('transform', `translate(${margin.left},${0})`)
 
    $svgLollipopG
      .append('g')
@@ -1855,10 +1958,22 @@
        } else return d.artist_song.split('|||')[1]
      })
 
+   d3.xml('assets/images/sound.svg')
+     .then(svg => {
+       d3.select('svg.chart__lollipop')
+         .selectAll('g.lollipop-song-g')
+         .append('g')
+         .attr('class', 'sound-icon-g')
+         .attr('transform', 'translate(2, 9)')
+         .nodes()
+         .forEach(n => n.append(svg.documentElement.cloneNode(true)))
+     })
+
+
 
    $svgLollipopSongsG
      .append('text')
-     .attr('x', 0)
+     .attr('x', 24)
      .attr('y', 20)
      .attr('class', 'lollipop-song-artist')
      .text(d => {
@@ -1908,6 +2023,10 @@
 
 
 
+   $svgLollipopG = $svgLollipop
+     .append('g')
+     .attr('class', 'chart lollipop-g')
+     .attr('transform', `translate(${margin.left},${margin.top/2})`)
 
 
 
@@ -1918,12 +2037,13 @@
 
    $svgLollipopXAxisFixed
      .attr('height', songHeight / 1.5)
-     .attr('width', chartWidth)
+     .attr('width', chartWidth + margin.left + margin.right)
+
 
    const $svgLollipopXAxisFixedG = $svgLollipopXAxisFixed
      .append('g')
-     .attr('class', 'axis x fixed lollipop-g')
-     .attr('transform', `translate(${mob ? 0 : margin.left},${margin.top})`)
+     .attr('class', 'axis x fixed lollipop-g line-chart')
+     .attr('transform', `translate(${margin.left},${margin.top/2})`)
 
    //    $svgLollipopXAxisFixedG
    //      .append('text')
@@ -1942,7 +2062,7 @@
    const lollipopAnnotations = [{
      note: {
        title: "Millennials",
-       bgPadding: 0
+       bgPadding: 2
      },
      //can use x, y directly instead of data
      data: {
@@ -1955,7 +2075,7 @@
    }, {
      note: {
        title: "Gen Z",
-       bgPadding: 0
+       bgPadding: 2
      },
      y: margin.top,
      //can use x, y directly instead of data
@@ -1996,7 +2116,11 @@
    //      .attr('transform', `translate(${-margin.left},${0 })`)
 
 
-
+   //    svgLollipopG.selectAll('.lollipop-song-g').selectAll('svg')
+   //      .attr('class', 'sound-icon')
+   //      .attr('width', 21)
+   //      .attr('height', 21)
+   //      .attr('cy', songHeight / 2)
 
 
  }
@@ -2004,9 +2128,10 @@
  function makeAllCharts() {
 
    // Load data
-   loadData(['time_series_90s_d3.csv', 'lollipop_chart_data.csv'])
+   loadData(['time_series_90s_d3.csv', 'lollipop_chart_data.csv', 'song_previews.csv'])
      .then(results => {
 
+       previewData = results[2]
        data = d3.nest()
          .key(d => d.artist_song.trim()) //NB trimmed whitespace from artist_song names, just in case
          .entries(results[0].filter(result => result.recognition > 0))
@@ -2025,7 +2150,21 @@
              .sort((a, b) => a.generation - b.generation) //sort generation values for each song
          }))
 
+
+       data.forEach(item => {
+         const currentKey = item.key
+         const previewSong = previewData.filter(previewItem => previewItem.artist_song === currentKey)[0]
+         if (previewSong) {
+           item.song_url = previewSong.song_url
+         } else item.song_url = ''
+
+       })
+
        console.log(data)
+
+
+
+
 
        makeProclaimersDreChart(data)
        makeNoDiggityChart(data)
@@ -2036,8 +2175,11 @@
        makeNarrativeChart(data, 'millennial-only', millennialOnlySongs)
        makeLollipopChart(results[1])
 
+
      })
      .then(setupEnterView)
+     .then(setupHowlerList)
+     .then(setupHowlerPlayback)
      .catch(console.error);
  }
 

@@ -65,6 +65,25 @@ figure.sticky
     line
       display none
 
+.lollipop-g
+    .sound-icon-g
+        cursor pointer
+        svg
+            cursor pointer
+            path
+                fill #52370C
+                cursor pointer
+    .x
+        .tick
+            line
+                display initial
+                stroke-dasharray: 3,3
+    .annotation-note-bg
+        fill #FEEFD7
+        fill-opacity: 1
+        display: initial
+
+
 .tick
     line
         opacity 0.2
@@ -256,12 +275,14 @@ text.label-axis-y
     font-family: 'Atlas Grotesk Web'
 
 .lollipop-song-title
+    cursor pointer
     font-size: 16px
     fill #52370C
     @media (max-width: 550px)
         font-size 14px
 
 .lollipop-song-artist
+    cursor pointer
     font-size 16px
     fill #645D52
     opacity 0.8
@@ -524,6 +545,13 @@ text.lollipop-x-axis-label
                 display inline-block
             .song-examples>.song-example
                 flex: 0 50%;
+
+
+.sound-icon-span
+    padding-right 0.5rem
+    cursor pointer
+    path
+        fill #52370C
 
 .chart-container__lollipop
     @media (max-width: 550px)
