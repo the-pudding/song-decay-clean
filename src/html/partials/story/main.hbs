@@ -1,4 +1,4 @@
-<section class='story intro'>
+<section class='story lede'>
 
 
     <div class='chart-container__proclaimers-dre'>
@@ -7,6 +7,21 @@
         <svg class='chart__proclaimers-dre'></svg>
     </div>
 
+    <div class='hed'>{{doc.hed}}</div>
+
+    <p class='intro__byline'>By
+
+        <a href='{{meta.author.url1}}' target='_blank'>
+            <strong>{{meta.author.name1}}</strong>
+        </a>
+
+        and
+
+        <a href='{{meta.author.url2}}' target='_blank'>
+            <strong>{{meta.author.name2}}</strong>
+        </a>
+    </p>
+    <time class='intro__time'>June 2020</time>
 
 
     {{#each doc.intro-no-diggity}}

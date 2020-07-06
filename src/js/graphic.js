@@ -357,6 +357,40 @@
  // making charts
  function makeProclaimersDreChart(data) {
 
+
+   var Quo = function (string) {
+     this.status = string;
+
+   };
+
+   // Give all instances of Quo a public method
+   // called get_status.
+
+   //    Quo.prototype.get_status = function () {
+   //      return this.status;
+   //    };
+
+   //    // Make an instance of Quo.
+
+   //    var myQuo = new Quo("confused");
+   //    console.log(myQuo)
+
+   //    console.log(myQuo.get_status()); // confused
+
+
+   //    const logger = function () {
+   //      console.log('My this ', this);
+   //      console.log(this.message);
+   //    };
+
+   //    const error = {
+   //      status: 404,
+   //      message: 'Not found'
+   //    };
+
+   //    logger.call(error)
+
+
    const annotations = [{
        note: {
          label: "Dr. Dre - Nuthin' But A G Thang",
@@ -364,8 +398,8 @@
        },
        //can use x, y directly instead of data
        data: {
-         generation: mob ? 0 : 5,
-         recognition: 0.35
+         generation: mob ? 1993 + 0 : 1993 + 5,
+         recognition: mob ? 0.5 : 0.35
        },
        className: "dre-anno",
        //   dy: 137,
@@ -378,7 +412,7 @@
        },
        //can use x, y directly instead of data
        data: {
-         generation: mob ? 4 : 5,
+         generation: mob ? 1993 + 2 : 1993 + 5,
          recognition: 0.94137931
        },
        className: "proclaimers-anno",
@@ -475,15 +509,6 @@
      .join('g')
      .attr('class', d => `song-g ${cleanSongName(d.key)}`)
 
-   //    $svgProclaimersDreSongGs
-   //      .selectAll('circle.song-year')
-   //      .data(d => d.values)
-   //      .join('circle')
-   //      .attr('class', d => `${cleanSongName(d.artist_song)} song-year-circles`)
-   //      .attr('cx', d => scaleProclaimersDreX(d.generation))
-   //      .attr('cy', d => scaleProclaimersDreY(d.recognition))
-   //      .attr('r', 5)
-
    $svgProclaimersDreSongGs
      .append('path')
      .attr('class', 'line proclaimers-dre')
@@ -558,8 +583,8 @@
    let chartHeight = mob ? chartWidth - margin.top - margin.bottom : chartWidth * .6 - margin.top - margin.bottom
 
    const CHART_SCREEN_PCT_WIDTH = mob ? 0.95 : 0.75
-   const thisChartPaddingLeft = +d3.select('section.story.intro').style('padding-left').split('px')[0]
-   const thisChartPaddingRight = +d3.select('section.story.intro').style('padding-right').split('px')[0]
+   const thisChartPaddingLeft = +d3.select('section.lede').style('padding-left').split('px')[0]
+   const thisChartPaddingRight = +d3.select('section.lede').style('padding-right').split('px')[0]
 
 
    const chartWidthPadding = (1 - CHART_SCREEN_PCT_WIDTH) * width / 2
@@ -673,7 +698,7 @@
        note: {
          title: "13-year-olds",
          label: "at moment of No Diggity's release",
-         bgPadding: mob ? 2 : 20
+         bgPadding: mob ? 0 : 20
        },
        //can use x, y directly instead of data
        data: {
@@ -681,8 +706,7 @@
          recognition: 0.8644067797
        },
        className: "show-bg",
-       dy: mob ? chartHeight / 2 : chartHeight / 7,
-       //   dx: 162
+       dy: mob ? chartHeight / 3 : chartHeight / 7
      },
      {
        note: {
@@ -708,10 +732,10 @@
        //can use x, y directly instead of data
        data: {
          generation: 1996,
-         recognition: 0.5526315789
+         recognition: mob ? 1 : 0.5526315789
        },
        className: "show-bg",
-       dy: chartHeight / 6,
+       dy: mob ? (0) : chartHeight / 6,
        //   dx: 162
      }
    ]
@@ -1139,7 +1163,7 @@
 
    d3.xml('assets/images/sound.svg')
      .then(svg => {
-       console.log(`${songChart}`)
+
 
        d3.select(`figure.${songChart}-songs`)
          .select('div.song-examples')
@@ -2160,7 +2184,7 @@
 
        })
 
-       console.log(data)
+       //    console.log(data)
 
 
 
