@@ -295,6 +295,17 @@
  // setup
  function setupDOM() {
 
+   //    d3.selectAll('.howler-icon').html('<svg class="testclass"></svg>   ')
+   d3.xml('assets/images/sound.svg')
+     .then(svg => {
+       d3.selectAll('.howler-icon')
+         .append('span')
+         .attr('class', 'sound-icon-span')
+         .nodes()
+         .forEach(n => n.append(svg.documentElement.cloneNode(true)))
+     })
+
+
    $svgProclaimersDre = d3.select('svg.chart__proclaimers-dre')
    $svgNoDiggity = d3.select('svg.chart__no-diggity')
    $svgAceOfBase = d3.select('svg.chart__ace-of-base')
@@ -748,23 +759,23 @@
          generation: (-5 + 1996),
          recognition: 0.8679245283
        },
-       className: "show-bg",
+       className: "show-bg note-five-yr-old",
        dy: chartHeight / 4,
        //   dx: 162
      },
      {
        note: {
          title: "Born",
-         label: "the same year",
-         bgPadding: mob ? 2 : 20
+         label: "when song was released",
+         bgPadding: mob ? 0 : 20
        },
        //can use x, y directly instead of data
        data: {
          generation: 1996,
-         recognition: mob ? 1 : 0.5526315789
+         recognition: 0.5526315789
        },
        className: "show-bg",
-       dy: mob ? (0) : chartHeight / 6,
+       dy: mob ? 5 : chartHeight / 6,
        //   dx: 162
      }
    ]
@@ -1398,7 +1409,7 @@
    const thisChartPaddingLeft = +d3.select('section.scroll').style('padding-left').split('px')[0]
    const thisChartPaddingRight = +d3.select('section.scroll').style('padding-right').split('px')[0]
 
-   const chartWidth = mob ? CHART_SCREEN_PCT_WIDTH * width - thisChartPaddingLeft - thisChartPaddingRight : CHART_SCREEN_PCT_WIDTH * width
+   const chartWidth = Math.min(width, 800) - margin.left - margin.right;
    //    const chartWidth = CHART_SCREEN_PCT_WIDTH * width
 
    //whatever width we decided for the chart, take the remaining width of screen,
@@ -1406,7 +1417,7 @@
    const chartWidthPadding = (1 - CHART_SCREEN_PCT_WIDTH) * width / 2
 
    const popularSongs = data
-     .filter(song => song.key === 'mean' || song.values[0].recognition >= 0.95)
+     .filter(song => song.key === 'mean' || song.values[0].recognition >= 0.9)
      .sort((a, b) => {
        if (a.key === 'mean') {
          return -1
@@ -2228,7 +2239,7 @@
        makeNarrativeChart(data, 'underperforming', underperformingSongs)
        makeNarrativeChart(data, 'overperforming', overperformingSongs)
        makeNarrativeChart(data, 'millennial-only', millennialOnlySongs)
-       makeLollipopChart(results[1])
+       //    makeLollipopChart(results[1])
 
 
      })

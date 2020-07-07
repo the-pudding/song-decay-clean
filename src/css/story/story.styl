@@ -5,6 +5,7 @@
     max-width 60rem
     margin 0 auto
     padding 6rem 0 1rem 0
+    text-align center
 
 body
     background-color: #FEEFD7
@@ -45,6 +46,8 @@ figure.sticky
     max-width 500px
     margin 0 auto
     margin-bottom 1.5rem
+    .sound-icon-span
+        padding-right 0
 
 
 .chart-container__no-diggity
@@ -238,15 +241,21 @@ text.label-axis-y
                     opacity: 0.8;
                     fill: #FEEFD7;
                     fill-opacity: 1;
+                    display initial
                 .annotation-note-label
                     font-weight: 200
                     font-size 16px
                     @media (max-width: 550px)
-                        font-size 14px
+                        font-size 12px
                 .annotation-note-title
                     font-size 16px
                     @media (max-width: 550px)
-                        font-size 14px
+                        font-size 12px
+.note-five-yr-old
+    @media (max-width: 550px)
+        display: none
+
+
 
 .ace-of-base-g
     .annotation-group
