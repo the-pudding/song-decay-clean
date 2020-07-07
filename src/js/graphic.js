@@ -19,6 +19,7 @@
  let previewData;
 
  const howlerList = []
+ const howlerObj = {}
  let currentlyPlayingSong;
 
  const proclaimersDreSongs = ["Proclaimers, The|||I'm Gonna Be", "Dr. Dre|||Nuthin' But A G Thang"]
@@ -225,13 +226,25 @@
      });
    }
 
+   const inTextSamples = [{
+       artist_song: 'no-diggity',
+       song_url: `https://p.scdn.co/mp3-preview/d887520d295cec271b8396b4c131f5f55348c3a3`
+     },
+     {
+       artist_song: 'the-sign',
+       song_url: 'https://p.scdn.co/mp3-preview/304efabb42448c99202a7659e43b502a6324d981'
+     }, {
+       artist_song: 'wild-wild-west',
+       song_url: 'https://p.scdn.co/mp3-preview/3adf0f00d728e3ab23c7dd167dbaedfdcd2ef6fe'
+     }
+   ]
 
-   //    const sound = new Howl({
-   //      src: [`${d.song_url}.mp3`],
-   //      volume: 0.8
-   //    });
-   //    sound.play()
-   //  })
+   for (let i = 0; i < inTextSamples.length; i++) {
+     howlerList[inTextSamples[i].artist_song] = new Howl({
+       src: [`${inTextSamples[i].song_url}.mp3`]
+     });
+   }
+
 
 
  }
@@ -258,6 +271,22 @@
      }
      howlerList[d.artist_song].play()
      currentlyPlayingSong = d.artist_song
+   })
+
+   d3.selectAll('.howler-icon').on('click', (d, i, n) => {
+     const howlIcon = n[i]
+     const howlSong = howlIcon.getAttribute('data-attribute')
+
+     Object.keys(howlerList).forEach(key => howlerList[key].stop());
+
+     if (howlSong === currentlyPlayingSong) {
+       howlerList[howlSong].stop()
+       currentlyPlayingSong = null
+       return
+     }
+     howlerList[howlSong].play()
+     currentlyPlayingSong = howlSong
+
    })
 
 
@@ -1246,9 +1275,9 @@
      .x(d => scaleXObj(d.generation))
      .y(d => scaleYObj(d.recognition))
      .extent([
-       [0, 0],
-       [(chartWidth - margin.right - margin.left),
-         (chartHeight - margin.top - margin.bottom)
+       [-margin.left, -margin.top],
+       [(chartWidth - margin.left),
+         (chartHeight - margin.bottom)
        ]
      ])
 
@@ -1897,7 +1926,7 @@
 
    let scaleLollipopX;
 
-   const lollipopData = data.map(song => ({
+   let lollipopData = data.map(song => ({
      ...song,
      mean_gen_z_recognition: +song.mean_gen_z_recognition,
      mean_millennial_recognition: +song.mean_millennial_recognition
@@ -1912,6 +1941,8 @@
      } else item.song_url = ''
 
    })
+   console.log(lollipopData)
+   //    lollipopData = lollipopData.filter(song => song.song_url !== 'https://p.scdn.co/mp3-preview/87cd92b04f6501ecace9f7f2a6b12802fc2cc437')
 
 
    const numSongs = lollipopData.length
@@ -2176,7 +2207,7 @@
 
 
        data.forEach(item => {
-         const currentKey = item.key
+         const currentKey = item.key.trim()
          const previewSong = previewData.filter(previewItem => previewItem.artist_song === currentKey)[0]
          if (previewSong) {
            item.song_url = previewSong.song_url
@@ -2184,7 +2215,7 @@
 
        })
 
-       //    console.log(data)
+       console.log(data)
 
 
 
