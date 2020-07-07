@@ -1278,19 +1278,23 @@
      .attr("x", -10);
 
 
+
+
+
    //creating voronoi
    const voronoi = d3.voronoi()
    const flatArray = d3.merge(popularSongs.map(d => d.values))
+
 
    voronoi
      .x(d => scaleXObj(d.generation))
      .y(d => scaleYObj(d.recognition))
      .extent([
-       [-margin.left, -margin.top],
-       [(chartWidth - margin.left),
-         (chartHeight - margin.bottom)
-       ]
+       [0, 0],
+       [chartWidth, chartHeight]
      ])
+
+   console.log(flatArray)
 
    const $voronoiGroup = $svgObjG
      .append('g')
@@ -1352,7 +1356,7 @@
          .classed('selected-songs', false)
 
      })
-     .attr('transform', `translate(${margin.left},${margin.bottom})`)
+   //  .attr('transform', `translate(${margin.left},${margin.bottom})`)
 
    $songExamples.on('mouseenter', song => {
        const currentSongs = ['Popular average', song.key];
@@ -2227,7 +2231,7 @@
            values: item.values.map(songYear => { //format value arrays to include objects w/nums, not strings
                const thisSongYear = {};
 
-               thisSongYear.artist_song = songYear.artist_song
+               thisSongYear.artist_song = songYear.artist_song.trim()
                thisSongYear.generation = +songYear.generation
                thisSongYear.recognition = +songYear.recognition
                thisSongYear.formatted_generation = yearToBirthYear(+songYear.generation)
