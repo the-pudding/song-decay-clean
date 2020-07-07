@@ -26,7 +26,7 @@
  const noDiggitySongs = ["BLACKstreet|||No Diggity"]
  const AceOfBaseSongs = ["Ace Of Base|||The Sign"]
  let colorScale;
- let masterPopularSongList = ["mean",
+ let masterPopularSongList = ["Popular average",
 
    "Will Smith|||Wild Wild West",
 
@@ -99,17 +99,17 @@
    "Paula Abdul|||Opposites Attract",
    "Jennifer Lopez|||If You Had My Love",
    "Backstreet Boys, The|||Quit Playing Games",
-   "mean"
+   "Popular average"
  ]
 
  const overperformingSongs = [
    "Coolio|||Gangsta's Paradise",
    "House Of Pain|||Jump Around",
    "Whitney Houston|||I Will Always Love You",
-   "R. Kelly|||I Believe I Can Fly",
-   "Sir Mix-A-Lot|||Baby Got Back",
+
+
    "Los Del Rio|||Macarena",
-   "mean"
+   "Popular average"
  ]
 
  const millennialOnlySongs = [
@@ -118,7 +118,7 @@
    "Bone Thugs N Harmony|||Tha Crossroads",
    "Savage Garden|||Truly Madly Deeply",
    //    "Bryan Adams|||Everything I Do I Do It For You",
-   "mean"
+   "Popular average"
  ]
 
 
@@ -948,7 +948,7 @@
      .attr('class', 'label-axis')
      .style("text-anchor", "middle")
      .attr('transform', `translate(${chartWidth/2},${chartHeight+40})`)
-     .text("Age when song was released");
+     .text("Age in 1993, when “The Sign” debuted");
 
 
    let $svgAceOfBaseSongGs = $svgAceOfBaseG
@@ -1042,7 +1042,7 @@
    const songsToHighlight = songsArray
 
    const popularSongs = data.filter(song => songsToHighlight.includes(song.key)).sort((a, b) => {
-     if (a.key === 'mean') {
+     if (a.key === 'Popular average') {
        return -1
      } else return 1
    })
@@ -1166,11 +1166,11 @@
      .attr('class', `line ${songChart}-recognition`) //TODO change variable
      .attr('d', d => line(d.values))
      .style('opacity', d => {
-       const opacity = d.key === 'mean' ? 1 : .07
+       const opacity = d.key === 'Popular average' ? 1 : .07
        return opacity
      })
      .style('stroke', d => {
-       const color = d.key === 'mean' ? '#52370c' : '#383838'
+       const color = d.key === 'Popular average' ? '#52370c' : '#383838'
        return color
      })
 
@@ -1190,7 +1190,7 @@
 
    //TODO choose more songs so that this doesn't look too sparse
    const $songExamples = $songExamplesBox.selectAll('div.song-example')
-     .data(popularSongs.filter(song => song.key !== 'mean'))
+     .data(popularSongs.filter(song => song.key !== 'Popular average'))
      .join('div')
      .attr('class', 'song-example')
 
@@ -1308,7 +1308,7 @@
 
 
        console.log(song.data)
-       const currentSongs = ['mean', song.data.artist_song];
+       const currentSongs = ['Popular average', song.data.artist_song];
 
        $svgObjSongBackgroundLines.classed('background-line-highlight', d => {
          if (currentSongs.includes(d.key)) return true //TODO add sorting by data value to actually have lines at the top   
@@ -1323,9 +1323,9 @@
          })
          .style('stroke', d => {
            let color;
-           if ((d.key === song.data.artist_song) && (song.data.artist_song !== 'mean')) {
+           if ((d.key === song.data.artist_song) && (song.data.artist_song !== 'Popular average')) {
              color = '#0a563f'
-           } else if (d.key === 'mean') {
+           } else if (d.key === 'Popular average') {
              color = '#52370c'
            } else {
              color = '#383838'
@@ -1340,11 +1340,11 @@
 
        $svgObjSongLines
          .style('opacity', d => {
-           const opacity = d.key === 'mean' ? 1 : .07
+           const opacity = d.key === 'Popular average' ? 1 : .07
            return opacity
          })
          .style('stroke', d => {
-           const color = d.key === 'mean' ? '#52370c' : '#383838'
+           const color = d.key === 'Popular average' ? '#52370c' : '#383838'
            return color
          })
 
@@ -1355,7 +1355,7 @@
      .attr('transform', `translate(${margin.left},${margin.bottom})`)
 
    $songExamples.on('mouseenter', song => {
-       const currentSongs = ['mean', song.key];
+       const currentSongs = ['Popular average', song.key];
        $svgObjSongLines
          .style('opacity', d => {
            const opacity = currentSongs.includes(d.key) ? 1 : .07
@@ -1365,7 +1365,7 @@
            let color;
            if (d.key === song.key) {
              color = '#0a563f'
-           } else if (d.key === 'mean') {
+           } else if (d.key === 'Popular average') {
              color = '#52370c'
            } else {
              color = '#383838'
@@ -1379,11 +1379,11 @@
      .on('mouseleave', song => {
        $svgObjSongLines
          .style('opacity', d => {
-           const opacity = d.key === 'mean' ? 1 : .07
+           const opacity = d.key === 'Popular average' ? 1 : .07
            return opacity
          })
          .style('stroke', d => {
-           const color = d.key === 'mean' ? '#52370c' : '#383838'
+           const color = d.key === 'Popular average' ? '#52370c' : '#383838'
            return color
          })
 
@@ -1417,9 +1417,9 @@
    const chartWidthPadding = (1 - CHART_SCREEN_PCT_WIDTH) * width / 2
 
    const popularSongs = data
-     .filter(song => song.key === 'mean' || song.values[0].recognition >= 0.9)
+     .filter(song => song.key === 'Popular average' || song.values[0].recognition >= 0.9)
      .sort((a, b) => {
-       if (a.key === 'mean') {
+       if (a.key === 'Popular average') {
          return -1
        } else return 1
      })
@@ -1465,13 +1465,13 @@
 
    const svgWidth = mob ? chartWidth : width
    $svgMean
-     .attr('width', svgWidth)
-     .attr('height', height)
+     .attr('width', chartWidth + margin.left + margin.right)
+     .attr('height', chartHeight + margin.top + margin.bottom)
 
    $svgMeanG = $svgMean
      .append('g')
      .attr('class', 'chart mean-g')
-     .attr('transform', `translate(${chartWidthPadding},${margin.top})`)
+     .attr('transform', `translate(${margin.left},${margin.top})`)
 
    const scaleObj = getScaleMinMax(popularSongs)
 
@@ -1479,12 +1479,12 @@
 
    scaleMeanX = d3.scaleLinear()
      .domain([scaleObj.xMin, scaleObj.xMax])
-     .range([0, chartWidth - margin.left - margin.right])
+     .range([0, chartWidth])
 
 
    scaleMeanY = d3.scaleLinear()
      .domain([0, scaleObj.yMax])
-     .range([chartHeight - margin.top - margin.bottom, 0])
+     .range([chartHeight, 0])
 
 
    const line = d3.line()
@@ -1499,8 +1499,9 @@
    $svgMeanG
      .append('g')
      .attr('class', 'axis x scroll')
+     .attr('transform', `translate(0,${chartHeight})`)
      .call(d3.axisBottom(scaleMeanX).tickFormat(d3.format('')).ticks(ticksNum))
-     .attr('transform', `translate(${margin.left},${chartHeight-margin.bottom})`)
+
 
 
 
@@ -1539,7 +1540,7 @@
        .tickFormat(d3.format('.0%'))
        .ticks(5)
      )
-     .attr('transform', `translate(${margin.left},${margin.bottom})`)
+
 
 
    $svgMeanG.append("text")
@@ -1548,7 +1549,7 @@
      .attr("dy", "1em")
      .attr('class', 'label-axis')
      .style("text-anchor", "middle")
-     .attr('transform', `translate(${mob? margin.left+chartWidth/3 : margin.left+chartWidth/2},${chartHeight+margin.bottom/2})`)
+     .attr('transform', `translate(${chartWidth/2},${chartHeight+40})`)
      .text("Age when song was released");
 
 
@@ -1557,7 +1558,7 @@
      .data(popularSongs)
      .join('g')
      .attr('class', d => `song-g ${cleanSongName(d.key)}`)
-     .attr('transform', `translate(${margin.left},${margin.top})`)
+   //  .attr('transform', `translate(${margin.left},${margin.top})`)
 
 
 
@@ -1572,41 +1573,61 @@
      .attr('class', 'line mean-recognition')
      .attr('d', d => line(d.values))
      .style('opacity', d => {
-       const opacity = d.key === 'mean' ? 1 : .07
+       console.log(d.key)
+       const opacity = d.key === 'Popular average' ? 1 : .07
        return opacity
      })
      .style('stroke', d => {
-       const color = d.key === 'mean' ? '#52370c' : '#383838'
+       const color = d.key === 'Popular average' ? '#52370c' : '#383838'
        return color
      })
 
 
 
-   const yAxisAnnotation = [{
-     note: {
-       title: "% of People Who Know Song",
-       bgPadding: 20,
-       wrap: mob ? 300 : 0
-     },
-     //can use x, y directly instead of data
-     data: {
-       generation: (-15),
-       recognition: 1
-     },
-     className: "show-bg"
-     // dy: chartHeight / 7,
-     //   dx: 162
-   }]
-
-   const makeYAxisLabel = setupAnnotations(scaleMeanX, scaleMeanY, yAxisAnnotation)
-
-   $svgMeanG
+   const $svgMeanGYLabels = $svgMeanG
      .append("g")
-     .attr("class", "annotation-y-axis")
-     .call(makeYAxisLabel)
+     .attr("class", "labels-axis-y")
 
-   $svgMeanG.select('.annotation-y-axis')
-     .attr('transform', `translate(${mob ? 0 :-margin.left},${0 })`)
+   $svgMeanGYLabels
+     .append("text")
+     .attr("y", -40)
+     .attr("x", 0)
+     .attr("dx", 0)
+     .attr('class', 'label-axis label-axis-y-bg')
+     .style("text-anchor", "start")
+     .attr('transform', `translate(-34,0)`)
+     .selectAll("tspan")
+     .data(["% of People", "Who Know", "Song"])
+     .enter()
+     .append("tspan")
+     .text(function (d) {
+       return d;
+     })
+     .attr("dy", function (d, i) {
+       return 1.1 + "em";
+     })
+     .attr("x", -10);
+
+   $svgMeanGYLabels
+     .append("text")
+     .attr("y", -40)
+     .attr("x", 0)
+     .attr("dx", 0)
+     .attr('class', 'label-axis label-axis-y')
+     .style("text-anchor", "start")
+     .attr('transform', `translate(-34,0)`)
+     .selectAll("tspan")
+     .data(["% of People", "Who Know", "Song"])
+     .enter()
+     .append("tspan")
+     .text(function (d) {
+       return d;
+     })
+     .attr("dy", function (d, i) {
+       return 1.1 + "em";
+     })
+     .attr("x", -10);
+
 
 
    if (mob) {
@@ -1636,7 +1657,7 @@
    $svgMeanG.select('.annotation-group-mean')
      .selectAll('g.annotation.label')
      .classed('invisible', d => {
-       if (d.note.label === 'mean') {
+       if (d.note.label === 'Popular average') {
          return false
        }
        return true
@@ -1646,7 +1667,7 @@
    $svgMeanG.select('.annotation-group-mean-background')
      .selectAll('g.annotation.label')
      .classed('invisible', d => {
-       if (d.note.label === 'mean') {
+       if (d.note.label === 'Popular average') {
          return false
        }
        return true
@@ -1690,7 +1711,7 @@
        $svgMeanG
          .select(`g.${currentSong}`)
          .select('path.line')
-         .style('stroke', item => item.key === 'mean' ? '#52370c' : "#2C9BD9")
+         .style('stroke', item => item.key === 'Popular average' ? '#52370c' : "#2C9BD9")
          .style('opacity', 1)
 
 
@@ -1735,11 +1756,11 @@
 
        $svgMeanSongLines
          .style('opacity', d => {
-           const opacity = d.key === 'mean' ? 1 : .07
+           const opacity = d.key === 'Popular average' ? 1 : .07
            return opacity
          })
          .style('stroke', d => {
-           const color = d.key === 'mean' ? '#52370c' : '#383838'
+           const color = d.key === 'Popular average' ? '#52370c' : '#383838'
            return color
          })
 
@@ -1748,7 +1769,7 @@
        $svgMeanG.select('.annotation-group-mean-background')
          .selectAll('g.annotation.label')
          .classed('invisible', d => {
-           if (d.note.label === 'mean') {
+           if (d.note.label === 'Popular average') {
              return false
            }
            return true
@@ -1757,7 +1778,7 @@
        $svgMeanG.select('.annotation-group-mean')
          .selectAll('g.annotation.label')
          .classed('invisible', d => {
-           if (d.note.label === 'mean') {
+           if (d.note.label === 'Popular average') {
              return false
            }
            return true
