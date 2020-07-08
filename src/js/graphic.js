@@ -1229,6 +1229,11 @@
      .attr('class', 'song-example__artist')
      .text(d => d.key.split('|||')[0])
 
+   $songExamplesArtists
+     .append('span')
+     .attr('class', 'song-example__year')
+     .text(d => `, ${d.year}`)
+
 
 
 
@@ -1294,7 +1299,7 @@
        [chartWidth, chartHeight]
      ])
 
-   console.log(flatArray)
+   //    console.log(flatArray)
 
    const $voronoiGroup = $svgObjG
      .append('g')
@@ -1311,7 +1316,7 @@
 
 
 
-       console.log(song.data)
+       //    console.log(song.data)
        const currentSongs = ['Popular average', song.data.artist_song];
 
        $svgObjSongBackgroundLines.classed('background-line-highlight', d => {
@@ -1577,7 +1582,7 @@
      .attr('class', 'line mean-recognition')
      .attr('d', d => line(d.values))
      .style('opacity', d => {
-       console.log(d.key)
+       //    console.log(d.key)
        const opacity = d.key === 'Popular average' ? 1 : .07
        return opacity
      })
@@ -1961,6 +1966,7 @@
  function makeLollipopChart(data) {
 
    let scaleLollipopX;
+   console.log(data)
 
    let lollipopData = data.map(song => ({
      ...song,
@@ -1969,12 +1975,12 @@
    })).sort((a, b) => b.mean_gen_z_recognition - a.mean_gen_z_recognition)
 
    lollipopData.forEach(item => {
-
      const currentKey = item.artist_song
      const previewSong = previewData.filter(previewItem => previewItem.artist_song === currentKey)[0]
      if (previewSong) {
        item.song_url = previewSong.song_url
      } else item.song_url = ''
+
 
    })
    console.log(lollipopData)
@@ -2038,15 +2044,15 @@
      .attr('y', 0)
      .attr('class', 'lollipop-song-title')
      .text(d => {
-       if (mob) {
-         const truncated = truncate({
-           text: d.artist_song.split('|||')[1],
-           chars: 13,
-           ellipses: true
-         })
-         //  console.log(truncated)
-         return truncated
-       } else return d.artist_song.split('|||')[1]
+
+       const truncated = truncate({
+         text: d.artist_song.split('|||')[1],
+         chars: 25,
+         ellipses: true
+       })
+       //  console.log(truncated)
+       return truncated
+
      })
 
    d3.xml('assets/images/sound.svg')
@@ -2062,22 +2068,32 @@
 
 
 
+
    $svgLollipopSongsG
      .append('text')
      .attr('x', 24)
      .attr('y', 20)
+     .attr('class', 'lollipop-song-year')
+     .text(d => `${d.year},`)
+
+   $svgLollipopSongsG
+     .append('text')
+     .attr('x', 65)
+     .attr('y', 20)
      .attr('class', 'lollipop-song-artist')
      .text(d => {
-       if (mob) {
-         const truncated = truncate({
-           text: d.artist_song.split('|||')[0],
-           chars: 13,
-           ellipses: true
-         })
-         //  console.log(truncated)
-         return truncated
-       } else return d.artist_song.split('|||')[0]
+
+       const truncated = truncate({
+         text: d.artist_song.split('|||')[0],
+         chars: 13,
+         ellipses: true
+       })
+       //  console.log(truncated)
+       return truncated
+
      })
+
+
 
 
    const RECT_HEIGHT = 6
@@ -2219,7 +2235,8 @@
  function makeAllCharts() {
 
    // Load data
-   loadData(['time_series_90s_d3.csv', 'lollipop_chart_data.csv', 'song_previews.csv'])
+   // old data time_series_90s_d3.csv
+   loadData(['time_series_90s_d3_13_15_averaged.csv', 'lollipop_chart_data.csv', 'song_previews.csv', 'song_years.csv'])
      .then(results => {
 
        previewData = results[2]
@@ -2242,16 +2259,36 @@
          }))
 
 
+       //   data.forEach(item => {
+       //     const currentKey = item.key.trim()
+       //     const previewSong = previewData.filter(previewItem => previewItem.artist_song === currentKey)[0]
+       //     if (previewSong) {
+       //       item.song_url = previewSong.song_url
+       //     } else item.song_url = ''
+
+       //   })
+
+
        data.forEach(item => {
          const currentKey = item.key.trim()
-         const previewSong = previewData.filter(previewItem => previewItem.artist_song === currentKey)[0]
+         const previewSong = results[3].filter(previewItem => previewItem.artist_song === currentKey)[0]
          if (previewSong) {
-           item.song_url = previewSong.song_url
-         } else item.song_url = ''
-
+           item.year = +previewSong.year
+         } else item.year = ''
+         item.values = item.values
        })
 
-       console.log(data)
+       //adding year to lollipop chart data
+       results[1].forEach(item => {
+         const currentKey = item.artist_song.trim()
+         const previewSong = results[3].filter(previewItem => previewItem.artist_song.trim() === currentKey)[0]
+         if (previewSong) {
+           item.year = +previewSong.year
+         } else item.year = ''
+         item.mean_gen_z_recognition = item.mean_gen_z_recognition;
+         item.mean_millennial_recognition = item.mean_millennial_recognition;
+         item.artist_song = item.artist_song;
+       })
 
 
 
@@ -2264,7 +2301,7 @@
        makeNarrativeChart(data, 'underperforming', underperformingSongs)
        makeNarrativeChart(data, 'overperforming', overperformingSongs)
        makeNarrativeChart(data, 'millennial-only', millennialOnlySongs)
-       //    makeLollipopChart(results[1])
+       makeLollipopChart(results[1])
 
 
      })
