@@ -10,14 +10,14 @@ header
 	a.logo
 		display block
 		border none
-		max-width 9rem
+		max-width 7rem
 		margin 1rem auto
 
 		svg
 			fill #52370C
 			display block
 			width 100%
-	
+
 header.is-sticky
 	position fixed
 	transform translate3d(0,0,0)
@@ -26,10 +26,10 @@ header.is-sticky
 	height 3rem
 	display flex
 	align-items center
-	
+
 	a.logo
 		margin 0 auto
-	
+
 	.header__toggle
 		position fixed
 		transform translate3d(0,0,0)
@@ -39,17 +39,17 @@ header.is-sticky
 		cursor pointer
 		line-height 1
 		z-index set-index(overlay)
-		border none 
+		border none
 		background-color transparent
 		svg
 			stroke #52370C
-		
+
 		span
 			&:first-of-type
 				display block
 			&:last-of-type
 				display none
-		
+
 		&.is-visible span
 			&:first-of-type
 				display none
@@ -149,9 +149,7 @@ header.is-sticky.is-dark
 	.header__toggle
 		svg
 			stroke $off-white
-		
+
 		&.is-visible span
 			svg
 				stroke $off-black
-
-

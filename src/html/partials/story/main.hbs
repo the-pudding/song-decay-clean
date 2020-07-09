@@ -1,27 +1,7 @@
 <section class='story lede'>
 
 
-    <div class='chart-container__proclaimers-dre'>
-        <div class='chart-text'>
-        </div>
-        <svg class='chart__proclaimers-dre'></svg>
-    </div>
 
-    <div class='hed'>{{doc.hed}}</div>
-
-    <p class='intro__byline'>By
-
-        <a href='{{meta.author.url1}}' target='_blank'>
-            <strong>{{meta.author.name1}}</strong>
-        </a>
-
-        and
-
-        <a href='{{meta.author.url2}}' target='_blank'>
-            <strong>{{meta.author.name2}}</strong>
-        </a>
-    </p>
-    <time class='intro__time'>June 2020</time>
 
 
     {{#each doc.intro-no-diggity}}
@@ -30,10 +10,10 @@
 
 
 
-
+    <!-- <p class="chart-hed">{{{doc.no-diggity-hed}}}</p> -->
     <div class='chart-container__no-diggity'>
         <div class='chart-text'>
-            <div class='chart-hed'>{{doc.chart-text-hed-no-diggity}}</div>
+            <div class='chart-hed'>{{doc.no-diggity-hed}}</div>
             <div class='chart-subhed'>{{doc.chart-text-subhed-no-diggity}}</div>
         </div>
         <svg class='chart__no-diggity line-chart'></svg>
@@ -41,7 +21,7 @@
 
 
     {{#each doc.no-diggity-the-sign}}
-    <p class='story-text'>{{{text}}}</p>
+      <p class='story-text'>{{{text}}}</p>
     {{/each}}
 
 
