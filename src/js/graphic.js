@@ -222,7 +222,9 @@
 
    for (let i = 0; i < previewData.length; i++) {
      howlerList[previewData[i].artist_song] = new Howl({
-       src: [`${previewData[i].song_url}.mp3`]
+       src: [`${previewData[i].song_url}.mp3`],
+       volume: .5,
+       preload: false
      });
    }
 
@@ -241,7 +243,9 @@
 
    for (let i = 0; i < inTextSamples.length; i++) {
      howlerList[inTextSamples[i].artist_song] = new Howl({
-       src: [`${inTextSamples[i].song_url}.mp3`]
+       src: [`${inTextSamples[i].song_url}.mp3`],
+       volume: .5,
+       preload: false
      });
    }
 
@@ -257,11 +261,17 @@
        currentlyPlayingSong = null
        return
      }
-     howlerList[d.key].play()
-     currentlyPlayingSong = d.key
+
+     howlerList[d.key].once('load', function(){
+       howlerList[d.key].play();
+       currentlyPlayingSong = d.key
+     });
+     howlerList[d.key].load()
+
+
    })
 
-   d3.selectAll('g.lollipop-song-g').on('click', d => {
+   d3.selectAll('g.lollipop-song-g').select("sound-icon-g").on('click', d => {
      Object.keys(howlerList).forEach(key => howlerList[key].stop());
 
      if (d.artist_song === currentlyPlayingSong) {
@@ -269,11 +279,19 @@
        currentlyPlayingSong = null
        return
      }
-     howlerList[d.artist_song].play()
-     currentlyPlayingSong = d.artist_song
+
+     howlerList[d.artist_song].once('load', function(){
+       howlerList[d.artist_song].play()
+       currentlyPlayingSong = d.artist_song
+     });
+     howlerList[d.artist_song].load()
+
+
+
    })
 
    d3.selectAll('.howler-icon').on('click', (d, i, n) => {
+     console.log("clicking icon");
      const howlIcon = n[i]
      const howlSong = howlIcon.getAttribute('data-attribute')
 
@@ -284,8 +302,14 @@
        currentlyPlayingSong = null
        return
      }
-     howlerList[howlSong].play()
-     currentlyPlayingSong = howlSong
+
+     howlerList[howlSong].once('load', function(){
+       howlerList[howlSong].play();
+       currentlyPlayingSong = howlSong
+     });
+     howlerList[howlSong].load()
+
+
 
    })
 
@@ -392,8 +416,6 @@
    });
  }
 
-
-
  // making charts
  function makeProclaimersDreChart(data) {
 
@@ -402,34 +424,6 @@
      this.status = string;
 
    };
-
-   // Give all instances of Quo a public method
-   // called get_status.
-
-   //    Quo.prototype.get_status = function () {
-   //      return this.status;
-   //    };
-
-   //    // Make an instance of Quo.
-
-   //    var myQuo = new Quo("confused");
-   //    console.log(myQuo)
-
-   //    console.log(myQuo.get_status()); // confused
-
-
-   //    const logger = function () {
-   //      console.log('My this ', this);
-   //      console.log(this.message);
-   //    };
-
-   //    const error = {
-   //      status: 404,
-   //      message: 'Not found'
-   //    };
-
-   //    logger.call(error)
-
 
    const annotations = [{
        note: {
@@ -503,7 +497,7 @@
        scaleProclaimersDreX(d.generation))
      .y(d => scaleProclaimersDreY(d.recognition))
 
-   const ticksNum = mob ? 5 : 10
+   const ticksNum = mob ? 5 : 5
 
    $svgProclaimersDreG
      .append('g')
@@ -541,8 +535,6 @@
      .attr('transform', `translate(${chartWidth/2},${chartHeight+40})`)
      .text("Birth year");
 
-
-
    let $svgProclaimersDreSongGs = $svgProclaimersDreG
      .selectAll('g.song-g')
      .data(proclaimersDreData)
@@ -560,7 +552,6 @@
      .append("g")
      .attr("class", "annotation-group")
      .call(makeAnnotations)
-
 
    $svgProclaimersDreG.select(".annotation-group").clone("deep");
 
@@ -641,8 +632,6 @@
      }))
    }))
 
-
-
    const svgWidth = mob ? chartWidth : width
    $svgNoDiggity
      .attr('width', chartWidth + margin.left + margin.right)
@@ -666,13 +655,13 @@
 
 
    const line = d3.line()
-     .curve(d3.curveCardinal)
+     .curve(d3.curveBasis)
      .x(d =>
        scaleNoDiggityX(d.generation))
      .y(d => scaleNoDiggityY(d.recognition))
 
 
-   const tickNum = mob ? 4 : 8
+   const tickNum = mob ? 4 : 5
    $svgNoDiggityG
      .append('g')
      .attr('transform', `translate(0,${chartHeight})`)
@@ -688,14 +677,9 @@
        .tickSize(-chartWidth)
        .tickFormat(d3.format('.0%'))
        .ticks(5))
-   //  .attr('transform', `translate(${margin.left},${margin.bottom})`)
-
 
    $svgNoDiggityG.select(".y").selectAll(".tick").select("text")
      .attr("transform", "translate(-10,0)")
-
-
-
 
    $svgNoDiggityG.append("text")
      .attr("y", 0)
@@ -713,7 +697,6 @@
      .data(noDiggityData)
      .join('g')
      .attr('class', d => `song-g ${cleanSongName(d.key)}`)
-   //  .attr('transform', `translate(${margin.left},${margin.top})`)
 
 
    //adding circles to each song path
@@ -732,18 +715,16 @@
      .attr('class', 'line no-diggity')
      .attr('d', d => line(d.values))
 
-
-
    const annotations = [{
        note: {
-         title: "13-year-olds",
+         title: "11-year-olds",
          label: "at moment of No Diggity's release",
          bgPadding: mob ? 0 : 20
        },
        //can use x, y directly instead of data
        data: {
-         generation: (-13 + 1996),
-         recognition: 0.8644067797
+         generation: (-11 + 1996),
+         recognition: 0.8979591836734694
        },
        className: "show-bg",
        dy: mob ? chartHeight / 3 : chartHeight / 7
@@ -787,8 +768,15 @@
      .attr("class", "annotation-group")
      .call(makeAnnotations)
 
-   //    $svgNoDiggityG.select('.annotation-group')
-   //  .attr('transform', `translate(${margin.left},${margin.top })`)
+   $svgNoDiggityG.select(".annotation-group").clone("deep");
+
+   $svgNoDiggityG.selectAll(".annotation-group").classed("background-fill", function (d, i) {
+     if (i == 0) {
+       return true;
+     }
+     return false;
+   })
+
 
 
    const $svgNoDiggityYLabels = $svgNoDiggityG
@@ -875,7 +863,7 @@
 
 
    const line = d3.line()
-     .curve(d3.curveCardinal)
+     .curve(d3.curveBasis)
      .x(d =>
        scaleAceOfBaseX(d.generation))
      .y(d => scaleAceOfBaseY(d.recognition))
@@ -1023,7 +1011,6 @@
 
  }
 
-
  function makeNarrativeChart(data, selectedChart, songsArray) {
 
    const songChart = selectedChart
@@ -1076,7 +1063,7 @@
      .range([chartHeight, 0])
 
    const line = d3.line()
-     .curve(d3.curveCardinal)
+     .curve(d3.curveBasis)
      .x(d =>
        scaleXObj(d.generation))
      .y(d => scaleYObj(d.recognition))
@@ -1320,7 +1307,7 @@
        const currentSongs = ['Popular average', song.data.artist_song];
 
        $svgObjSongBackgroundLines.classed('background-line-highlight', d => {
-         if (currentSongs.includes(d.key)) return true //TODO add sorting by data value to actually have lines at the top   
+         if (currentSongs.includes(d.key)) return true //TODO add sorting by data value to actually have lines at the top
          else return false
        })
 
@@ -1497,7 +1484,7 @@
 
 
    const line = d3.line()
-     .curve(d3.curveCardinal)
+     .curve(d3.curveBasis)
      .x(d =>
        scaleMeanX(d.generation))
      .y(d => scaleMeanY(d.recognition))
@@ -1869,7 +1856,7 @@
 
 
    const line = d3.line()
-     .curve(d3.curveCardinal)
+     .curve(d3.curveBasis)
      .x(d =>
        scaleScrollX(d.generation))
      .y(d => scaleScrollY(d.recognition))
@@ -1966,7 +1953,6 @@
  function makeLollipopChart(data) {
 
    let scaleLollipopX;
-   console.log(data)
 
    let lollipopData = data.map(song => ({
      ...song,
@@ -1983,7 +1969,6 @@
 
 
    })
-   console.log(lollipopData)
    //    lollipopData = lollipopData.filter(song => song.song_url !== 'https://p.scdn.co/mp3-preview/87cd92b04f6501ecace9f7f2a6b12802fc2cc437')
 
 
@@ -2078,7 +2063,7 @@
 
    $svgLollipopSongsG
      .append('text')
-     .attr('x', 65)
+     .attr('x', 58)
      .attr('y', 20)
      .attr('class', 'lollipop-song-artist')
      .text(d => {
@@ -2097,7 +2082,7 @@
 
 
    const RECT_HEIGHT = 6
-   const CIRCLE_RADIUS = 9
+   const CIRCLE_RADIUS = 6
    const RECT_VERTICAL_BUMP = CIRCLE_RADIUS - RECT_HEIGHT
 
    $svgLollipopSongsG
@@ -2121,22 +2106,19 @@
      .attr('class', 'circle-millennial')
      .attr('r', `${CIRCLE_RADIUS}`)
      .attr('cx', d => scaleLollipopX(d.mean_millennial_recognition))
+     .attr('cy', `${CIRCLE_RADIUS/2}`)
 
    $svgLollipopSongsG
      .append('circle')
      .attr('class', 'circle-gen-z')
      .attr('r', `${CIRCLE_RADIUS}`)
      .attr('cx', d => scaleLollipopX(d.mean_gen_z_recognition))
-
-
+     .attr('cy', `${CIRCLE_RADIUS/2}`)
 
    $svgLollipopG = $svgLollipop
      .append('g')
      .attr('class', 'chart lollipop-g')
      .attr('transform', `translate(${margin.left},${margin.top/2})`)
-
-
-
 
    const $svgLollipopXAxisFixed = d3.select('.lollipop-x-axis-svg')
    //    const headerHeight = d3.select('header').style('height')

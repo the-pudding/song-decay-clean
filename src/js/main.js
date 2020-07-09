@@ -4,6 +4,8 @@ import isMobile from "./utils/is-mobile";
 import linkFix from "./utils/link-fix";
 import graphic from "./graphic";
 import footer from "./footer";
+import header from "./header";
+
 
 const $body = d3.select("body");
 let previousWidth = 0;
@@ -34,12 +36,13 @@ function setupStickyHeader() {
 function init() {
   // adds rel="noopener" to all target="_blank" links
   linkFix();
+  header.init();
   // add mobile class to body tag
   $body.classed("is-mobile", isMobile.any());
   // setup resize event
   window.addEventListener("resize", debounce(resize, 150));
   // setup sticky header menu
-  setupStickyHeader();
+  // setupStickyHeader();
   // kick off graphic code
   graphic.init();
   // load footer stories
