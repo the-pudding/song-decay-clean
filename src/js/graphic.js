@@ -1350,7 +1350,7 @@
        return 1.1 + "em";
      })
      .attr("x", -10);
-   
+
    $svgObjGYLabels
      .append("text")
      .attr("y", -40)
@@ -1933,7 +1933,7 @@
  }
 
 
-function makeScrollChart(data) {
+ function makeScrollChart(data) {
    const chartHeight = 0.6 * height
    const CHART_SCREEN_PCT_WIDTH = 0.75
    const chartWidth = CHART_SCREEN_PCT_WIDTH * width
@@ -1977,11 +1977,12 @@ function makeScrollChart(data) {
    let scaleScrollY;
 
 
+
    //svg width remains at full
    $svgScroll
      .attr('width', width)
      .attr('height', height)
-  
+
   $svgScrollG = $svgScroll
      .append('g')
      .attr('class', 'chart scroll-g')
@@ -2095,7 +2096,7 @@ function makeScrollChart(data) {
      .attr('transform', `translate(${-margin.left},${0 })`)
 
  }
- 
+
  function makeLollipopChart(data) {
 
    let scaleLollipopX;
