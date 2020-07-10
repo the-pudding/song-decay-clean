@@ -319,6 +319,11 @@
  // setup
  function setupDOM() {
 
+   d3.select(".see-more").on("click",function(d){
+     d3.select(this).remove();
+     d3.select(".chart-container__lollipop").classed("expanded",true);
+   })
+
    //    d3.selectAll('.howler-icon').html('<svg class="testclass"></svg>   ')
    d3.xml('assets/images/sound.svg')
      .then(svg => {
@@ -492,7 +497,7 @@
      .range([chartHeight, 0])
 
    const line = d3.line()
-     .curve(d3.curveBasis)
+     .curve(d3.curveCardinal)
      .x(d =>
        scaleProclaimersDreX(d.generation))
      .y(d => scaleProclaimersDreY(d.recognition))
@@ -655,7 +660,7 @@
 
 
    const line = d3.line()
-     .curve(d3.curveBasis)
+     .curve(d3.curveCardinal)
      .x(d =>
        scaleNoDiggityX(d.generation))
      .y(d => scaleNoDiggityY(d.recognition))
@@ -863,7 +868,7 @@
 
 
    const line = d3.line()
-     .curve(d3.curveBasis)
+     .curve(d3.curveCardinal)
      .x(d =>
        scaleAceOfBaseX(d.generation))
      .y(d => scaleAceOfBaseY(d.recognition))
@@ -1013,6 +1018,29 @@
 
  function makeNarrativeChart(data, selectedChart, songsArray) {
 
+   function rotateAndCenter(d){
+     let dataPoint = popularSongsMap.get(d.note.key).values.filter(function(d){
+       return d.generation == -2;
+     })[0].recognition;
+
+     let curveOne = popularSongsMap.get(d.note.key).values.filter(function(d){
+       return d.generation == -3;
+     })[0].recognition;
+
+     let curveTwo = popularSongsMap.get(d.note.key).values.filter(function(d){
+       return d.generation == -1;
+     })[0].recognition;
+
+
+     let delta_x = scaleXObj(-1) - scaleXObj(-3);
+     let delta_y = scaleYObj(curveOne) - scaleYObj(curveTwo);
+     let theta_radians = -Math.atan2(delta_y, delta_x) * 180 / Math.PI
+     if(d.note.key != "Popular average"){
+       theta_radians = 0;
+     }
+     return "translate("+chartWidth/2+","+(scaleYObj(dataPoint)+20)+"), rotate("+theta_radians+")";
+   }
+
    const songChart = selectedChart
 
 
@@ -1030,8 +1058,42 @@
 
    const popularSongs = data.filter(song => songsToHighlight.includes(song.key)).sort((a, b) => {
      if (a.key === 'Popular average') {
-       return -1
-     } else return 1
+       return 1
+     } else return -1
+   })
+
+   let popularSongsMap = d3.map(popularSongs,function(d){
+     return d.key;
+   })
+
+   const annotations = popularSongs.map(song => {
+
+     const songAnno = {}
+
+     const note = {}
+     note.label = song.key.replace('|||', ' - ')
+     note.bgPadding = {
+       'right': 10,
+       'bottom': 0
+     }
+     note.key = song.key
+     note.wrap = mob ? 10 : WRAP
+     note.padding = 0
+
+     const data = {}
+
+     const nonZeroArray = song.values.filter(item => item.recognition > 0)
+     const maxXValue = d3.max(nonZeroArray, item => item.generation)
+     const className = cleanSongName(song.key)
+     data.recognition = nonZeroArray[nonZeroArray.length - 1].recognition;
+     data.generation = maxXValue;
+
+     songAnno.className = className + ' ' + 'invisible';
+     songAnno.key = song.key
+     songAnno.note = note
+     songAnno.data = data
+
+     return songAnno
    })
 
    let scaleXObj;
@@ -1063,7 +1125,7 @@
      .range([chartHeight, 0])
 
    const line = d3.line()
-     .curve(d3.curveBasis)
+     .curve(d3.curveCardinal)
      .x(d =>
        scaleXObj(d.generation))
      .y(d => scaleYObj(d.recognition))
@@ -1101,9 +1163,6 @@
        }
      })
 
-
-
-
    $svgObjG
      .append('g')
      .attr('class', `axis y ${songChart}`) //TODO change out variable
@@ -1112,7 +1171,6 @@
        .tickFormat(d3.format('.0%'))
        .ticks(5)
      )
-   //  .attr('transform', `translate(${margin.left},${margin.bottom})`)
 
 
    //  AXES
@@ -1126,44 +1184,62 @@
      .attr('transform', `translate(${chartWidth/2},${chartHeight+40})`)
      .text("Age when song was released");
 
-
-
    $svgObjSongGs = $svgObjG
      .selectAll('g.song-g')
      .data(popularSongs)
      .join('g')
      .attr('class', d => `song-g ${cleanSongName(d.key)}`)
-   //  .attr('transform', `translate(${margin.left},${margin.top})`)
-
-
-
-
-
-   //add mean line annotation
-
 
    const $svgObjSongBackgroundLines = $svgObjSongGs
      .append('path')
      .attr('class', `background-line ${songChart}-recognition`) //TODO change variable
      .attr('d', d => line(d.values))
+     .style("opacity",.7)
 
 
    $svgObjSongLines = $svgObjSongGs
      .append('path')
      .attr('class', `line ${songChart}-recognition`) //TODO change variable
      .attr('d', d => line(d.values))
-     .style('opacity', d => {
-       const opacity = d.key === 'Popular average' ? 1 : .07
-       return opacity
+     .style('opacity', function(d,i){
+       if(d.key === 'Popular average'){
+         return 1;
+       }
+       else {
+         return 1-(i/5);
+       }
      })
      .style('stroke', d => {
-       const color = d.key === 'Popular average' ? '#52370c' : '#383838'
+       const color = d.key === 'Popular average' ? '#ad1b64' : '#106bb3'
        return color
      })
 
+   const makeAnnotations = setupAnnotations(scaleXObj, scaleYObj, annotations)
+   const makeAnnotationsBackground = setupAnnotations(scaleXObj, scaleYObj, annotations)
+
+
+   $svgObjG
+     .append("g")
+     .attr("class", "annotation-group-mean-background")
+     .call(makeAnnotationsBackground)
+
+
+   $svgObjG
+     .append("g")
+     .attr("class", "annotation-group-mean")
+     .call(makeAnnotations)
 
 
 
+    $svgObjG.select('.annotation-group-mean')
+      .selectAll('g.annotation.label')
+      .classed('invisible', d => {
+        if (d.note.label === 'Popular average') {
+          return false
+        }
+        return true
+      })
+      .attr("transform",rotateAndCenter)
 
 
    $svgObjG.select('.annotation-note-content')
@@ -1181,12 +1257,16 @@
      .join('div')
      .attr('class', 'song-example')
 
-
-
-
    const $songExamplesTitles = $songExamples
      .append('p')
      .attr('class', 'song-example__title')
+     .style('opacity', function(d,i){
+        return 1-(i/10);
+     })
+     .style('color', d => {
+       const color = d.key === 'Popular average' ? '#ad1b64' : '#106bb3'
+       return color
+     })
 
    d3.xml('assets/images/sound.svg')
      .then(svg => {
@@ -1209,8 +1289,6 @@
          .text(d => d.key.split('|||')[1])
      })
 
-
-
    const $songExamplesArtists = $songExamples
      .append('p')
      .attr('class', 'song-example__artist')
@@ -1220,10 +1298,6 @@
      .append('span')
      .attr('class', 'song-example__year')
      .text(d => `, ${d.year}`)
-
-
-
-
 
    const $svgObjGYLabels = $svgObjG
      .append("g")
@@ -1268,10 +1342,6 @@
        return 1.1 + "em";
      })
      .attr("x", -10);
-
-
-
-
 
    //creating voronoi
    const voronoi = d3.voronoi()
@@ -1387,9 +1457,6 @@
          .classed('selected-songs', false)
      })
 
-
-
-
    const songExamplesContainerHeight = chartHeight
    if (!mob) {
      $songExamplesBox.style('height', `${songExamplesContainerHeight}px`)
@@ -1399,13 +1466,14 @@
  }
 
  function makeMeanChart(data) {
-   const chartHeight = 0.6 * height
    const CHART_SCREEN_PCT_WIDTH = mob ? 0.95 : 0.75
 
    const thisChartPaddingLeft = +d3.select('section.scroll').style('padding-left').split('px')[0]
    const thisChartPaddingRight = +d3.select('section.scroll').style('padding-right').split('px')[0]
 
    const chartWidth = Math.min(width, 800) - margin.left - margin.right;
+   const chartHeight = mob ? 0.6 * height : Math.min(0.6 * height,chartWidth*.5);
+
    //    const chartWidth = CHART_SCREEN_PCT_WIDTH * width
 
    //whatever width we decided for the chart, take the remaining width of screen,
@@ -1416,11 +1484,14 @@
      .filter(song => song.key === 'Popular average' || song.values[0].recognition >= 0.9)
      .sort((a, b) => {
        if (a.key === 'Popular average') {
-         return -1
-       } else return 1
+         return 1
+       } else return -1
      })
 
 
+   let popularSongsMap = d3.map(popularSongs,function(d){
+     return d.key;
+   })
 
    const annotationsMean = popularSongs.map(song => {
 
@@ -1484,7 +1555,7 @@
 
 
    const line = d3.line()
-     .curve(d3.curveBasis)
+     .curve(d3.curveCardinal)
      .x(d =>
        scaleMeanX(d.generation))
      .y(d => scaleMeanY(d.recognition))
@@ -1497,9 +1568,6 @@
      .attr('class', 'axis x scroll')
      .attr('transform', `translate(0,${chartHeight})`)
      .call(d3.axisBottom(scaleMeanX).tickFormat(d3.format('')).ticks(ticksNum))
-
-
-
 
    $svgMeanG.selectAll('.x.axis')
      .selectAll('g.tick')
@@ -1532,12 +1600,10 @@
      .append('g')
      .attr('class', 'axis y scroll')
      .call(d3.axisLeft(scaleMeanY)
-       .tickSize(-chartWidth + margin.left + margin.right)
+       .tickSize(-chartWidth)
        .tickFormat(d3.format('.0%'))
        .ticks(5)
      )
-
-
 
    $svgMeanG.append("text")
      .attr("y", 0)
@@ -1548,20 +1614,23 @@
      .attr('transform', `translate(${chartWidth/2},${chartHeight+40})`)
      .text("Age when song was released");
 
-
    $svgMeanSongGs = $svgMeanG
      .selectAll('g.song-g')
      .data(popularSongs)
      .join('g')
      .attr('class', d => `song-g ${cleanSongName(d.key)}`)
+
    //  .attr('transform', `translate(${margin.left},${margin.top})`)
-
-
 
    $svgMeanSongLinesBackground = $svgMeanSongGs
      .append('path')
      .attr('class', 'background-line mean-recognition')
      .attr('d', d => line(d.values))
+     .style('opacity', d => {
+       //    console.log(d.key)
+       const opacity = d.key === 'Popular average' ? 1 : null;
+       return opacity
+     })
 
 
    $svgMeanSongLines = $svgMeanSongGs
@@ -1574,11 +1643,9 @@
        return opacity
      })
      .style('stroke', d => {
-       const color = d.key === 'Popular average' ? '#52370c' : '#383838'
+       const color = d.key === 'Popular average' ? '#ad1b64' : '#383838'
        return color
      })
-
-
 
    const $svgMeanGYLabels = $svgMeanG
      .append("g")
@@ -1602,7 +1669,8 @@
      .attr("dy", function (d, i) {
        return 1.1 + "em";
      })
-     .attr("x", -10);
+     .attr("x", 0)
+     ;
 
    $svgMeanGYLabels
      .append("text")
@@ -1622,7 +1690,7 @@
      .attr("dy", function (d, i) {
        return 1.1 + "em";
      })
-     .attr("x", -10);
+     .attr("x", 0);
 
 
 
@@ -1650,6 +1718,30 @@
    $svgMeanG.select('.annotation-group-mean')
      .attr('transform', `translate(${0},0)`)
 
+    function rotateAndCenter(d){
+      let dataPoint = popularSongsMap.get(d.note.key).values.filter(function(d){
+        return d.generation == -2;
+      })[0].recognition;
+
+      let curveOne = popularSongsMap.get(d.note.key).values.filter(function(d){
+        return d.generation == -3;
+      })[0].recognition;
+
+      let curveTwo = popularSongsMap.get(d.note.key).values.filter(function(d){
+        return d.generation == -1;
+      })[0].recognition;
+
+
+      let delta_x = scaleMeanX(-1) - scaleMeanX(-3);
+      let delta_y = scaleMeanY(curveOne) - scaleMeanY(curveTwo);
+      let theta_radians = -Math.atan2(delta_y, delta_x) * 180 / Math.PI
+      if(d.note.key != "Popular average"){
+        theta_radians = 0;
+      }
+      return "translate("+chartWidth/2+","+(scaleMeanY(dataPoint)+20)+"), rotate("+theta_radians+")";
+    }
+
+
    $svgMeanG.select('.annotation-group-mean')
      .selectAll('g.annotation.label')
      .classed('invisible', d => {
@@ -1658,6 +1750,8 @@
        }
        return true
      })
+     .attr("transform",rotateAndCenter)
+
 
 
    $svgMeanG.select('.annotation-group-mean-background')
@@ -1668,6 +1762,7 @@
        }
        return true
      })
+     .attr("transform",rotateAndCenter)
 
    //creating voronoi
    const voronoi = d3.voronoi()
@@ -1696,21 +1791,19 @@
      .on('mouseenter', d => {
        const currentSong = cleanSongName(d.data.artist_song);
 
+       $svgMeanSongLines
+         .style('stroke', "#383838")
+
        $svgMeanG
          .select(`g.${currentSong}`)
          .select('path.background-line')
          .classed('background-line-highlight', true)
 
-
-
-
        $svgMeanG
          .select(`g.${currentSong}`)
          .select('path.line')
-         .style('stroke', item => item.key === 'Popular average' ? '#52370c' : "#2C9BD9")
+         .style('stroke',"#ad1b64")
          .style('opacity', 1)
-
-
 
        $svgMeanG.select('.annotation-group-mean')
          .selectAll('g.annotation.label')
@@ -1721,7 +1814,6 @@
            return true
          })
 
-
        $svgMeanG.select('.annotation-group-mean-background')
          .selectAll('g.annotation.label')
          .classed('invisible', d => {
@@ -1730,16 +1822,6 @@
            }
            return true
          })
-
-
-       //    $svgMeanG.select('.annotation-group-mean')
-       //      .selectAll('g.annotation.label')
-       //      .classed('invisible', d => {
-       //        if (d.note.label === 'mean') {
-       //          return false
-       //        }
-       //        return true
-       //      })
 
      })
      .on('mouseleave', d => {
@@ -1756,11 +1838,9 @@
            return opacity
          })
          .style('stroke', d => {
-           const color = d.key === 'Popular average' ? '#52370c' : '#383838'
+           const color = d.key === 'Popular average' ? '#ad1b64' : '#383838'
            return color
          })
-
-
 
        $svgMeanG.select('.annotation-group-mean-background')
          .selectAll('g.annotation.label')
@@ -1856,7 +1936,7 @@
 
 
    const line = d3.line()
-     .curve(d3.curveBasis)
+     .curve(d3.curveCardinal)
      .x(d =>
        scaleScrollX(d.generation))
      .y(d => scaleScrollY(d.recognition))
@@ -1980,16 +2060,11 @@
    const thisChartPaddingRight = +d3.select('.chart-container__lollipop').style('padding-right').split('px')[0]
    let chartWidth = Math.min(width, 800) - margin.left - margin.right;
 
-
-
    const scaleWidth = margin.left
 
    scaleLollipopX = d3.scaleLinear()
      .domain([0, 1])
      .range([chartWidth, scaleWidth * 4.5])
-
-
-
 
    $svgLollipop
      .attr('width', chartWidth + margin.left + margin.right)
@@ -2013,6 +2088,8 @@
      .attr('transform', `translate(${0},${0})`)
 
    $svgLollipopSongsG = $svgLollipopG
+     .append("g")
+     .attr("class","lollipop-song-g-wrapper")
      .selectAll('g.lollipop-song-g')
      .data(lollipopData)
      .join('g')
@@ -2051,9 +2128,6 @@
          .forEach(n => n.append(svg.documentElement.cloneNode(true)))
      })
 
-
-
-
    $svgLollipopSongsG
      .append('text')
      .attr('x', 24)
@@ -2063,7 +2137,7 @@
 
    $svgLollipopSongsG
      .append('text')
-     .attr('x', 58)
+     .attr('x', 66)
      .attr('y', 20)
      .attr('class', 'lollipop-song-artist')
      .text(d => {
@@ -2077,9 +2151,6 @@
        return truncated
 
      })
-
-
-
 
    const RECT_HEIGHT = 6
    const CIRCLE_RADIUS = 6
@@ -2115,7 +2186,7 @@
      .attr('cx', d => scaleLollipopX(d.mean_gen_z_recognition))
      .attr('cy', `${CIRCLE_RADIUS/2}`)
 
-   $svgLollipopG = $svgLollipop
+   const $svgLollipopGAnnotation = $svgLollipop
      .append('g')
      .attr('class', 'chart lollipop-g')
      .attr('transform', `translate(${margin.left},${margin.top/2})`)
@@ -2146,7 +2217,6 @@
        .tickSize(0)
        .ticks(5)
      )
-
 
    const lollipopAnnotations = [{
      note: {
@@ -2192,11 +2262,7 @@
      })
      .annotations(lollipopAnnotations)
 
-
-
-
-
-   $svgLollipopG
+   $svgLollipopGAnnotation
      .append("g")
      .attr("class", "annotation-circles")
      .call(makeAnnotations)
@@ -2296,9 +2362,6 @@
  function init() {
    setupDOM()
    resize()
-
-
-
  }
 
  export default {

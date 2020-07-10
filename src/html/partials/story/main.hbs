@@ -36,9 +36,6 @@
     {{#each doc.scroll-intro}}
     <p class='story-text'>{{{text}}}</p>
     {{/each}}
-    {{#each doc.intro-mean}}
-    <p class='story-text'>{{{text}}}</p>
-    {{/each}}
 </section>
 
 <section class='story scroll'>
@@ -54,6 +51,10 @@
 
         </div>
     </figure>
+    {{#each doc.intro-mean}}
+    <p class='story-text'>{{{text}}}</p>
+    {{/each}}
+
 
     {{#each doc.wild-west}}
     <p class='story-text'>{{{text}}}</p>
@@ -61,8 +62,8 @@
     <figure class='underperforming-songs'>
         <div class='chart-container__underperforming-songs'>
             <div class='chart-text'>
-                <div class='chart-hed'>{{doc.chart-text-hed-scroll}}</div>
-                <div class='chart-subhed'>{{doc.chart-text-subhed-scroll}}</div>
+                <div class='chart-hed'>{{doc.wild-west-hed}}</div>
+                <div class='chart-subhed'>{{doc.wild-west-sub}}</div>
             </div>
 
             <div class='chart-contents underperforming-songs'>
@@ -113,12 +114,9 @@
 </section>
 
 <section class='story lollipop'>
-
-
     {{#each doc.lollipop-intro}}
     <p class='story-text'>{{{text}}}</p>
     {{/each}}
-
     <div class='chart-container__lollipop'>
         <div class='chart-text'>
             <div class='chart-hed'>{{doc.chart-text-hed-lollipop}}</div>
@@ -130,10 +128,12 @@
         <svg class='chart__lollipop line-chart'>
             <defs>
                 <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" style="stop-color:rgb(197,185,166);stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:rgb(163,205,219);stop-opacity:1" />
+                    <stop offset="0%" style="stop-color:#808080;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#ad1b64;stop-opacity:1" />
                 </linearGradient>
             </defs>
         </svg>
     </div>
+    <button class="see-more"> See More Songs
+    </button>
 </section>

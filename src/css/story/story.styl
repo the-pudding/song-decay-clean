@@ -63,6 +63,10 @@ figure.sticky
 .millennial-only-songs
     margin-bottom 2rem
 
+.underperforming-songs
+  .chart-subhed
+    color #106bb3
+
 .story-text-scroll
     text-align: center
     background-color: white
@@ -76,7 +80,7 @@ figure.sticky
     fill gray
 
 .circle-gen-z
-    fill #009CF4
+    fill #ad1b64
 
 // .lollipop-x-axis-base-difference
 //     fill #52370c
@@ -120,8 +124,10 @@ figure.sticky
     line
         opacity 0.2
     text
-        font-size: 16px
-        fill #403525
+        font-size: 14px
+        fill #645D52
+        opacity .8
+        font-weight 500
         @media (max-width: 550px)
             font-size: 14px
 
@@ -140,10 +146,41 @@ figure.sticky
         stroke-width: 2px
         fill #FEEFD7
 
-.lollipop-song-g
-    text
-        fill #111f
-        font-size 14px
+.chart-container__lollipop
+  position relative
+  &:after
+    width 100%
+    content ''
+    height 200px
+    background linear-gradient(180deg, rgba(254, 239, 215, 0), #feefd7)
+    position absolute
+    bottom 0
+    left 0
+    right 0
+  .chart__lollipop
+    max-height 5010px
+    margin-bottom 2rem
+    .lollipop-song-g-wrapper
+      .lollipop-song-g
+          display block
+          &:nth-of-type(n+100)
+            display none
+          text
+              fill #111f
+              font-size 14px
+
+.expanded
+  &:after
+    display none
+  .chart__lollipop
+    max-height none
+    .lollipop-song-g-wrapper
+      .lollipop-song-g
+        &:nth-of-type(n+100)
+          display block
+
+
+
 
 .ace-of-base
     &.y
@@ -205,6 +242,10 @@ text.label-axis-y
         .line
             stroke #ad1b64
             stroke-width: 3px
+    .popular_average
+      .line
+        stroke red
+
 
 .y
     .domain
@@ -393,7 +434,7 @@ text.lollipop-x-axis-label
 
 .lollipop-annotation-gen-z
     .annotation-note-title
-        fill #2C9BD9
+        fill #ad1b64
         text-anchor: start
     .annotation-connector
         .connector
@@ -418,12 +459,17 @@ text.lollipop-x-axis-label
         rect.annotation-note-bg
             fill-opacity: 0;
             fill #feefd7
-    .mean-g
-        .annotation
-            &.label
-                .annotation-note
-                    text
-                        fill #009CF4
+    .annotation
+        &.label
+            .annotation-note
+                text
+                    fill #ad1b64
+                    text-anchor middle
+                    tspan
+                      text-transform uppercase
+                      font-size 13px
+                      font-weight 600
+                      letter-spacing 1px
         .annotation
             &.label
                 &.mean
@@ -458,13 +504,14 @@ text.lollipop-x-axis-label
         tspan
             fill rgb(254, 239, 215)
             stroke rgb(254, 239, 215)
-            stroke-width: 8px
+            stroke-width: 4px
 
 .g-voronoi
     path
         fill-opacity 0
         stroke black
         opacity 0
+        cursor pointer
 
 
 .chart-contents
@@ -664,3 +711,17 @@ text.lollipop-x-axis-label
   font-weight 500
   color #ad1b64
   margin-bottom 1.5rem
+
+
+.see-more
+  display block
+  margin 0 auto
+  background black
+  color white
+  padding .5rem 1.2rem
+  border-radius 3px
+  font-family $atlas
+  box-shadow 0 2px 2px rgba(15, 15, 15, 0.26)
+  cursor pointer
+.lollipop
+  padding-bottom 5rem
