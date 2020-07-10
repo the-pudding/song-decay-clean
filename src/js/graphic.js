@@ -178,7 +178,7 @@
    } else if (yearVal === 0) {
      formattedYear = "Born"
    } else if (yearVal > 0) {
-     formattedYear = -Math.abs(yearVal)
+     formattedYear = Math.abs(yearVal)
    }
    return formattedYear
 
@@ -419,12 +419,6 @@
  // making charts
  function makeProclaimersDreChart(data) {
 
-
-   var Quo = function (string) {
-     this.status = string;
-
-   };
-
    const annotations = [{
        note: {
          label: "Dr. Dre - Nuthin' But A G Thang",
@@ -490,6 +484,7 @@
    scaleProclaimersDreY = d3.scaleLinear()
      .domain([0, 1])
      .range([chartHeight, 0])
+
 
    const line = d3.line()
      .curve(d3.curveBasis)
@@ -862,6 +857,8 @@
      .range([chartHeight, 0])
 
 
+   addBirthBackground($svgAceOfBaseG, scaleAceOfBaseX, scaleAceOfBaseY, scaleObj, chartWidth, chartHeight)
+
    const line = d3.line()
      .curve(d3.curveBasis)
      .x(d =>
@@ -1091,7 +1088,7 @@
        if (i === 0) {
          return 'middle'
        }
-       if (i === 12) {
+       if (i === 11) {
          return 'end'
        } else return
      })
@@ -1099,10 +1096,15 @@
        if (i === 0) {
          d3.select(n[i]).append('tspan').text('years old').attr('dy', '1em').attr('x', '0')
        }
-       if (i === 12) {
+       if (i === 11) {
          d3.select(n[i])
            .append('tspan')
-           .text('years old')
+           .text('years')
+           .attr('dy', '1em').attr('x', -1)
+
+         d3.select(n[i])
+           .append('tspan')
+           .text('until born')
            .attr('dy', '1em').attr('x', -1)
        }
      })
@@ -1130,7 +1132,7 @@
      .attr('class', 'label-axis')
      .style("text-anchor", "middle")
      .attr('transform', `translate(${chartWidth/2},${chartHeight+40})`)
-     .text("Age when song was released");
+     .text("Age in year that song was released");
 
 
 
@@ -1415,10 +1417,19 @@
      .attr('width', chartWidth - scaleX(0))
      .style('fill', 'url(#Gradient2)')
 
+   $svgObjG.append('rect')
+     .attr('class', 'birth-background-border')
+     .attr('id', 'rect1')
+     .attr('x', scaleX(0))
+     .attr('y', scaleY(1))
+     .attr('height', scaleY(0) - scaleY(1))
+     .attr('width', scaleX(0.1) - scaleX(0))
+   //  .style('fill', 'url(#Gradient1)')
+
    $svgObjG.append('text')
      .attr('class', 'birth-background-anno')
      .text('NOT BORN AT SONG RELEASE')
-     .attr('x', scaleX(0.1))
+     .attr('x', scaleX(0.5))
      .attr('y', scaleY(.03))
 
 
@@ -1509,6 +1520,8 @@
      .range([chartHeight, 0])
 
 
+   addBirthBackground($svgMeanG, scaleMeanX, scaleMeanY, scaleObj, chartWidth, chartHeight)
+
    const line = d3.line()
      .curve(d3.curveBasis)
      .x(d =>
@@ -1538,7 +1551,7 @@
        if (i === 0) {
          return 'middle'
        }
-       if (i === 12) {
+       if (i === 11) {
          return 'end'
        } else return
      })
@@ -1546,10 +1559,16 @@
        if (i === 0) {
          d3.select(n[i]).append('tspan').text('years old').attr('dy', '1em').attr('x', '0')
        }
-       if (i === 12) {
+       if (i === 11) {
          d3.select(n[i])
            .append('tspan')
-           .text('years old')
+           .text('years')
+           .attr('dy', '1em').attr('x', -1)
+
+
+         d3.select(n[i])
+           .append('tspan')
+           .text('until born')
            .attr('dy', '1em').attr('x', -1)
        }
      })
@@ -1572,7 +1591,7 @@
      .attr('class', 'label-axis')
      .style("text-anchor", "middle")
      .attr('transform', `translate(${chartWidth/2},${chartHeight+40})`)
-     .text("Age when song was released");
+     .text("Age in year that song was released");
 
 
    $svgMeanSongGs = $svgMeanG
