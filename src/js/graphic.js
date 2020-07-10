@@ -262,7 +262,7 @@
        return
      }
 
-     howlerList[d.key].once('load', function(){
+     howlerList[d.key].once('load', function () {
        howlerList[d.key].play();
        currentlyPlayingSong = d.key
      });
@@ -280,7 +280,7 @@
        return
      }
 
-     howlerList[d.artist_song].once('load', function(){
+     howlerList[d.artist_song].once('load', function () {
        howlerList[d.artist_song].play()
        currentlyPlayingSong = d.artist_song
      });
@@ -303,7 +303,7 @@
        return
      }
 
-     howlerList[howlSong].once('load', function(){
+     howlerList[howlSong].once('load', function () {
        howlerList[howlSong].play();
        currentlyPlayingSong = howlSong
      });
@@ -1062,6 +1062,12 @@
      .domain([0, scaleObj.yMax])
      .range([chartHeight, 0])
 
+
+
+
+   addBirthBackground($svgObjG, scaleXObj, scaleYObj, scaleObj, chartWidth, chartHeight)
+
+
    const line = d3.line()
      .curve(d3.curveBasis)
      .x(d =>
@@ -1273,6 +1279,7 @@
 
 
 
+
    //creating voronoi
    const voronoi = d3.voronoi()
    const flatArray = d3.merge(popularSongs.map(d => d.values))
@@ -1394,6 +1401,25 @@
    if (!mob) {
      $songExamplesBox.style('height', `${songExamplesContainerHeight}px`)
    }
+
+
+ }
+
+ function addBirthBackground($svgObjG, scaleX, scaleY, scaleObj, chartWidth, chartHeight) {
+
+   $svgObjG.append('rect')
+     .attr('class', 'birth-background')
+     .attr('x', scaleX(0))
+     .attr('y', scaleY(1))
+     .attr('height', scaleY(0) - scaleY(1))
+     .attr('width', chartWidth - scaleX(0))
+     .style('fill', 'url(#Gradient2)')
+
+   $svgObjG.append('text')
+     .attr('class', 'birth-background-anno')
+     .text('NOT BORN AT SONG RELEASE')
+     .attr('x', scaleX(0.1))
+     .attr('y', scaleY(.03))
 
 
  }
@@ -1787,168 +1813,7 @@
 
  }
 
- function makeScrollChart(data) {
-   const chartHeight = 0.6 * height
-   const CHART_SCREEN_PCT_WIDTH = 0.75
-   const chartWidth = CHART_SCREEN_PCT_WIDTH * width
 
-   //whatever width we decided for the chart, take the remaining width of screen,
-   //and  use that as padding on the left
-   const chartWidthPadding = (1 - CHART_SCREEN_PCT_WIDTH) * width / 2
-
-   const popularSongs = data.filter(song => masterPopularSongList.includes(song.key) || song.values[0].recognition >= 0.95)
-
-   const annotationsScroll = popularSongs.map(song => {
-
-     const songAnno = {}
-
-     const note = {}
-     note.label = song.key.replace('|||', ' - ')
-     note.bgPadding = 20
-     note.key = song.key
-     note.wrap = WRAP
-     note.padding = 4
-
-     const data = {}
-
-     const nonZeroArray = song.values.filter(item => item.recognition > 0)
-     const maxXValue = d3.max(nonZeroArray, item => item.generation)
-     const className = cleanSongName(song.key)
-     data.recognition = nonZeroArray[nonZeroArray.length - 1].recognition;
-     data.generation = maxXValue;
-
-     songAnno.className = className + ' ' + 'invisible';
-     songAnno.key = song.key
-     songAnno.note = note
-     songAnno.data = data
-
-     return songAnno
-   })
-
-   console.log(annotationsScroll)
-
-   let scaleScrollX;
-   let scaleScrollY;
-
-
-   //svg width remains at full
-   $svgScroll
-     .attr('width', width)
-     .attr('height', height)
-
-   $svgScrollG = $svgScroll
-     .append('g')
-     .attr('class', 'chart scroll-g')
-     .attr('transform', `translate(${chartWidthPadding},${margin.top})`)
-
-   const scaleObj = getScaleMinMax(popularSongs)
-
-   console.log(scaleObj)
-
-   scaleScrollX = d3.scaleLinear()
-     .domain([scaleObj.xMin, scaleObj.xMax])
-     .range([0, chartWidth - margin.left - margin.right])
-
-
-   scaleScrollY = d3.scaleLinear()
-     .domain([0, scaleObj.yMax])
-     .range([chartHeight - margin.top - margin.bottom, 0])
-
-
-   const line = d3.line()
-     .curve(d3.curveBasis)
-     .x(d =>
-       scaleScrollX(d.generation))
-     .y(d => scaleScrollY(d.recognition))
-
-   $svgScrollG
-     .append('g')
-     .attr('class', 'axis x scroll')
-     .call(d3.axisBottom(scaleScrollX).tickFormat(d3.format('')))
-     .attr('transform', `translate(${margin.left},${chartHeight-margin.bottom})`)
-
-   $svgScrollG
-     .append('g')
-     .attr('class', 'axis y scroll')
-     .call(d3.axisLeft(scaleScrollY)
-       .tickSize(-chartWidth + margin.left + margin.right)
-       .tickFormat(d3.format('.0%'))
-       .ticks(5)
-     )
-     .attr('transform', `translate(${margin.left},${margin.bottom})`)
-
-
-   $svgScrollG.append("text")
-     .attr("y", 0)
-     .attr("x", 0)
-     .attr("dy", "1em")
-     .attr('class', 'label-axis')
-     .style("text-anchor", "middle")
-     .attr('transform', `translate(${margin.left+chartWidth/2},${chartHeight+margin.bottom/2})`)
-     .text("Age when song was released");
-
-
-   $svgScrollSongGs = $svgScrollG
-     .selectAll('g.song-g')
-     .data(popularSongs)
-     .join('g')
-     .attr('class', d => `song-g ${cleanSongName(d.key)}`)
-     .attr('transform', `translate(${margin.left},${margin.top})`)
-
-   $svgScrollSongLines = $svgScrollSongGs
-     .append('path')
-     .attr('class', 'line scroll')
-     .attr('d', d => line(d.values))
-     .style('opacity', 0)
-
-   $svgScrollSongGLabelsTextG = $svgScrollSongGs
-     .append('g')
-     .attr('class', 'label-g scoll')
-     .style('opacity', 0)
-
-   const makeAnnotations = setupAnnotations(scaleScrollX, scaleScrollY, annotationsScroll)
-
-   $svgScrollG
-     .append("g")
-     .attr("class", "annotation-group-scroll")
-     .call(makeAnnotations)
-
-   $svgScrollG.select('.annotation-group-scroll')
-     .attr('transform', `translate(${margin.left + WRAP/2},0)`)
-
-   $svgScrollG
-     .selectAll('g.label')
-     .select('text.annotation-note-label')
-     .style('fill', d => colorScale(d.note.key))
-
-
-
-   const yAxisAnnotation = [{
-     note: {
-       title: "% of People Who Know Song",
-       bgPadding: 20
-     },
-     //can use x, y directly instead of data
-     data: {
-       generation: (-15),
-       recognition: 1
-     },
-     className: "show-bg"
-     // dy: chartHeight / 7,
-     //   dx: 162
-   }]
-
-   const makeYAxisLabel = setupAnnotations(scaleScrollX, scaleScrollY, yAxisAnnotation)
-
-   $svgScrollG
-     .append("g")
-     .attr("class", "annotation-y-axis")
-     .call(makeYAxisLabel)
-
-   $svgScrollG.select('.annotation-y-axis')
-     .attr('transform', `translate(${-margin.left},${0 })`)
-
- }
 
  function makeLollipopChart(data) {
 

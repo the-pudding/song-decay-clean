@@ -21,7 +21,7 @@
 
 
     {{#each doc.no-diggity-the-sign}}
-      <p class='story-text'>{{{text}}}</p>
+    <p class='story-text'>{{{text}}}</p>
     {{/each}}
 
 
@@ -60,13 +60,44 @@
     {{/each}}
     <figure class='underperforming-songs'>
         <div class='chart-container__underperforming-songs'>
+
             <div class='chart-text'>
                 <div class='chart-hed'>{{doc.chart-text-hed-scroll}}</div>
                 <div class='chart-subhed'>{{doc.chart-text-subhed-scroll}}</div>
             </div>
 
             <div class='chart-contents underperforming-songs'>
-                <svg class='chart__underperforming-songs'></svg>
+                <svg class='chart__underperforming-songs'>
+                    <defs>
+                        <linearGradient id="Gradient1">
+                            <stop class="stop1" offset="0%" />
+                            <stop class="stop2" offset="100%" />
+                        </linearGradient>
+                        <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
+                            <stop offset="0" stop-color="#FFE9C7" stop-opacity="0" />
+                            <stop offset="100%" stop-color="#FFE9C7" stop-opacity="1" />
+                        </linearGradient>
+                        <style type="text/css">
+                            #rect1 {
+                                fill: url(#Gradient2);
+                            }
+
+                            .stop1 {
+                                stop-color: #FFE9C7;
+                                stop-opacity: 0;
+                            }
+
+                            .stop2 {
+                                stop-color: #FFE9C7;
+                                stop-opacity: 1;
+                            }
+
+
+
+                            ]]>
+                        </style>
+                    </defs>
+                </svg>
                 <div class='song-examples underperforming-songs'></div>
             </div>
 
@@ -84,7 +115,37 @@
             </div>
 
             <div class='chart-contents overperforming-songs'>
-                <svg class='chart__overperforming-songs'></svg>
+                <svg class='chart__overperforming-songs'>
+                    <defs>
+                        <linearGradient id="Gradient1">
+                            <stop class="stop1" offset="0%" />
+                            <stop class="stop2" offset="100%" />
+                        </linearGradient>
+                        <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
+                            <stop offset="0" stop-color="#FFE9C7" stop-opacity="0" />
+                            <stop offset="100%" stop-color="#FFE9C7" stop-opacity="1" />
+                        </linearGradient>
+                        <style type="text/css">
+                            #rect1 {
+                                fill: url(#Gradient2);
+                            }
+
+                            .stop1 {
+                                stop-color: #FFE9C7;
+                                stop-opacity: 0;
+                            }
+
+                            .stop2 {
+                                stop-color: #FFE9C7;
+                                stop-opacity: 1;
+                            }
+
+
+
+                            ]]>
+                        </style>
+                    </defs>
+                </svg>
                 <div class='song-examples overperforming-songs'></div>
             </div>
 
@@ -102,7 +163,37 @@
             </div>
 
             <div class='chart-contents millennial-only-songs'>
-                <svg class='chart__millennial-only-songs'></svg>
+                <svg class='chart__millennial-only-songs'>
+                    <defs>
+                        <linearGradient id="Gradient1">
+                            <stop class="stop1" offset="0%" />
+                            <stop class="stop2" offset="100%" />
+                        </linearGradient>
+                        <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
+                            <stop offset="0" stop-color="#FFE9C7" stop-opacity="0" />
+                            <stop offset="100%" stop-color="#FFE9C7" stop-opacity="1" />
+                        </linearGradient>
+                        <style type="text/css">
+                            #rect1 {
+                                fill: url(#Gradient2);
+                            }
+
+                            .stop1 {
+                                stop-color: #FFE9C7;
+                                stop-opacity: 0;
+                            }
+
+                            .stop2 {
+                                stop-color: #FFE9C7;
+                                stop-opacity: 1;
+                            }
+
+
+
+                            ]]>
+                        </style>
+                    </defs>
+                </svg>
                 <div class='song-examples millennial-only-songs'></div>
             </div>
 
