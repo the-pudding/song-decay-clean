@@ -21,7 +21,7 @@
 
 
     {{#each doc.no-diggity-the-sign}}
-      <p class='story-text'>{{{text}}}</p>
+    <p class='story-text'>{{{text}}}</p>
     {{/each}}
 
 
@@ -61,13 +61,25 @@
     {{/each}}
     <figure class='underperforming-songs'>
         <div class='chart-container__underperforming-songs'>
+
             <div class='chart-text'>
                 <div class='chart-hed'>{{doc.wild-west-hed}}</div>
                 <div class='chart-subhed'>{{doc.wild-west-sub}}</div>
             </div>
 
             <div class='chart-contents underperforming-songs'>
-                <svg class='chart__underperforming-songs'></svg>
+                <svg class='chart__underperforming-songs'>
+                    <defs>
+                        <linearGradient id="Gradient1" x1="0" x2="0" y1="0" y2="1">
+                            <stop offset="0" stop-color="#52370c" stop-opacity="0" />
+                            <stop offset="100%" stop-color="#52370c" stop-opacity=".3" />
+                        </linearGradient>
+                        <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
+                            <stop offset="0" stop-color="#FFE9C7" stop-opacity="0" />
+                            <stop offset="100%" stop-color="#FFE9C7" stop-opacity=".7" />
+                        </linearGradient>
+                    </defs>
+                </svg>
                 <div class='song-examples underperforming-songs'></div>
             </div>
 
@@ -85,7 +97,18 @@
             </div>
 
             <div class='chart-contents overperforming-songs'>
-                <svg class='chart__overperforming-songs'></svg>
+                <svg class='chart__overperforming-songs'>
+                    <defs>
+                        <linearGradient id="Gradient1" x1="0" x2="0" y1="0" y2="1">
+                            <stop offset="0" stop-color="#52370c" stop-opacity="0" />
+                            <stop offset="100%" stop-color="#52370c" stop-opacity=".3" />
+                        </linearGradient>
+                        <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
+                            <stop offset="0" stop-color="#FFE9C7" stop-opacity="0" />
+                            <stop offset="100%" stop-color="#FFE9C7" stop-opacity=".7" />
+                        </linearGradient>
+                    </defs>
+                </svg>
                 <div class='song-examples overperforming-songs'></div>
             </div>
 
@@ -103,7 +126,19 @@
             </div>
 
             <div class='chart-contents millennial-only-songs'>
-                <svg class='chart__millennial-only-songs'></svg>
+                <svg class='chart__millennial-only-songs'>
+                    <defs>
+                        <linearGradient id="Gradient1" x1="0" x2="0" y1="0" y2="1">
+                            <stop offset="0" stop-color="#52370c" stop-opacity="0" />
+                            <stop offset="100%" stop-color="#52370c" stop-opacity=".3" />
+                        </linearGradient>
+
+                        <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
+                            <stop offset="0" stop-color="#FFE9C7" stop-opacity="0" />
+                            <stop offset="100%" stop-color="#FFE9C7" stop-opacity=".7" />
+                        </linearGradient>
+                    </defs>
+                </svg>
                 <div class='song-examples millennial-only-songs'></div>
             </div>
 

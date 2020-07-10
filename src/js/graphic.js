@@ -178,7 +178,7 @@
    } else if (yearVal === 0) {
      formattedYear = "Born"
    } else if (yearVal > 0) {
-     formattedYear = -Math.abs(yearVal)
+     formattedYear = Math.abs(yearVal)
    }
    return formattedYear
 
@@ -262,7 +262,7 @@
        return
      }
 
-     howlerList[d.key].once('load', function(){
+     howlerList[d.key].once('load', function () {
        howlerList[d.key].play();
        currentlyPlayingSong = d.key
      });
@@ -280,7 +280,7 @@
        return
      }
 
-     howlerList[d.artist_song].once('load', function(){
+     howlerList[d.artist_song].once('load', function () {
        howlerList[d.artist_song].play()
        currentlyPlayingSong = d.artist_song
      });
@@ -303,7 +303,7 @@
        return
      }
 
-     howlerList[howlSong].once('load', function(){
+     howlerList[howlSong].once('load', function () {
        howlerList[howlSong].play();
        currentlyPlayingSong = howlSong
      });
@@ -424,12 +424,6 @@
  // making charts
  function makeProclaimersDreChart(data) {
 
-
-   var Quo = function (string) {
-     this.status = string;
-
-   };
-
    const annotations = [{
        note: {
          label: "Dr. Dre - Nuthin' But A G Thang",
@@ -495,6 +489,7 @@
    scaleProclaimersDreY = d3.scaleLinear()
      .domain([0, 1])
      .range([chartHeight, 0])
+
 
    const line = d3.line()
      .curve(d3.curveCardinal)
@@ -867,6 +862,8 @@
      .range([chartHeight, 0])
 
 
+   addBirthBackground($svgAceOfBaseG, scaleAceOfBaseX, scaleAceOfBaseY, scaleObj, chartWidth, chartHeight)
+
    const line = d3.line()
      .curve(d3.curveCardinal)
      .x(d =>
@@ -1124,6 +1121,12 @@
      .domain([0, scaleObj.yMax])
      .range([chartHeight, 0])
 
+
+
+
+   addBirthBackground($svgObjG, scaleXObj, scaleYObj, scaleObj, chartWidth, chartHeight)
+
+
    const line = d3.line()
      .curve(d3.curveCardinal)
      .x(d =>
@@ -1147,7 +1150,7 @@
        if (i === 0) {
          return 'middle'
        }
-       if (i === 12) {
+       if (i === 11) {
          return 'end'
        } else return
      })
@@ -1155,10 +1158,15 @@
        if (i === 0) {
          d3.select(n[i]).append('tspan').text('years old').attr('dy', '1em').attr('x', '0')
        }
-       if (i === 12) {
+       if (i === 11) {
          d3.select(n[i])
            .append('tspan')
-           .text('years old')
+           .text('years')
+           .attr('dy', '1em').attr('x', -1)
+
+         d3.select(n[i])
+           .append('tspan')
+           .text('until born')
            .attr('dy', '1em').attr('x', -1)
        }
      })
@@ -1182,7 +1190,7 @@
      .attr('class', 'label-axis')
      .style("text-anchor", "middle")
      .attr('transform', `translate(${chartWidth/2},${chartHeight+40})`)
-     .text("Age when song was released");
+     .text("Age in year that song was released");
 
    $svgObjSongGs = $svgObjG
      .selectAll('g.song-g')
@@ -1342,6 +1350,27 @@
        return 1.1 + "em";
      })
      .attr("x", -10);
+   
+   $svgObjGYLabels
+     .append("text")
+     .attr("y", -40)
+     .attr("x", 0)
+     .attr("dx", 0)
+     .attr('class', 'label-axis label-axis-y')
+     .style("text-anchor", "start")
+     .attr('transform', `translate(-34,0)`)
+     .selectAll("tspan")
+     .data(["% of People", "Who Know", "Song"])
+     .enter()
+     .append("tspan")
+     .text(function (d) {
+       return d;
+     })
+     .attr("dy", function (d, i) {
+       return 1.1 + "em";
+     })
+     .attr("x", -10);
+
 
    //creating voronoi
    const voronoi = d3.voronoi()
@@ -1465,6 +1494,34 @@
 
  }
 
+ function addBirthBackground($svgObjG, scaleX, scaleY, scaleObj, chartWidth, chartHeight) {
+
+   $svgObjG.append('rect')
+     .attr('class', 'birth-background')
+     .attr('x', scaleX(0))
+     .attr('y', scaleY(1))
+     .attr('height', scaleY(0) - scaleY(1))
+     .attr('width', chartWidth - scaleX(0))
+     .style('fill', 'url(#Gradient2)')
+
+   $svgObjG.append('rect')
+     .attr('class', 'birth-background-border')
+     .attr('id', 'rect1')
+     .attr('x', scaleX(0))
+     .attr('y', scaleY(1))
+     .attr('height', scaleY(0) - scaleY(1))
+     .attr('width', scaleX(0.1) - scaleX(0))
+   //  .style('fill', 'url(#Gradient1)')
+
+   $svgObjG.append('text')
+     .attr('class', 'birth-background-anno')
+     .text('NOT BORN AT SONG RELEASE')
+     .attr('x', scaleX(0.5))
+     .attr('y', scaleY(.03))
+
+
+ }
+
  function makeMeanChart(data) {
    const CHART_SCREEN_PCT_WIDTH = mob ? 0.95 : 0.75
 
@@ -1554,6 +1611,8 @@
      .range([chartHeight, 0])
 
 
+   addBirthBackground($svgMeanG, scaleMeanX, scaleMeanY, scaleObj, chartWidth, chartHeight)
+
    const line = d3.line()
      .curve(d3.curveCardinal)
      .x(d =>
@@ -1580,7 +1639,7 @@
        if (i === 0) {
          return 'middle'
        }
-       if (i === 12) {
+       if (i === 11) {
          return 'end'
        } else return
      })
@@ -1588,10 +1647,16 @@
        if (i === 0) {
          d3.select(n[i]).append('tspan').text('years old').attr('dy', '1em').attr('x', '0')
        }
-       if (i === 12) {
+       if (i === 11) {
          d3.select(n[i])
            .append('tspan')
-           .text('years old')
+           .text('years')
+           .attr('dy', '1em').attr('x', -1)
+
+
+         d3.select(n[i])
+           .append('tspan')
+           .text('until born')
            .attr('dy', '1em').attr('x', -1)
        }
      })
@@ -1612,7 +1677,7 @@
      .attr('class', 'label-axis')
      .style("text-anchor", "middle")
      .attr('transform', `translate(${chartWidth/2},${chartHeight+40})`)
-     .text("Age when song was released");
+     .text("Age in year that song was released");
 
    $svgMeanSongGs = $svgMeanG
      .selectAll('g.song-g')
@@ -1867,7 +1932,8 @@
 
  }
 
- function makeScrollChart(data) {
+
+function makeScrollChart(data) {
    const chartHeight = 0.6 * height
    const CHART_SCREEN_PCT_WIDTH = 0.75
    const chartWidth = CHART_SCREEN_PCT_WIDTH * width
@@ -1915,8 +1981,8 @@
    $svgScroll
      .attr('width', width)
      .attr('height', height)
-
-   $svgScrollG = $svgScroll
+  
+  $svgScrollG = $svgScroll
      .append('g')
      .attr('class', 'chart scroll-g')
      .attr('transform', `translate(${chartWidthPadding},${margin.top})`)
@@ -2029,7 +2095,7 @@
      .attr('transform', `translate(${-margin.left},${0 })`)
 
  }
-
+ 
  function makeLollipopChart(data) {
 
    let scaleLollipopX;
