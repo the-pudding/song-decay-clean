@@ -67,6 +67,10 @@ figure.sticky
   .chart-subhed
     color #106bb3
 
+.overperforming-songs
+  .chart-subhed
+    color #096f6f
+
 .story-text-scroll
     text-align: center
     background-color: white
@@ -128,6 +132,12 @@ figure.sticky
         fill #645D52
         opacity .8
         font-weight 500
+        tspan
+          fill #2F2B24
+          opacity .9
+          font-size 12px
+          font-weight 400
+
         @media (max-width: 550px)
             font-size: 14px
 
@@ -528,12 +538,12 @@ text.lollipop-x-axis-label
     .song-example__title
         font-weight 600
         margin 0
-        font-size: 18px
+        font-size: 14px
         // color #0A563F
         color #52370C
         cursor: pointer
     .song-example__artist
-        font-size: 16px
+        font-size: 14px
         font-weight: 400
         margin 0
         margin-bottom: 1.5rem
@@ -733,20 +743,24 @@ text.lollipop-x-axis-label
 .birth-background-anno
     fill #52370c
     font-family: 'Atlas Grotesk Web'
-    font-size: 12px
+    font-size: 11px
+    font-weight 600
+    text-transform uppercase
+    letter-spacing 1px
+    text-anchor middle
     @media (max-width: 550px)
         font-size 12px
 
 #rect1
     fill url(#Gradient1)
-    // x1 "0" 
-    // x2 "0" 
-    // y1 "0" 
+    // x1 "0"
+    // x2 "0"
+    // y1 "0"
     // y2 "1"
 
 .stop1
     stop-color red
-    
+
 .stop2
     stop-color black
     stop-opacity 0
