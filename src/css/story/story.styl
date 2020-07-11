@@ -177,7 +177,7 @@ figure.sticky
             display none
           text
               fill #111f
-              font-size 14px
+              font-size 12px
 
 .expanded
   &:after
@@ -423,6 +423,8 @@ text.lollipop-song-year
                 font-family $atlas
                 font-size 14px
                 font-weight 500
+                @media (max-width: 550px)
+                    font-size 10px
 
 .lollipop-x-axis-svg
     background-color: #FEEFD7
@@ -460,6 +462,8 @@ text.lollipop-x-axis-label
 .mean-recognition
     display: flex
     flex-direction: row
+    &.song-examples
+        display none
 
  .chart__mean-recognition
      rect.annotation-note-bg
@@ -760,3 +764,7 @@ text.lollipop-x-axis-label
 .stop2
     stop-color black
     stop-opacity 0
+
+
+#content
+    overflow-x: hidden

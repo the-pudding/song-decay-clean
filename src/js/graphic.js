@@ -320,9 +320,9 @@
  // setup
  function setupDOM() {
 
-   d3.select(".see-more").on("click",function(d){
+   d3.select(".see-more").on("click", function (d) {
      d3.select(this).remove();
-     d3.select(".chart-container__lollipop").classed("expanded",true);
+     d3.select(".chart-container__lollipop").classed("expanded", true);
    })
 
    //    d3.selectAll('.howler-icon').html('<svg class="testclass"></svg>   ')
@@ -1045,18 +1045,17 @@
    let lineColor = "#106bb3"
    if(selectedChart == "overperforming"){
      lineColor = "#096f6f"
-   }
-
+   
    function rotateAndCenter(d){
      let dataPoint = popularSongsMap.get(d.note.key).values.filter(function(d){
        return d.generation == -2;
      })[0].recognition;
 
-     let curveOne = popularSongsMap.get(d.note.key).values.filter(function(d){
+     let curveOne = popularSongsMap.get(d.note.key).values.filter(function (d) {
        return d.generation == -3;
      })[0].recognition;
 
-     let curveTwo = popularSongsMap.get(d.note.key).values.filter(function(d){
+     let curveTwo = popularSongsMap.get(d.note.key).values.filter(function (d) {
        return d.generation == -1;
      })[0].recognition;
 
@@ -1064,10 +1063,10 @@
      let delta_x = scaleXObj(-1) - scaleXObj(-3);
      let delta_y = scaleYObj(curveOne) - scaleYObj(curveTwo);
      let theta_radians = -Math.atan2(delta_y, delta_x) * 180 / Math.PI
-     if(d.note.key != "Popular average"){
+     if (d.note.key != "Popular average") {
        theta_radians = 0;
      }
-     return "translate("+chartWidth/2+","+(scaleYObj(dataPoint)+20)+"), rotate("+theta_radians+")";
+     return "translate(" + chartWidth / 2 + "," + (scaleYObj(dataPoint) + 20) + "), rotate(" + theta_radians + ")";
    }
 
    const songChart = selectedChart
@@ -1091,7 +1090,7 @@
      } else return -1
    })
 
-   let popularSongsMap = d3.map(popularSongs,function(d){
+   let popularSongsMap = d3.map(popularSongs, function (d) {
      return d.key;
    })
 
@@ -1258,7 +1257,7 @@
      .append('path')
      .attr('class', `background-line ${songChart}-recognition`) //TODO change variable
      .attr('d', d => line(d.values))
-     .style("opacity",.7)
+     .style("opacity", .7)
 
 
 
@@ -1269,12 +1268,11 @@
      .append('path')
      .attr('class', `line ${songChart}-recognition`) //TODO change variable
      .attr('d', d => line(d.values))
-     .style('opacity', function(d,i){
-       if(d.key === 'Popular average'){
+     .style('opacity', function (d, i) {
+       if (d.key === 'Popular average') {
          return 1;
-       }
-       else {
-         return 1-(i/5);
+       } else {
+         return 1 - (i / 5);
        }
      })
      .style('stroke', d => {
@@ -1299,15 +1297,15 @@
 
 
 
-    $svgObjG.select('.annotation-group-mean')
-      .selectAll('g.annotation.label')
-      .classed('invisible', d => {
-        if (d.note.label === 'Popular average') {
-          return false
-        }
-        return true
-      })
-      .attr("transform",rotateAndCenter)
+   $svgObjG.select('.annotation-group-mean')
+     .selectAll('g.annotation.label')
+     .classed('invisible', d => {
+       if (d.note.label === 'Popular average') {
+         return false
+       }
+       return true
+     })
+     .attr("transform", rotateAndCenter)
 
 
    $svgObjG.select('.annotation-note-content')
@@ -1579,9 +1577,8 @@
      .attr('class', 'birth-background-anno')
      .text(text)
      .attr('x', scaleX((scaleX.domain()[1] - 0)/2))
+     .text(mob ? 'BORN POST-DEBUT' : 'NOT BORN AT SONG RELEASE')
      .attr('y', scaleY(.03))
-
-
  }
 
  function makeMeanChart(data) {
@@ -1591,7 +1588,7 @@
    const thisChartPaddingRight = +d3.select('section.scroll').style('padding-right').split('px')[0]
 
    const chartWidth = Math.min(width, 800) - margin.left - margin.right;
-   const chartHeight = mob ? 0.6 * height : Math.min(0.6 * height,chartWidth*.5);
+   const chartHeight = mob ? 0.6 * height : Math.min(0.6 * height, chartWidth * .5);
 
    //    const chartWidth = CHART_SCREEN_PCT_WIDTH * width
 
@@ -1608,7 +1605,7 @@
      })
 
 
-   let popularSongsMap = d3.map(popularSongs,function(d){
+   let popularSongsMap = d3.map(popularSongs, function (d) {
      return d.key;
    })
 
@@ -1819,8 +1816,7 @@
      .attr("dy", function (d, i) {
        return 1.1 + "em";
      })
-     .attr("x", 0)
-     ;
+     .attr("x", 0);
 
    $svgMeanGYLabels
      .append("text")
@@ -1868,28 +1864,28 @@
    $svgMeanG.select('.annotation-group-mean')
      .attr('transform', `translate(${0},0)`)
 
-    function rotateAndCenter(d){
-      let dataPoint = popularSongsMap.get(d.note.key).values.filter(function(d){
-        return d.generation == -2;
-      })[0].recognition;
+   function rotateAndCenter(d) {
+     let dataPoint = popularSongsMap.get(d.note.key).values.filter(function (d) {
+       return d.generation == -2;
+     })[0].recognition;
 
-      let curveOne = popularSongsMap.get(d.note.key).values.filter(function(d){
-        return d.generation == -3;
-      })[0].recognition;
+     let curveOne = popularSongsMap.get(d.note.key).values.filter(function (d) {
+       return d.generation == -3;
+     })[0].recognition;
 
-      let curveTwo = popularSongsMap.get(d.note.key).values.filter(function(d){
-        return d.generation == -1;
-      })[0].recognition;
+     let curveTwo = popularSongsMap.get(d.note.key).values.filter(function (d) {
+       return d.generation == -1;
+     })[0].recognition;
 
 
-      let delta_x = scaleMeanX(-1) - scaleMeanX(-3);
-      let delta_y = scaleMeanY(curveOne) - scaleMeanY(curveTwo);
-      let theta_radians = -Math.atan2(delta_y, delta_x) * 180 / Math.PI
-      if(d.note.key != "Popular average"){
-        theta_radians = 0;
-      }
-      return "translate("+chartWidth/2+","+(scaleMeanY(dataPoint)+20)+"), rotate("+theta_radians+")";
-    }
+     let delta_x = scaleMeanX(-1) - scaleMeanX(-3);
+     let delta_y = scaleMeanY(curveOne) - scaleMeanY(curveTwo);
+     let theta_radians = -Math.atan2(delta_y, delta_x) * 180 / Math.PI
+     if (d.note.key != "Popular average") {
+       theta_radians = 0;
+     }
+     return "translate(" + chartWidth / 2 + "," + (scaleMeanY(dataPoint) + 20) + "), rotate(" + theta_radians + ")";
+   }
 
 
    $svgMeanG.select('.annotation-group-mean')
@@ -1900,7 +1896,7 @@
        }
        return true
      })
-     .attr("transform",rotateAndCenter)
+     .attr("transform", rotateAndCenter)
 
 
 
@@ -1912,7 +1908,7 @@
        }
        return true
      })
-     .attr("transform",rotateAndCenter)
+     .attr("transform", rotateAndCenter)
 
    //creating voronoi
    const voronoi = d3.voronoi()
@@ -1952,7 +1948,7 @@
        $svgMeanG
          .select(`g.${currentSong}`)
          .select('path.line')
-         .style('stroke',"#ad1b64")
+         .style('stroke', "#ad1b64")
          .style('opacity', 1)
 
        $svgMeanG.select('.annotation-group-mean')
@@ -2068,7 +2064,7 @@
      .attr('width', width)
      .attr('height', height)
 
-  $svgScrollG = $svgScroll
+   $svgScrollG = $svgScroll
      .append('g')
      .attr('class', 'chart scroll-g')
      .attr('transform', `translate(${chartWidthPadding},${margin.top})`)
@@ -2214,9 +2210,11 @@
 
    const scaleWidth = margin.left
 
+
+   const scaleXArray = mob ? [chartWidth + margin.right, chartWidth / 1.7] : [chartWidth, scaleWidth * 4.5]
    scaleLollipopX = d3.scaleLinear()
      .domain([0, 1])
-     .range([chartWidth, scaleWidth * 4.5])
+     .range(scaleXArray)
 
    $svgLollipop
      .attr('width', chartWidth + margin.left + margin.right)
@@ -2226,7 +2224,7 @@
    $svgLollipopG = $svgLollipop
      .append('g')
      .attr('class', 'chart lollipop-g')
-     .attr('transform', `translate(${margin.left},${0})`)
+     .attr('transform', `translate(${0},${0})`)
 
    $svgLollipopG
      .append('g')
@@ -2241,7 +2239,7 @@
 
    $svgLollipopSongsG = $svgLollipopG
      .append("g")
-     .attr("class","lollipop-song-g-wrapper")
+     .attr("class", "lollipop-song-g-wrapper")
      .selectAll('g.lollipop-song-g')
      .data(lollipopData)
      .join('g')
@@ -2289,7 +2287,7 @@
 
    $svgLollipopSongsG
      .append('text')
-     .attr('x', 66)
+     .attr('x', mob ? 58 : 66)
      .attr('y', 20)
      .attr('class', 'lollipop-song-artist')
      .text(d => {
@@ -2355,7 +2353,7 @@
    const $svgLollipopXAxisFixedG = $svgLollipopXAxisFixed
      .append('g')
      .attr('class', 'axis x fixed lollipop-g line-chart')
-     .attr('transform', `translate(${margin.left},${margin.top/2})`)
+     .attr('transform', `translate(${0},${margin.top/2})`)
 
    //    $svgLollipopXAxisFixedG
    //      .append('text')
