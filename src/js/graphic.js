@@ -22,7 +22,8 @@
  const howlerObj = {}
  let currentlyPlayingSong;
 
- const proclaimersDreSongs = ["Proclaimers, The|||I'm Gonna Be", "Dr. Dre|||Nuthin' But A G Thang"]
+ //const proclaimersDreSongs = ["Sir Mix-A-Lot|||Baby Got Back", "Dr. Dre|||Nuthin' But A G Thang"]
+ const proclaimersDreSongs = ["Notorious B.I.G., The|||Hypnotize", "Hanson|||MMMbop"]
  const noDiggitySongs = ["BLACKstreet|||No Diggity"]
  const AceOfBaseSongs = ["Ace Of Base|||The Sign"]
  let colorScale;
@@ -163,7 +164,7 @@
    left: 50,
    right: 30,
    top: 60,
-   bottom: 60
+   bottom: 90
  }
 
 
@@ -830,8 +831,6 @@
    let scaleAceOfBaseX;
    let scaleAceOfBaseY;
 
-
-
    let chartWidth = Math.min(width, 800) - margin.left - margin.right;
    let chartHeight = mob ? chartWidth - margin.top - margin.bottom : chartWidth * .6 - margin.top - margin.bottom
 
@@ -862,7 +861,7 @@
      .range([chartHeight, 0])
 
 
-   addBirthBackground($svgAceOfBaseG, scaleAceOfBaseX, scaleAceOfBaseY, scaleObj, chartWidth, chartHeight)
+   addBirthBackground($svgAceOfBaseG, scaleAceOfBaseX, scaleAceOfBaseY, scaleObj, chartWidth, chartHeight,"not alive in 1993")
 
    const line = d3.line()
      .curve(d3.curveCardinal)
@@ -902,15 +901,43 @@
          return 'end'
        } else return
      })
-     .each((d, i, n) => {
+     .each(function(d, i, n){
+       let spacing = "1.2em";
        if (i === 0) {
-         d3.select(n[i]).append('tspan').text('years old').attr('dy', '1em').attr('x', '0')
-       }
-       if (i === 10) {
          d3.select(n[i])
+          .append('tspan')
+          .text('years old')
+          .attr('dy', '1em')
+          .attr('x', '0')
+       }
+       if(d3.select(this).text() == "Born"){
+         d3.select(this)
            .append('tspan')
-           .text('years old')
-           .attr('dy', '1em').attr('x', -1)
+           .attr("class","x-axis-tspan")
+           .text('year of song’s')
+           .attr('dy', spacing).attr('x', -1)
+
+         d3.select(this)
+           .append('tspan')
+           .attr("class","x-axis-tspan")
+           .text('debut')
+           .attr('dy', spacing).attr('x', -1)
+       }
+       if (d == 6) {
+         d3.select(this)
+           .append('tspan')
+           .text('years until')
+           .style("text-anchor","end")
+           .attr('dy', spacing)
+           .attr('x', 5)
+
+         d3.select(this)
+           .append('tspan')
+           .attr("class","x-axis-tspan")
+           .text('born')
+           .style("text-anchor","end")
+           .attr('dy', spacing)
+           .attr('x', 5)
        }
      })
 
@@ -934,7 +961,7 @@
    $svgAceOfBaseG.append("text")
      .attr("y", 0)
      .attr("x", 0)
-     .attr("dy", "1em")
+     .attr("dy", "2.5em")
      .attr('class', 'label-axis')
      .style("text-anchor", "middle")
      .attr('transform', `translate(${chartWidth/2},${chartHeight+40})`)
@@ -1014,6 +1041,11 @@
  }
 
  function makeNarrativeChart(data, selectedChart, songsArray) {
+
+   let lineColor = "#106bb3"
+   if(selectedChart == "overperforming"){
+     lineColor = "#096f6f"
+   }
 
    function rotateAndCenter(d){
      let dataPoint = popularSongsMap.get(d.note.key).values.filter(function(d){
@@ -1124,7 +1156,7 @@
 
 
 
-   addBirthBackground($svgObjG, scaleXObj, scaleYObj, scaleObj, chartWidth, chartHeight)
+   addBirthBackground($svgObjG, scaleXObj, scaleYObj, scaleObj, chartWidth, chartHeight,"not born at song release")
 
 
    const line = d3.line()
@@ -1154,20 +1186,44 @@
          return 'end'
        } else return
      })
-     .each((d, i, n) => {
-       if (i === 0) {
-         d3.select(n[i]).append('tspan').text('years old').attr('dy', '1em').attr('x', '0')
-       }
-       if (i === 11) {
-         d3.select(n[i])
-           .append('tspan')
-           .text('years')
-           .attr('dy', '1em').attr('x', -1)
+     .each(function(d, i, n){
+       let spacing = "1.2em";
 
+       if (i === 0) {
          d3.select(n[i])
+          .append('tspan')
+          .text('years old')
+          .attr('dy', '1em')
+          .attr('x', '0')
+       }
+       if(d3.select(this).text() == "Born"){
+         d3.select(this)
            .append('tspan')
-           .text('until born')
-           .attr('dy', '1em').attr('x', -1)
+           .attr("class","x-axis-tspan")
+           .text('year of song’s')
+           .attr('dy', spacing).attr('x', -1)
+
+         d3.select(this)
+           .append('tspan')
+           .attr("class","x-axis-tspan")
+           .text('debut')
+           .attr('dy', spacing).attr('x', -1)
+       }
+       if (d == 10) {
+         d3.select(this)
+           .append('tspan')
+           .text('years until')
+           .style("text-anchor","end")
+           .attr('dy', spacing)
+           .attr('x', 0)
+
+         d3.select(this)
+           .append('tspan')
+           .attr("class","x-axis-tspan")
+           .text('born')
+           .style("text-anchor","end")
+           .attr('dy', spacing)
+           .attr('x', 0)
        }
      })
 
@@ -1186,7 +1242,7 @@
    $svgObjG.append("text")
      .attr("y", 0)
      .attr("x", 0)
-     .attr("dy", "1em")
+     .attr("dy", "2.5em")
      .attr('class', 'label-axis')
      .style("text-anchor", "middle")
      .attr('transform', `translate(${chartWidth/2},${chartHeight+40})`)
@@ -1205,6 +1261,10 @@
      .style("opacity",.7)
 
 
+
+
+
+
    $svgObjSongLines = $svgObjSongGs
      .append('path')
      .attr('class', `line ${songChart}-recognition`) //TODO change variable
@@ -1218,7 +1278,7 @@
        }
      })
      .style('stroke', d => {
-       const color = d.key === 'Popular average' ? '#ad1b64' : '#106bb3'
+       const color = d.key === 'Popular average' ? '#ad1b64' : lineColor
        return color
      })
 
@@ -1269,10 +1329,10 @@
      .append('p')
      .attr('class', 'song-example__title')
      .style('opacity', function(d,i){
-        return 1-(i/10);
+        return 1-(i/15);
      })
      .style('color', d => {
-       const color = d.key === 'Popular average' ? '#ad1b64' : '#106bb3'
+       const color = d.key === 'Popular average' ? '#ad1b64' : lineColor
        return color
      })
 
@@ -1494,7 +1554,7 @@
 
  }
 
- function addBirthBackground($svgObjG, scaleX, scaleY, scaleObj, chartWidth, chartHeight) {
+ function addBirthBackground($svgObjG, scaleX, scaleY, scaleObj, chartWidth, chartHeight,text) {
 
    $svgObjG.append('rect')
      .attr('class', 'birth-background')
@@ -1513,10 +1573,12 @@
      .attr('width', scaleX(0.1) - scaleX(0))
    //  .style('fill', 'url(#Gradient1)')
 
+   console.log(scaleX.domain());
+
    $svgObjG.append('text')
      .attr('class', 'birth-background-anno')
-     .text('NOT BORN AT SONG RELEASE')
-     .attr('x', scaleX(0.5))
+     .text(text)
+     .attr('x', scaleX((scaleX.domain()[1] - 0)/2))
      .attr('y', scaleY(.03))
 
 
@@ -1611,7 +1673,7 @@
      .range([chartHeight, 0])
 
 
-   addBirthBackground($svgMeanG, scaleMeanX, scaleMeanY, scaleObj, chartWidth, chartHeight)
+   addBirthBackground($svgMeanG, scaleMeanX, scaleMeanY, scaleObj, chartWidth, chartHeight,"not born at song release")
 
    const line = d3.line()
      .curve(d3.curveCardinal)
@@ -1643,21 +1705,44 @@
          return 'end'
        } else return
      })
-     .each((d, i, n) => {
+     .each(function(d, i, n){
+       let spacing = "1.2em";
+
        if (i === 0) {
-         d3.select(n[i]).append('tspan').text('years old').attr('dy', '1em').attr('x', '0')
+         d3.select(n[i])
+          .append('tspan')
+          .text('years old')
+          .attr('dy', '1em')
+          .attr('x', '0')
        }
-       if (i === 11) {
-         d3.select(n[i])
+       if(d3.select(this).text() == "Born"){
+         d3.select(this)
            .append('tspan')
-           .text('years')
-           .attr('dy', '1em').attr('x', -1)
+           .attr("class","x-axis-tspan")
+           .text('year of song’s')
+           .attr('dy', spacing).attr('x', -1)
 
-
-         d3.select(n[i])
+         d3.select(this)
            .append('tspan')
-           .text('until born')
-           .attr('dy', '1em').attr('x', -1)
+           .attr("class","x-axis-tspan")
+           .text('debut')
+           .attr('dy', spacing).attr('x', -1)
+       }
+       if (d == 10) {
+         d3.select(this)
+           .append('tspan')
+           .text('years until')
+           .style("text-anchor","end")
+           .attr('dy', spacing)
+           .attr('x', 0)
+
+         d3.select(this)
+           .append('tspan')
+           .attr("class","x-axis-tspan")
+           .text('born')
+           .style("text-anchor","end")
+           .attr('dy', spacing)
+           .attr('x', 0)
        }
      })
 
@@ -1673,7 +1758,7 @@
    $svgMeanG.append("text")
      .attr("y", 0)
      .attr("x", 0)
-     .attr("dy", "1em")
+     .attr("dy", "2.5em")
      .attr('class', 'label-axis')
      .style("text-anchor", "middle")
      .attr('transform', `translate(${chartWidth/2},${chartHeight+40})`)
