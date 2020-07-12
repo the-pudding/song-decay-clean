@@ -122,9 +122,6 @@
    "Popular average"
  ]
 
-
-
-
  // chart svgs
  let $svgProclaimersDre;
  let $svgProclaimersDreG;
@@ -166,12 +163,8 @@
    top: 60,
    bottom: 90
  }
-
-
-
-
  //  helpers
-
+ //
  function yearToBirthYear(yearVal) {
    let formattedYear;
    if (yearVal < 0) {
@@ -184,7 +177,6 @@
    return formattedYear
 
  }
-
 
  function cleanSongName(song) {
    return song.replace(/[\W_]+/g, "_").toLowerCase()
@@ -239,6 +231,9 @@
      }, {
        artist_song: 'wild-wild-west',
        song_url: 'https://p.scdn.co/mp3-preview/3adf0f00d728e3ab23c7dd167dbaedfdcd2ef6fe'
+     }, {
+       artist_song: 'all-my-life',
+       song_url: 'https://p.scdn.co/mp3-preview/bfbafd334c6f877255ed1b2e4b08cb7f2d48b2b8'
      }
    ]
 
@@ -255,7 +250,9 @@
  }
 
  function setupHowlerPlayback() {
-   d3.selectAll('div.song-example').on('click', d => {
+
+   d3.selectAll(".song-examples").selectAll('.sound-icon-span').on('click', d => {
+
      Object.keys(howlerList).forEach(key => howlerList[key].stop());
      if (d.key === currentlyPlayingSong) {
        howlerList[d.key].stop()
@@ -272,7 +269,7 @@
 
    })
 
-   d3.selectAll('g.lollipop-song-g').select("sound-icon-g").on('click', d => {
+   d3.selectAll('g.lollipop-song-g').select(".sound-icon-g").on('click', d => {
      Object.keys(howlerList).forEach(key => howlerList[key].stop());
 
      if (d.artist_song === currentlyPlayingSong) {
@@ -313,7 +310,6 @@
 
 
    })
-
 
  }
 
@@ -372,6 +368,7 @@
    height = window.innerHeight;
    if (width < 550) {
      margin.left = 50;
+     //margin.top = 30;
    }
    d3.selectAll('.story-step')
      .style('height', `${height}px`)
@@ -379,14 +376,14 @@
 
    makeAllCharts()
  }
-
+ //
  function setupAnnotations(scaleX, scaleY, annotations) {
    const type = Annotate.annotationLabel
    const makeAnnotations = Annotate.annotation()
      .editMode(false)
      //also can set and override in the note.padding property
      //of the annotation object
-     .notePadding(20)
+     .notePadding(5)
      .type(type)
      //accessors & accessorsInverse not needed
      //if using x, y in annotations JSON
@@ -400,7 +397,6 @@
    return makeAnnotations
 
  }
-
 
  function setupEnterView() {
 
@@ -422,7 +418,6 @@
    });
  }
 
- // making charts
  function makeProclaimersDreChart(data) {
 
    const annotations = [{
@@ -612,7 +607,13 @@
  function makeNoDiggityChart() {
 
    let chartWidth = Math.min(width, 800) - margin.left - margin.right;
-   let chartHeight = mob ? chartWidth - margin.top - margin.bottom : chartWidth * .6 - margin.top - margin.bottom
+   let chartHeight = chartWidth * .6 - margin.top - margin.bottom;
+   if(mob || width < 550){
+     chartHeight = chartWidth - margin.top - margin.bottom;
+   }
+   if(mob || width < 390){
+     chartHeight = chartWidth - margin.top;
+   }
 
    const CHART_SCREEN_PCT_WIDTH = mob ? 0.95 : 0.75
    const thisChartPaddingLeft = +d3.select('section.lede').style('padding-left').split('px')[0]
@@ -634,6 +635,7 @@
    }))
 
    const svgWidth = mob ? chartWidth : width
+
    $svgNoDiggity
      .attr('width', chartWidth + margin.left + margin.right)
      .attr('height', chartHeight + margin.top + margin.bottom)
@@ -733,7 +735,7 @@
      {
        note: {
          title: "5-year-olds",
-         label: "at the time of its release still recognize it today",
+         label: "at the time of its release",
          bgPadding: mob ? 2 : 20
        },
        //can use x, y directly instead of data
@@ -777,8 +779,6 @@
      }
      return false;
    })
-
-
 
    const $svgNoDiggityYLabels = $svgNoDiggityG
      .append("g")
@@ -832,7 +832,13 @@
    let scaleAceOfBaseY;
 
    let chartWidth = Math.min(width, 800) - margin.left - margin.right;
-   let chartHeight = mob ? chartWidth - margin.top - margin.bottom : chartWidth * .6 - margin.top - margin.bottom
+   let chartHeight = chartWidth * .6 - margin.top - margin.bottom;
+   if(mob || width < 550){
+     chartHeight = chartWidth - margin.top - margin.bottom;
+   }
+   if(mob || width < 390){
+     chartHeight = chartWidth - margin.top;
+   }
 
 
    const svgWidth = mob ? chartWidth : width
@@ -1039,34 +1045,41 @@
      .attr("x", -10);
 
  }
-
+ //
  function makeNarrativeChart(data, selectedChart, songsArray) {
 
    let lineColor = "#106bb3"
    if(selectedChart == "overperforming"){
      lineColor = "#096f6f"
-   
+   }
+   if(selectedChart == "millennial-only"){
+     lineColor = "#e84613"
+   }
+
    function rotateAndCenter(d){
+
+     let centerPoint = -1;
+
      let dataPoint = popularSongsMap.get(d.note.key).values.filter(function(d){
-       return d.generation == -2;
+       return d.generation == centerPoint;
      })[0].recognition;
 
      let curveOne = popularSongsMap.get(d.note.key).values.filter(function (d) {
-       return d.generation == -3;
+       return d.generation == centerPoint - 1;
      })[0].recognition;
 
      let curveTwo = popularSongsMap.get(d.note.key).values.filter(function (d) {
-       return d.generation == -1;
+       return d.generation == centerPoint + 1;
      })[0].recognition;
 
 
-     let delta_x = scaleXObj(-1) - scaleXObj(-3);
+     let delta_x = scaleXObj(centerPoint + 1) - scaleXObj(centerPoint - 1);
      let delta_y = scaleYObj(curveOne) - scaleYObj(curveTwo);
      let theta_radians = -Math.atan2(delta_y, delta_x) * 180 / Math.PI
      if (d.note.key != "Popular average") {
        theta_radians = 0;
      }
-     return "translate(" + chartWidth / 2 + "," + (scaleYObj(dataPoint) + 20) + "), rotate(" + theta_radians + ")";
+     return "translate(" + scaleXObj(centerPoint) + "," + (scaleYObj(dataPoint) + -3) + "), rotate(" + theta_radians + ")";
    }
 
    const songChart = selectedChart
@@ -1074,8 +1087,15 @@
 
    //non-reusable //TODO make these ternary operator assignments that are dependent on mob/not mob (if mob, full-width chart + stacked song titles; if desktop, half widht)
 
+
    const chartWidth = Math.min(width, 800) - margin.left - margin.right;
-   const chartHeight = mob ? chartWidth - margin.top - margin.bottom : chartWidth * .6 - margin.top - margin.bottom
+   let chartHeight = chartWidth * .6 - margin.top - margin.bottom;
+   if(mob || width < 550){
+     chartHeight = chartWidth - margin.top - margin.bottom;
+   }
+   if(mob || width < 390){
+     chartHeight = chartWidth - margin.top;
+   }
 
    const CHART_SCREEN_PCT_WIDTH = mob ? 0.95 : 0.65
 
@@ -1155,7 +1175,7 @@
 
 
 
-   addBirthBackground($svgObjG, scaleXObj, scaleYObj, scaleObj, chartWidth, chartHeight,"not born at song release")
+   addBirthBackground($svgObjG, scaleXObj, scaleYObj, scaleObj, chartWidth, chartHeight,"not alive when song debuted")
 
 
    const line = d3.line()
@@ -1181,7 +1201,7 @@
        if (i === 0) {
          return 'middle'
        }
-       if (i === 11) {
+       if (d == 10) {
          return 'end'
        } else return
      })
@@ -1259,11 +1279,6 @@
      .attr('d', d => line(d.values))
      .style("opacity", .7)
 
-
-
-
-
-
    $svgObjSongLines = $svgObjSongGs
      .append('path')
      .attr('class', `line ${songChart}-recognition`) //TODO change variable
@@ -1295,7 +1310,21 @@
      .attr("class", "annotation-group-mean")
      .call(makeAnnotations)
 
-
+   $svgObjG.select('.annotation-group-mean-background')
+     .selectAll('g.annotation.label')
+     .classed('invisible', d => {
+       if (d.note.label === 'Popular average') {
+         return false
+       }
+       return true
+     })
+     .classed('mean-line', d => {
+       if (d.note.label === 'Popular average') {
+         return true
+       }
+       return false
+     })
+     .attr("transform", rotateAndCenter)
 
    $svgObjG.select('.annotation-group-mean')
      .selectAll('g.annotation.label')
@@ -1305,16 +1334,22 @@
        }
        return true
      })
+     .classed('mean-line', d => {
+       if (d.note.label === 'Popular average') {
+         return true
+       }
+       return false
+     })
      .attr("transform", rotateAndCenter)
 
 
-   $svgObjG.select('.annotation-note-content')
-     .attr('transform', `translate(0,0)`)
+   // $svgObjG.selectAll('.annotation-note-content')
+   //   .attr('transform', `translate(0,0)`)
 
 
    // Adding song examples
    const $songExamplesBox = d3.select(`.song-examples.${songChart}-songs`) //TODO change variable
-   $songExamplesBox.style('margin-top', `${margin.top}px`)
+   // $songExamplesBox.style('margin-top', `${margin.top}px`)
 
 
    //TODO choose more songs so that this doesn't look too sparse
@@ -1334,26 +1369,31 @@
        return color
      })
 
-   d3.xml('assets/images/sound.svg')
-     .then(svg => {
+   $songExamplesTitles
+     .append('span')
+     .attr('class', 'song-example__title-text')
+     .text(d => d.key.split('|||')[1])
 
-
-       d3.select(`figure.${songChart}-songs`)
-         .select('div.song-examples')
-         .selectAll('.song-example')
-         .selectAll('p.song-example__title')
-         .append('span')
-         .attr('class', 'sound-icon-span')
-         .nodes()
-         .forEach(n => n.append(svg.documentElement.cloneNode(true)))
-
+   d3.select(`figure.${songChart}-songs`)
+     .select('div.song-examples')
+     .selectAll('.song-example')
+     .selectAll('p.song-example__title')
+     .append('span')
+     .attr('class', 'sound-icon-span')
+     .append("svg")
+     .attr("width",14)
+     .attr("height",10)
+     .attr("viewBox","0 0 14 10")
+     .selectAll("path")
+     .data(["M0 3V7H3L6 10H7V0H6L3 3H0Z","M12.25 0L11.4688 0.625C12.4339 1.8248 13 3.3403 13 5C13 6.6597 12.4339 8.1752 11.4688 9.375L12.25 10C13.3483 8.6303 14 6.8922 14 5C14 3.1078 13.3483 1.3697 12.25 0ZM10.6875 1.25L9.875 1.90625C10.5629 2.76275 11 3.8159 11 5C11 6.1841 10.5629 7.23715 9.875 8.09375L10.6875 8.75C11.5106 7.7229 12 6.4186 12 5C12 3.5814 11.5106 2.2771 10.6875 1.25ZM9.125 2.5L8.34375 3.125C8.75502 3.6385 9 4.2909 9 5C9 5.7091 8.75502 6.3615 8.34375 6.875L9.125 7.5C9.67032 6.8164 10 5.9424 10 5C10 4.0576 9.67032 3.1836 9.125 2.5Z"])
+     .enter()
+     .append("path")
+     .attr("d",function(d){
+       return d;
      })
-     .then(() => {
-       $songExamplesTitles
-         .append('span')
-         .attr('class', 'song-example__title-text')
-         .text(d => d.key.split('|||')[1])
-     })
+     .attr("fill","black");
+
+
 
    const $songExamplesArtists = $songExamples
      .append('p')
@@ -1371,7 +1411,12 @@
 
    $svgObjGYLabels
      .append("text")
-     .attr("y", -40)
+     .attr("y", function(d){
+       if(width < 550){
+         return 0;
+       }
+       return -40
+     })
      .attr("x", 0)
      .attr("dx", 0)
      .attr('class', 'label-axis label-axis-y-bg')
@@ -1391,7 +1436,12 @@
 
    $svgObjGYLabels
      .append("text")
-     .attr("y", -40)
+     .attr("y", function(d){
+       if(width < 550){
+         return 0;
+       }
+       return -40
+     })
      .attr("x", 0)
      .attr("dx", 0)
      .attr('class', 'label-axis label-axis-y')
@@ -1408,27 +1458,6 @@
        return 1.1 + "em";
      })
      .attr("x", -10);
-
-   $svgObjGYLabels
-     .append("text")
-     .attr("y", -40)
-     .attr("x", 0)
-     .attr("dx", 0)
-     .attr('class', 'label-axis label-axis-y')
-     .style("text-anchor", "start")
-     .attr('transform', `translate(-34,0)`)
-     .selectAll("tspan")
-     .data(["% of People", "Who Know", "Song"])
-     .enter()
-     .append("tspan")
-     .text(function (d) {
-       return d;
-     })
-     .attr("dy", function (d, i) {
-       return 1.1 + "em";
-     })
-     .attr("x", -10);
-
 
    //creating voronoi
    const voronoi = d3.voronoi()
@@ -1457,102 +1486,146 @@
      .attr("d", d => (d ? "M" + d.join("L") + "Z" : null)) //this step draws the paths from the voronoi data
      .on('mouseenter', song => {
 
+       if(song.data.artist_song!= "Popular average"){
+         const currentSongs = ['Popular average', song.data.artist_song];
+
+         $svgObjG.select('.annotation-group-mean-background')
+           .selectAll('g.annotation.label')
+           .classed('invisible', d => {
+             if (cleanSongName(song.data.artist_song) == cleanSongName(d.note.label) || d.note.label == "Popular average") {
+               return false
+             }
+             return true
+           })
+
+         $svgObjG.select('.annotation-group-mean')
+           .selectAll('g.annotation.label')
+           .classed('invisible', d => {
+             if (cleanSongName(song.data.artist_song) == cleanSongName(d.note.label) || d.note.label == "Popular average") {
+               return false
+             }
+             return true
+           })
+
+         $svgObjSongLines
+           .style('opacity', d => {
+             const opacity = currentSongs.includes(d.key) ? 1 : 0
+             return opacity
+           })
+
+         $svgObjSongBackgroundLines
+           .style('opacity', d => {
+             const opacity = currentSongs.includes(d.key) ? 1 : 0
+             return opacity
+           })
+
+         $songExamples
+           .classed('selected-songs', d => d.key === song.data.artist_song ? true : false)
+       }
 
 
-
-       //    console.log(song.data)
-       const currentSongs = ['Popular average', song.data.artist_song];
-
-       $svgObjSongBackgroundLines.classed('background-line-highlight', d => {
-         if (currentSongs.includes(d.key)) return true //TODO add sorting by data value to actually have lines at the top
-         else return false
-       })
-
-
-       $svgObjSongLines
-         .style('opacity', d => {
-           const opacity = currentSongs.includes(d.key) ? 1 : .07
-           return opacity
-         })
-         .style('stroke', d => {
-           let color;
-           if ((d.key === song.data.artist_song) && (song.data.artist_song !== 'Popular average')) {
-             color = '#0a563f'
-           } else if (d.key === 'Popular average') {
-             color = '#52370c'
-           } else {
-             color = '#383838'
-           }
-           return color
-         })
-
-       $songExamples
-         .classed('selected-songs', d => d.key === song.data.artist_song ? true : false)
      })
      .on('mouseleave', song => {
 
+       $svgObjG.select('.annotation-group-mean-background')
+         .selectAll('g.annotation.label')
+         .classed('invisible', d => {
+           if (d.note.label == "Popular average") {
+             return false
+           }
+           return true
+         })
+
+       $svgObjG.select('.annotation-group-mean')
+         .selectAll('g.annotation.label')
+         .classed('invisible', d => {
+           if (d.note.label == "Popular average") {
+             return false
+           }
+           return true
+         })
+
+
        $svgObjSongLines
-         .style('opacity', d => {
-           const opacity = d.key === 'Popular average' ? 1 : .07
-           return opacity
+         .style('opacity', function (d, i) {
+           if (d.key === 'Popular average') {
+             return 1;
+           } else {
+             return 1 - (i / 5);
+           }
          })
-         .style('stroke', d => {
-           const color = d.key === 'Popular average' ? '#52370c' : '#383838'
-           return color
-         })
+
+       $svgObjSongBackgroundLines
+         .style('opacity', .7);
 
        $songExamples
          .classed('selected-songs', false)
 
      })
-   //  .attr('transform', `translate(${margin.left},${margin.bottom})`)
 
    $songExamples.on('mouseenter', song => {
+
        const currentSongs = ['Popular average', song.key];
+
        $svgObjSongLines
          .style('opacity', d => {
-           const opacity = currentSongs.includes(d.key) ? 1 : .07
+           const opacity = currentSongs.includes(d.key) ? 1 : 0
            return opacity
          })
-         .style('stroke', d => {
-           let color;
-           if (d.key === song.key) {
-             color = '#0a563f'
-           } else if (d.key === 'Popular average') {
-             color = '#52370c'
-           } else {
-             color = '#383838'
-           }
-           return color
+
+       $svgObjSongBackgroundLines
+         .style('opacity', d => {
+           const opacity = currentSongs.includes(d.key) ? 1 : 0
+           return opacity
          })
 
-       $songExamples
-         .classed('selected-songs', d => d.key === song.key ? true : false)
+       $svgObjSongLines
+         .style('opacity', d => {
+           const opacity = currentSongs.includes(d.key) ? 1 : 0
+           return opacity
+         })
      })
      .on('mouseleave', song => {
+
+       $svgObjG.select('.annotation-group-mean-background')
+         .selectAll('g.annotation.label')
+         .classed('invisible', d => {
+           if (d.note.label == "Popular average") {
+             return false
+           }
+           return true
+         })
+
+       $svgObjG.select('.annotation-group-mean')
+         .selectAll('g.annotation.label')
+         .classed('invisible', d => {
+           if (d.note.label == "Popular average") {
+             return false
+           }
+           return true
+         })
+
        $svgObjSongLines
-         .style('opacity', d => {
-           const opacity = d.key === 'Popular average' ? 1 : .07
-           return opacity
-         })
-         .style('stroke', d => {
-           const color = d.key === 'Popular average' ? '#52370c' : '#383838'
-           return color
+         .style('opacity', function (d, i) {
+           if (d.key === 'Popular average') {
+             return 1;
+           } else {
+             return 1 - (i / 5);
+           }
          })
 
-       $songExamples
-         .classed('selected-songs', false)
+       $svgObjSongBackgroundLines
+         .style('opacity', .7);
      })
-
-   const songExamplesContainerHeight = chartHeight
-   if (!mob) {
-     $songExamplesBox.style('height', `${songExamplesContainerHeight}px`)
-   }
-
 
  }
 
  function addBirthBackground($svgObjG, scaleX, scaleY, scaleObj, chartWidth, chartHeight,text) {
+
+   let birthText = "born after song debuted";
+   if(scaleX.range()[1]-scaleX(0) < 220){
+     birthText = "born post-debut";
+   }
 
    $svgObjG.append('rect')
      .attr('class', 'birth-background')
@@ -1571,14 +1644,41 @@
      .attr('width', scaleX(0.1) - scaleX(0))
    //  .style('fill', 'url(#Gradient1)')
 
-   console.log(scaleX.domain());
+   if(scaleX.range()[1]-scaleX(0) < 220){
+     $svgObjG.append('text')
+       .attr('class', 'birth-background-anno')
+       .attr('x', scaleX((scaleX.domain()[1] - 0)/2))
+       .attr('y', chartHeight - 20)
+       .selectAll("tspan")
+       .data(["born","post-debut"])
+       .enter()
+       .append("tspan")
+       .attr('x', scaleX((scaleX.domain()[1] - 0)/2))
+       .attr("dy",function(d,i){
+         if(i==1){
+           return "1.2em"
+         }
+         return null;
+       })
+       // .attr("dx",function(d,i){
+       //   if(i==1){
+       //     return 0
+       //   }
+       //   return null;
+       // })
+       .text(function(d){
+         return d;
+       })
+       ;
+   }else {
+     $svgObjG.append('text')
+       .attr('class', 'birth-background-anno')
+       .attr('x', scaleX((scaleX.domain()[1] - 0)/2))
+       .text(birthText)
+       .attr('y', scaleY(.03))
+   }
 
-   $svgObjG.append('text')
-     .attr('class', 'birth-background-anno')
-     .text(text)
-     .attr('x', scaleX((scaleX.domain()[1] - 0)/2))
-     .text(mob ? 'BORN POST-DEBUT' : 'NOT BORN AT SONG RELEASE')
-     .attr('y', scaleY(.03))
+
  }
 
  function makeMeanChart(data) {
@@ -1588,7 +1688,13 @@
    const thisChartPaddingRight = +d3.select('section.scroll').style('padding-right').split('px')[0]
 
    const chartWidth = Math.min(width, 800) - margin.left - margin.right;
-   const chartHeight = mob ? 0.6 * height : Math.min(0.6 * height, chartWidth * .5);
+   let chartHeight = chartWidth * .6 - margin.top - margin.bottom;
+   if(mob || width < 550){
+     chartHeight = chartWidth - margin.top - margin.bottom;
+   }
+   if(mob || width < 390){
+     chartHeight = chartWidth - margin.top;
+   }
 
    //    const chartWidth = CHART_SCREEN_PCT_WIDTH * width
 
@@ -1678,9 +1784,8 @@
        scaleMeanX(d.generation))
      .y(d => scaleMeanY(d.recognition))
 
-
-
    const ticksNum = mob ? 5 : 10
+
    $svgMeanG
      .append('g')
      .attr('class', 'axis x scroll')
@@ -1779,7 +1884,6 @@
        return opacity
      })
 
-
    $svgMeanSongLines = $svgMeanSongGs
      .append('path')
      .attr('class', 'line mean-recognition')
@@ -1838,8 +1942,6 @@
      })
      .attr("x", 0);
 
-
-
    if (mob) {
      $svgMeanG.select('.annotation-y-axis')
        .select('.annotation-note-content')
@@ -1865,28 +1967,53 @@
      .attr('transform', `translate(${0},0)`)
 
    function rotateAndCenter(d) {
-     let dataPoint = popularSongsMap.get(d.note.key).values.filter(function (d) {
-       return d.generation == -2;
+
+     let centerPoint = -1;
+
+     let dataPoint = popularSongsMap.get(d.note.key).values.filter(function(d){
+       return d.generation == centerPoint;
      })[0].recognition;
 
      let curveOne = popularSongsMap.get(d.note.key).values.filter(function (d) {
-       return d.generation == -3;
+       return d.generation == centerPoint - 1;
      })[0].recognition;
 
      let curveTwo = popularSongsMap.get(d.note.key).values.filter(function (d) {
-       return d.generation == -1;
+       return d.generation == centerPoint + 1;
      })[0].recognition;
 
 
-     let delta_x = scaleMeanX(-1) - scaleMeanX(-3);
+     let delta_x = scaleMeanX(centerPoint + 1) - scaleMeanX(centerPoint - 1);
      let delta_y = scaleMeanY(curveOne) - scaleMeanY(curveTwo);
      let theta_radians = -Math.atan2(delta_y, delta_x) * 180 / Math.PI
      if (d.note.key != "Popular average") {
        theta_radians = 0;
      }
-     return "translate(" + chartWidth / 2 + "," + (scaleMeanY(dataPoint) + 20) + "), rotate(" + theta_radians + ")";
-   }
+     return "translate(" + scaleMeanX(centerPoint) + "," + (scaleMeanY(dataPoint) + -3) + "), rotate(" + theta_radians + ")";
 
+
+     //
+     // let dataPoint = popularSongsMap.get(d.note.key).values.filter(function (d) {
+     //   return d.generation == -2;
+     // })[0].recognition;
+     //
+     // let curveOne = popularSongsMap.get(d.note.key).values.filter(function (d) {
+     //   return d.generation == -3;
+     // })[0].recognition;
+     //
+     // let curveTwo = popularSongsMap.get(d.note.key).values.filter(function (d) {
+     //   return d.generation == -1;
+     // })[0].recognition;
+     //
+     //
+     // let delta_x = scaleMeanX(-1) - scaleMeanX(-3);
+     // let delta_y = scaleMeanY(curveOne) - scaleMeanY(curveTwo);
+     // let theta_radians = -Math.atan2(delta_y, delta_x) * 180 / Math.PI
+     // if (d.note.key != "Popular average") {
+     //   theta_radians = 0;
+     // }
+     // return "translate(" + chartWidth / 2 + "," + (scaleMeanY(dataPoint) + 10) + "), rotate(" + theta_radians + ")";
+   }
 
    $svgMeanG.select('.annotation-group-mean')
      .selectAll('g.annotation.label')
@@ -1896,9 +2023,13 @@
        }
        return true
      })
+     .classed('mean-line', d => {
+       if (d.note.label === 'Popular average') {
+         return true
+       }
+       return false
+     })
      .attr("transform", rotateAndCenter)
-
-
 
    $svgMeanG.select('.annotation-group-mean-background')
      .selectAll('g.annotation.label')
@@ -1907,6 +2038,12 @@
          return false
        }
        return true
+     })
+     .classed('mean-line', d => {
+       if (d.note.label === 'Popular average') {
+         return true
+       }
+       return false
      })
      .attr("transform", rotateAndCenter)
 
@@ -1933,12 +2070,18 @@
      .data(voronoi.polygons(flatArray))
      .enter()
      .append('path')
-     .attr("d", d => (d ? "M" + d.join("L") + "Z" : null)) //this step draws the paths from the voronoi data
+     .attr("d", d => (d ? "M" + d.join("L") + "Z" : null))
      .on('mouseenter', d => {
+
        const currentSong = cleanSongName(d.data.artist_song);
 
        $svgMeanSongLines
-         .style('stroke', "#383838")
+         .style('stroke', function(d){
+           if(d.key == 'Popular average'){
+             return "#ad1b64"
+           }
+           return "#383838"
+         })
 
        $svgMeanG
          .select(`g.${currentSong}`)
@@ -1948,7 +2091,7 @@
        $svgMeanG
          .select(`g.${currentSong}`)
          .select('path.line')
-         .style('stroke', "#ad1b64")
+         .style('stroke', "#106bb3")
          .style('opacity', 1)
 
        $svgMeanG.select('.annotation-group-mean')
@@ -1971,7 +2114,6 @@
 
      })
      .on('mouseleave', d => {
-
 
        $svgMeanG
          .selectAll(`.song-g`)
@@ -2009,173 +2151,6 @@
 
 
      })
-
-
- }
-
-
- function makeScrollChart(data) {
-   const chartHeight = 0.6 * height
-   const CHART_SCREEN_PCT_WIDTH = 0.75
-   const chartWidth = CHART_SCREEN_PCT_WIDTH * width
-
-   //whatever width we decided for the chart, take the remaining width of screen,
-   //and  use that as padding on the left
-   const chartWidthPadding = (1 - CHART_SCREEN_PCT_WIDTH) * width / 2
-
-   const popularSongs = data.filter(song => masterPopularSongList.includes(song.key) || song.values[0].recognition >= 0.95)
-
-   const annotationsScroll = popularSongs.map(song => {
-
-     const songAnno = {}
-
-     const note = {}
-     note.label = song.key.replace('|||', ' - ')
-     note.bgPadding = 20
-     note.key = song.key
-     note.wrap = WRAP
-     note.padding = 4
-
-     const data = {}
-
-     const nonZeroArray = song.values.filter(item => item.recognition > 0)
-     const maxXValue = d3.max(nonZeroArray, item => item.generation)
-     const className = cleanSongName(song.key)
-     data.recognition = nonZeroArray[nonZeroArray.length - 1].recognition;
-     data.generation = maxXValue;
-
-     songAnno.className = className + ' ' + 'invisible';
-     songAnno.key = song.key
-     songAnno.note = note
-     songAnno.data = data
-
-     return songAnno
-   })
-
-   console.log(annotationsScroll)
-
-   let scaleScrollX;
-   let scaleScrollY;
-
-
-
-   //svg width remains at full
-   $svgScroll
-     .attr('width', width)
-     .attr('height', height)
-
-   $svgScrollG = $svgScroll
-     .append('g')
-     .attr('class', 'chart scroll-g')
-     .attr('transform', `translate(${chartWidthPadding},${margin.top})`)
-
-   const scaleObj = getScaleMinMax(popularSongs)
-
-   console.log(scaleObj)
-
-   scaleScrollX = d3.scaleLinear()
-     .domain([scaleObj.xMin, scaleObj.xMax])
-     .range([0, chartWidth - margin.left - margin.right])
-
-
-   scaleScrollY = d3.scaleLinear()
-     .domain([0, scaleObj.yMax])
-     .range([chartHeight - margin.top - margin.bottom, 0])
-
-
-   const line = d3.line()
-     .curve(d3.curveCardinal)
-     .x(d =>
-       scaleScrollX(d.generation))
-     .y(d => scaleScrollY(d.recognition))
-
-   $svgScrollG
-     .append('g')
-     .attr('class', 'axis x scroll')
-     .call(d3.axisBottom(scaleScrollX).tickFormat(d3.format('')))
-     .attr('transform', `translate(${margin.left},${chartHeight-margin.bottom})`)
-
-   $svgScrollG
-     .append('g')
-     .attr('class', 'axis y scroll')
-     .call(d3.axisLeft(scaleScrollY)
-       .tickSize(-chartWidth + margin.left + margin.right)
-       .tickFormat(d3.format('.0%'))
-       .ticks(5)
-     )
-     .attr('transform', `translate(${margin.left},${margin.bottom})`)
-
-
-   $svgScrollG.append("text")
-     .attr("y", 0)
-     .attr("x", 0)
-     .attr("dy", "1em")
-     .attr('class', 'label-axis')
-     .style("text-anchor", "middle")
-     .attr('transform', `translate(${margin.left+chartWidth/2},${chartHeight+margin.bottom/2})`)
-     .text("Age when song was released");
-
-
-   $svgScrollSongGs = $svgScrollG
-     .selectAll('g.song-g')
-     .data(popularSongs)
-     .join('g')
-     .attr('class', d => `song-g ${cleanSongName(d.key)}`)
-     .attr('transform', `translate(${margin.left},${margin.top})`)
-
-   $svgScrollSongLines = $svgScrollSongGs
-     .append('path')
-     .attr('class', 'line scroll')
-     .attr('d', d => line(d.values))
-     .style('opacity', 0)
-
-   $svgScrollSongGLabelsTextG = $svgScrollSongGs
-     .append('g')
-     .attr('class', 'label-g scoll')
-     .style('opacity', 0)
-
-   const makeAnnotations = setupAnnotations(scaleScrollX, scaleScrollY, annotationsScroll)
-
-   $svgScrollG
-     .append("g")
-     .attr("class", "annotation-group-scroll")
-     .call(makeAnnotations)
-
-   $svgScrollG.select('.annotation-group-scroll')
-     .attr('transform', `translate(${margin.left + WRAP/2},0)`)
-
-   $svgScrollG
-     .selectAll('g.label')
-     .select('text.annotation-note-label')
-     .style('fill', d => colorScale(d.note.key))
-
-
-
-   const yAxisAnnotation = [{
-     note: {
-       title: "% of People Who Know Song",
-       bgPadding: 20
-     },
-     //can use x, y directly instead of data
-     data: {
-       generation: (-15),
-       recognition: 1
-     },
-     className: "show-bg"
-     // dy: chartHeight / 7,
-     //   dx: 162
-   }]
-
-   const makeYAxisLabel = setupAnnotations(scaleScrollX, scaleScrollY, yAxisAnnotation)
-
-   $svgScrollG
-     .append("g")
-     .attr("class", "annotation-y-axis")
-     .call(makeYAxisLabel)
-
-   $svgScrollG.select('.annotation-y-axis')
-     .attr('transform', `translate(${-margin.left},${0 })`)
-
  }
 
  function makeLollipopChart(data) {
@@ -2194,31 +2169,53 @@
      if (previewSong) {
        item.song_url = previewSong.song_url
      } else item.song_url = ''
-
-
    })
-   //    lollipopData = lollipopData.filter(song => song.song_url !== 'https://p.scdn.co/mp3-preview/87cd92b04f6501ecace9f7f2a6b12802fc2cc437')
 
+   let minX = 0;
+
+
+   if(width < 550){
+      minX = .1;
+   }
+
+   lollipopData = lollipopData.filter(function(d){
+     if(width < 550){
+       return d.mean_millennial_recognition > .1 && d.mean_gen_z_recognition > .1;
+     }
+     return d;
+   })
+
+
+   //    lollipopData = lollipopData.filter(song => song.song_url !== 'https://p.scdn.co/mp3-preview/87cd92b04f6501ecace9f7f2a6b12802fc2cc437')
+   let lolliMargin = {top:margin.top,bottom:margin.bottom,left:margin.left,right:margin.right};
+   lolliMargin.right = 30;
+   lolliMargin.top = 60;
+   lolliMargin.left = 170;
+   if(width < 350){
+     lolliMargin.left = 160;
+   }
 
    const numSongs = lollipopData.length
    // todo check if mobile and decide on the right multiplier
    const songHeight = 60
-   const chartHeight = (numSongs * songHeight) + margin.top + margin.bottom
+   const chartHeight = (numSongs * songHeight) + lolliMargin.top + lolliMargin.bottom
    const thisChartPaddingLeft = +d3.select('.chart-container__lollipop').style('padding-left').split('px')[0]
    const thisChartPaddingRight = +d3.select('.chart-container__lollipop').style('padding-right').split('px')[0]
-   let chartWidth = Math.min(width, 800) - margin.left - margin.right;
+   let chartWidth = Math.min(width, 800) - lolliMargin.left - lolliMargin.right;
+   const scaleWidth = lolliMargin.left
 
-   const scaleWidth = margin.left
+//   const scaleXArray = mob ? [chartWidth + margin.right, chartWidth / 1.7] : [chartWidth, scaleWidth * 4.5]
+   const scaleXArray = [chartWidth + lolliMargin.left, lolliMargin.left];
 
-
-   const scaleXArray = mob ? [chartWidth + margin.right, chartWidth / 1.7] : [chartWidth, scaleWidth * 4.5]
    scaleLollipopX = d3.scaleLinear()
-     .domain([0, 1])
+     .domain([minX, 1])
      .range(scaleXArray)
 
+
+
    $svgLollipop
-     .attr('width', chartWidth + margin.left + margin.right)
-     .attr('height', chartHeight + margin.top + margin.bottom)
+     .attr('width', chartWidth + lolliMargin.left + lolliMargin.right)
+     .attr('height', chartHeight + lolliMargin.top + lolliMargin.bottom)
 
 
    $svgLollipopG = $svgLollipop
@@ -2247,16 +2244,17 @@
 
    $svgLollipopSongsG
      .attr('transform', (d, i) => {
-       return `translate(0,${margin.top + i*songHeight})`
+       return `translate(0,${lolliMargin.top + i*songHeight})`
      })
 
-   $svgLollipopSongsG
+   const $svgLollipopSongsGNameWrapper = $svgLollipopSongsG.append("g").attr("transform","translate(10,0)")
+
+   $svgLollipopSongsGNameWrapper
      .append('text')
      .attr('x', 0)
      .attr('y', 0)
      .attr('class', 'lollipop-song-title')
      .text(d => {
-
        const truncated = truncate({
          text: d.artist_song.split('|||')[1],
          chars: 25,
@@ -2264,34 +2262,49 @@
        })
        //  console.log(truncated)
        return truncated
-
      })
 
-   d3.xml('assets/images/sound.svg')
-     .then(svg => {
-       d3.select('svg.chart__lollipop')
-         .selectAll('g.lollipop-song-g')
-         .append('g')
-         .attr('class', 'sound-icon-g')
-         .attr('transform', 'translate(2, 9)')
-         .nodes()
-         .forEach(n => n.append(svg.documentElement.cloneNode(true)))
-     })
+   const $svgLollipopSongsGNameWrapperSound = $svgLollipopSongsGNameWrapper
+     .append('g')
+     .attr('class', 'sound-icon-g')
+     .attr('transform', 'translate(2, 9)')
+     .append("svg")
+     .attr("width",14)
+     .attr("height",10)
+     .attr("viewBox","0 0 14 10")
 
-   $svgLollipopSongsG
+  $svgLollipopSongsGNameWrapperSound
+     .selectAll("path")
+     .data(["M0 3V7H3L6 10H7V0H6L3 3H0Z","M12.25 0L11.4688 0.625C12.4339 1.8248 13 3.3403 13 5C13 6.6597 12.4339 8.1752 11.4688 9.375L12.25 10C13.3483 8.6303 14 6.8922 14 5C14 3.1078 13.3483 1.3697 12.25 0ZM10.6875 1.25L9.875 1.90625C10.5629 2.76275 11 3.8159 11 5C11 6.1841 10.5629 7.23715 9.875 8.09375L10.6875 8.75C11.5106 7.7229 12 6.4186 12 5C12 3.5814 11.5106 2.2771 10.6875 1.25ZM9.125 2.5L8.34375 3.125C8.75502 3.6385 9 4.2909 9 5C9 5.7091 8.75502 6.3615 8.34375 6.875L9.125 7.5C9.67032 6.8164 10 5.9424 10 5C10 4.0576 9.67032 3.1836 9.125 2.5Z"])
+     .enter()
+     .append("path")
+     .attr("d",function(d){
+       return d;
+     })
+     .attr("fill","black");
+
+   $svgLollipopSongsGNameWrapperSound.append("rect").attr("width","15").attr("height",15).attr("x",0).attr("y",0).attr("fill","none")
+
+   $svgLollipopSongsGNameWrapper
      .append('text')
      .attr('x', 24)
      .attr('y', 20)
      .attr('class', 'lollipop-song-year')
-     .text(d => `${d.year},`)
+     .html(function(d){
+       return "&rsquo;"+JSON.stringify(d.year).slice(-2)+",";
+     })
 
-   $svgLollipopSongsG
+   $svgLollipopSongsGNameWrapper
      .append('text')
-     .attr('x', mob ? 58 : 66)
+     .attr('x', function(d){
+       if(width < 390){
+         return 44;
+       }
+       return 50;
+     })
      .attr('y', 20)
      .attr('class', 'lollipop-song-artist')
      .text(d => {
-
        const truncated = truncate({
          text: d.artist_song.split('|||')[0],
          chars: 13,
@@ -2299,7 +2312,6 @@
        })
        //  console.log(truncated)
        return truncated
-
      })
 
    const RECT_HEIGHT = 6
@@ -2320,7 +2332,6 @@
      })
      .attr('height', `${RECT_HEIGHT}px`)
      .attr('fill', 'url(#grad1)')
-   //  .attr('transform', `translate(0, -${RECT_VERTICAL_BUMP}px)`)
 
    $svgLollipopSongsG
      .append('circle')
@@ -2336,6 +2347,48 @@
      .attr('cx', d => scaleLollipopX(d.mean_gen_z_recognition))
      .attr('cy', `${CIRCLE_RADIUS/2}`)
 
+
+   $svgLollipopSongsG
+     .append('text')
+     .attr('class', 'circle-gen-z-text')
+     .attr('x', function(d){
+       if(d.mean_gen_z_recognition > d.mean_millennial_recognition){
+         return scaleLollipopX(d.mean_gen_z_recognition) - CIRCLE_RADIUS - 2;
+       }
+       return scaleLollipopX(d.mean_gen_z_recognition) + CIRCLE_RADIUS + 2;
+     })
+     .style('text-anchor', function(d){
+       if(d.mean_gen_z_recognition > d.mean_millennial_recognition){
+         return "end";
+       }
+       return null;
+     })
+     .attr('y', `${CIRCLE_RADIUS/2 + 1}`)
+     .text(function(d){
+       return (Math.round(d.mean_gen_z_recognition * 100))+"%";
+     })
+
+   $svgLollipopSongsG
+     .append('text')
+     .attr('class', 'circle-mil-text')
+     .attr('x', function(d){
+       if(d.mean_gen_z_recognition > d.mean_millennial_recognition){
+         return scaleLollipopX(d.mean_millennial_recognition) + CIRCLE_RADIUS + 2;
+       }
+       return scaleLollipopX(d.mean_millennial_recognition) - CIRCLE_RADIUS - 2;
+     })
+     .style('text-anchor', function(d){
+       if(d.mean_gen_z_recognition > d.mean_millennial_recognition){
+         return "start";
+       }
+       return null;
+     })
+     .attr('y', `${CIRCLE_RADIUS/2 + 1}`)
+     .text(function(d){
+       return (Math.round(d.mean_millennial_recognition * 100))+"%";
+     })
+
+
    const $svgLollipopGAnnotation = $svgLollipop
      .append('g')
      .attr('class', 'chart lollipop-g')
@@ -2347,18 +2400,13 @@
 
    $svgLollipopXAxisFixed
      .attr('height', songHeight / 1.5)
-     .attr('width', chartWidth + margin.left + margin.right)
+     .attr('width', chartWidth + lolliMargin.left + lolliMargin.right)
 
 
    const $svgLollipopXAxisFixedG = $svgLollipopXAxisFixed
      .append('g')
      .attr('class', 'axis x fixed lollipop-g line-chart')
-     .attr('transform', `translate(${0},${margin.top/2})`)
-
-   //    $svgLollipopXAxisFixedG
-   //      .append('text')
-   //      .attr('class', 'lollipop-x-axis-label')
-   //      .text('% of People Who Know Song')
+     .attr('transform', `translate(${0},${lolliMargin.top/2})`)
 
    $svgLollipopXAxisFixedG
      .call(
@@ -2368,65 +2416,21 @@
        .ticks(5)
      )
 
-   const lollipopAnnotations = [{
-     note: {
-       title: "Millennials",
-       bgPadding: 2
-     },
-     //can use x, y directly instead of data
-     data: {
-       recognition: 0.9918509070294785
-     },
-     className: "lollipop-annotation-millennials",
-     y: margin.top,
-     dy: -margin.top / 2,
-     dx: -margin.left / 2
-   }, {
-     note: {
-       title: "Gen Z",
-       bgPadding: 2
-     },
-     y: margin.top,
-     //can use x, y directly instead of data
-     data: {
-       recognition: 0.9619603211477253
-     },
-     className: "lollipop-annotation-gen-z",
-     dy: -margin.top / 2,
-     dx: margin.left
-   }]
+   $svgLollipopXAxisFixed
+    .append("text")
+    .attr("class","lollipop-annotation-millennials")
+    .attr("x",scaleLollipopX(.99))
+    .attr("y",lolliMargin.top+5)
+    .text("millennials")
+    ;
 
-
-   const type = Annotate.annotationLabel
-
-   const makeAnnotations = Annotate.annotation()
-     .editMode(false)
-     //also can set and override in the note.padding property
-     //of the annotation object
-     .notePadding(20)
-     .type(type)
-     //accessors & accessorsInverse not needed
-     //if using x, y in annotations JSON
-     .accessors({
-       x: d => scaleLollipopX(d.recognition)
-     })
-     .annotations(lollipopAnnotations)
-
-   $svgLollipopGAnnotation
-     .append("g")
-     .attr("class", "annotation-circles")
-     .call(makeAnnotations)
-
-   //    $svgScrollG.select('.annotation-circles')
-   //      .attr('transform', `translate(${-margin.left},${0 })`)
-
-
-   //    svgLollipopG.selectAll('.lollipop-song-g').selectAll('svg')
-   //      .attr('class', 'sound-icon')
-   //      .attr('width', 21)
-   //      .attr('height', 21)
-   //      .attr('cy', songHeight / 2)
-
+  $svgLollipopXAxisFixed
+   .append("text")
+   .attr("class","lollipop-annotation-gen-z")
+   .attr("x",scaleLollipopX(.96))
+   .attr("y",lolliMargin.top+5)
+   .text("gen z")
+   ;
 
  }
 
@@ -2456,17 +2460,6 @@
              .sort((a, b) => a.generation - b.generation) //sort generation values for each song
          }))
 
-
-       //   data.forEach(item => {
-       //     const currentKey = item.key.trim()
-       //     const previewSong = previewData.filter(previewItem => previewItem.artist_song === currentKey)[0]
-       //     if (previewSong) {
-       //       item.song_url = previewSong.song_url
-       //     } else item.song_url = ''
-
-       //   })
-
-
        data.forEach(item => {
          const currentKey = item.key.trim()
          const previewSong = results[3].filter(previewItem => previewItem.artist_song === currentKey)[0]
@@ -2488,10 +2481,6 @@
          item.artist_song = item.artist_song;
        })
 
-
-
-
-
        makeProclaimersDreChart(data)
        makeNoDiggityChart(data)
        makeAceOfBace(data)
@@ -2500,7 +2489,6 @@
        makeNarrativeChart(data, 'overperforming', overperformingSongs)
        makeNarrativeChart(data, 'millennial-only', millennialOnlySongs)
        makeLollipopChart(results[1])
-
 
      })
      .then(setupEnterView)
