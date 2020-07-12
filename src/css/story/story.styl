@@ -3,6 +3,8 @@
   margin 0 auto
   display block
   margin-bottom 5rem
+  @media (max-width: 550px)
+    margin-bottom 2rem
 .hed
     font-size 64px
     max-width 60rem
@@ -17,6 +19,7 @@ body
     fill none
     stroke black
 
+
 .chart-annotation-arrow
     path
         fill none
@@ -28,7 +31,6 @@ body
 
 .scroll
     margin: 0 auto
-    padding: 0rem 1rem 3rem 1rem;
 
 .line
     &.scroll
@@ -52,6 +54,12 @@ figure.sticky
     color #402a07
     margin 0 auto
     margin-bottom 1.5rem
+    @media (max-width: 450px)
+      font-size 19px
+    @media (max-width: 350px)
+      font-size 17.5px
+    &:last-of-type
+      margin-bottom 0
     .sound-icon-span
         padding-right 0
 
@@ -66,10 +74,41 @@ figure.sticky
 .underperforming-songs
   .chart-subhed
     color #106bb3
+  .chart
+    .song-g
+        .line
+            stroke-width: 2px
 
 .overperforming-songs
   .chart-subhed
-    color #096f6f
+    color $green-berry
+  .annotation-note-content
+    text
+      fill $green-berry
+  .mean-line
+    .annotation-note-content
+      text
+        fill $rasp
+
+  .chart
+    .song-g
+        .line
+            stroke-width: 2px
+
+
+.millennial-only-songs
+  .chart-subhed
+    color $orange
+  .annotation-note-content
+    text
+      fill $orange
+
+  .chart
+    .song-g
+        .line
+            stroke-width: 2px
+
+
 
 .story-text-scroll
     text-align: center
@@ -85,6 +124,9 @@ figure.sticky
 
 .circle-gen-z
     fill #ad1b64
+
+
+
 
 // .lollipop-x-axis-base-difference
 //     fill #52370c
@@ -110,6 +152,8 @@ figure.sticky
         opacity .6
         svg
             cursor pointer
+            rect
+              cursor pointer
             path
                 fill #111
                 cursor pointer
@@ -121,7 +165,7 @@ figure.sticky
     .annotation-note-bg
         fill #FEEFD7
         fill-opacity: 1
-        display: initial
+        display none
 
 
 .tick
@@ -133,8 +177,8 @@ figure.sticky
         opacity .8
         font-weight 500
         tspan
-          fill #2F2B24
-          opacity .9
+          fill #271900
+          opacity .8
           font-size 12px
           font-weight 400
 
@@ -178,6 +222,19 @@ figure.sticky
           text
               fill #111f
               font-size 12px
+              @media(max-width: 390px)
+                font-size 11px
+          .circle-gen-z-text, .circle-mil-text
+            font-size 11px
+            dominant-baseline middle
+            alignment-baseline middle
+            text-anchor start
+            font-weight 500
+            fill $rasp
+          .circle-mil-text
+            text-anchor end
+            fill #666
+
 
 .expanded
   &:after
@@ -215,6 +272,7 @@ text.label-axis
     font-weight 600
     fill #52370c
     dominant-baseline text-after-edge
+    alignment-baseline text-after-edge
     font-size 14px
     @media (max-width: 550px)
       font-size 12px
@@ -233,10 +291,13 @@ text.label-axis-y
     @media (max-width: 550px)
       font-size 12px
 
+
+
 .annotation-note-content
     text
         font-family 'Atlas Grotesk Web'
         fill #52370c
+        font-size 16px
 
 .annotation-connector
     path
@@ -320,17 +381,28 @@ text.label-axis-y
                     fill: #FEEFD7;
                     fill-opacity: 0;
                     display initial
-                .annotation-note-label
-                    font-weight: 200
-                    font-size 16px
-                    @media (max-width: 550px)
-                        font-size 12px
-                .annotation-note-title
+
+                .annotation-note-title, .annotation-note-label
                     font-size 16px
                     font-weight 500
                     color #332205
+                    tspan
+                      letter-spacing 0
+                      fill #332205
+                      font-weight 500
+                      text-transform none
+                      font-size 16px
                     @media (max-width: 550px)
-                        font-size 12px
+                        tspan
+                          font-size 12px
+                .annotation-note-label
+                    tspan
+                      font-weight: 200
+                      dominant-baseline text-after-edge
+                      alignment-baseline text-after-edge
+                      font-size 14px
+                      @media (max-width: 550px)
+                          font-size 12px
 .note-five-yr-old
     @media (max-width: 550px)
         display: none
@@ -374,6 +446,8 @@ text.label-axis-y
 
 .lollipop-song-g
     font-family: 'Atlas Grotesk Web'
+    .lollipop-x-axis-base-difference
+      opacity .5
 
 .lollipop-song-title
     font-size: 16px
@@ -407,6 +481,18 @@ text.lollipop-song-year
     position: -webkit-sticky;
     position: sticky;
     top: 0rem;
+    &:before
+      content ''
+      width 200px
+      height 40px
+      position absolute
+      top 40px
+      left 50px
+      background #feefd7
+      z-index 100
+      border-bottom-left-radius 3px
+      border-bottom-right-radius 3px
+      box-shadow 0px 3px 4px 0px rgba(41, 14, 5, 0.19)
 
 .lollipop-g
     .tick
@@ -424,12 +510,15 @@ text.lollipop-song-year
                 font-size 14px
                 font-weight 500
                 @media (max-width: 550px)
-                    font-size 10px
+                    font-size 11px
 
 .lollipop-x-axis-svg
     background-color: #FEEFD7
-    box-shadow: 0px 8px 4px -7px #c3c3c3
+    box-shadow: 0px 8px 4px -7px rgba(41, 14, 5, 0.19)
     margin-bottom 0
+    overflow visible
+    position relative
+    z-index 10000000
 
 text.lollipop-x-axis-label
     font-size 16px
@@ -437,21 +526,26 @@ text.lollipop-x-axis-label
     fill #645D52
 
 .lollipop-annotation-millennials
-    .annotation-note-title
-        fill #808080
-        text-anchor: end
-    .annotation-connector
-        .connector
-            visibility: hidden
+  fill #808080
+  text-anchor end
+  letter-spacing 1px
+  text-transform uppercase
+  font-weight 600
+  font-size 14px
 
 .lollipop-annotation-gen-z
-    .annotation-note-title
-        fill #ad1b64
-        text-anchor: start
-    .annotation-connector
-        .connector
-            visibility: hidden
+  fill #ad1b64
+  letter-spacing 1px
+  text-transform uppercase
+  font-weight 600
+  font-size 14px
 
+.lollipop-annotation-bg
+  stroke-width 4px
+  stroke #feefd7
+
+.lollipop-annotation-box
+  fill #feefd7
 
 .invisible
     visibility: hidden
@@ -473,23 +567,16 @@ text.lollipop-x-axis-label
         rect.annotation-note-bg
             fill-opacity: 0;
             fill #feefd7
-    .annotation
-        &.label
-            .annotation-note
-                text
-                    fill #ad1b64
-                    text-anchor middle
-                    tspan
-                      text-transform uppercase
-                      font-size 13px
-                      font-weight 600
-                      letter-spacing 1px
+    .annotation-note-content
+      text
+          fill #106bb3
         .annotation
             &.label
                 &.mean
                     .annotation-note
                         text
                             fill #52370C
+
     .annotation-y-axis
         .annotations
             .annotation
@@ -533,41 +620,53 @@ text.lollipop-x-axis-label
     flex-direction: row
     font-family: 'Atlas Grotesk Web'
     justify-content: center
-    // color #0A563F
-
-    .song-example__title
-        font-weight 600
-        margin 0
-        font-size: 14px
-        // color #0A563F
-        color #52370C
-        cursor: pointer
-    .song-example__artist
-        font-size: 14px
-        font-weight: 400
-        margin 0
-        margin-bottom: 1.5rem
-        @media (max-width: 550px)
-            margin-bottom 0.5rem
-        // color #0A563F
-        color #52370C
-        cursor: pointer
+    flex-wrap wrap
+    .song-examples
+        display: flex
+        flex-direction column
+        padding-left 1rem
+        justify-content center
+        @media (max-width:1000px)
+          flex-direction row
+          flex-wrap wrap
+          padding 0
+          margin 0
+          justify-content center
+          margin 0 auto
+          .song-example
+            margin 0
+            padding 0
+            width calc(50% - 5px)
+            margin-bottom 1rem
+            text-align center
+    .song-example
+      margin-bottom 1rem
+      &:hover
+        background rgba(0, 0, 0, 0.13)
+        border-radius 3px
+      .song-example__title
+          font-weight 600
+          margin 0
+          font-size: 14px
+          color #52370C
+          cursor: pointer
+          .song-example__title-text
+            margin-right 10px
+      .song-example__artist
+          font-size: 14px
+          font-weight: 400
+          margin 0
+          @media (max-width: 550px)
+              margin-bottom 0.5rem
+          color #52370C
+          cursor: pointer
 
 .selected-songs
-    .song-example__title
-        color #0A563F
-        font-weight: 800
-        text-decoration: underline
-    .song-example__artist
-        color #0A563F
-        text-decoration: underline
+  background rgba(0,0,0,0.13)
+  border-radius 3px
 
 
-.song-examples
-    display: flex
-    flex-direction: column
-    justify-content: space-evenly
-    padding-left 1rem
+
 
 .millennial-only-recognition
 .overperforming-recognition
@@ -581,6 +680,10 @@ text.lollipop-x-axis-label
         path
             cursor default
 
+
+.millennial-only-songs
+  .popular_average
+    display none
 
 .chart-contents
     &.underperforming-songs
@@ -598,14 +701,10 @@ text.lollipop-x-axis-label
                 width 100%
 
             .song-example__title
-                color #0A563F
                 font-weight: 800
-                padding 0 1rem 0 1rem
                 font-size 14px
                 display inline-block
             .song-example__artist
-                color #0A563F
-                padding 0 1rem 0 1rem
                 font-size 14px
                 display inline-block
             .song-examples>.song-example
@@ -626,16 +725,12 @@ text.lollipop-x-axis-label
                 width 100%
 
             .song-example__title
-                color #0A563F
                 font-weight: 800
                 font-size 14px
                 padding 0 1rem 0 1rem
-                display inline-block
             .song-example__artist
-                color #0A563F
                 font-size 14px
                 display inline-block
-                padding 0 1rem 0 1rem
             .song-examples>.song-example
                 flex: 0 50%;
 
@@ -657,16 +752,12 @@ text.lollipop-x-axis-label
                 width 100%
 
             .song-example__title
-                color #0A563F
                 font-weight: 800
                 font-size 14px
                 display inline-block
-                padding 0 1rem 0 1rem
             .song-example__artist
-                color #0A563F
                 font-size 14px
                 display inline-block
-                padding 0 1rem 0 1rem
             .song-examples>.song-example
                 flex: 0 50%;
 
@@ -677,18 +768,12 @@ text.lollipop-x-axis-label
     path
         fill #52370C
 
-.chart-container__lollipop
-    @media (max-width: 550px)
-        // margin-left 1rem
-        padding 0 1rem
-
-
 .background-fill
   .annotations
     .annotation
       .annotation-note
         .annotation-note-content
-          .annotation-note-label
+          .annotation-note-label, .annotation-note-title
             tspan
               fill #feefd7
               stroke #feefd7
@@ -718,6 +803,10 @@ text.lollipop-x-axis-label
   color #402a07
   line-height 1.4
   margin-top 5rem
+  width 95%
+  @media (max-width:350px)
+    font-size 24px
+
 .chart-subhed
   margin-top 1.5rem
   font-family $atlas
@@ -725,6 +814,10 @@ text.lollipop-x-axis-label
   font-weight 500
   color #ad1b64
   margin-bottom 1.5rem
+  @media (max-width:350px)
+    margin-bottom 0
+    font-size 14px
+    margin-top 1rem
 
 
 .see-more
@@ -739,6 +832,9 @@ text.lollipop-x-axis-label
   cursor pointer
 .lollipop
   padding-bottom 5rem
+  .chart-subhed
+    color #333
+    opacity .8
 
 .birth-background-anno
     fill #52370c
@@ -749,7 +845,7 @@ text.lollipop-x-axis-label
     letter-spacing 1px
     text-anchor middle
     @media (max-width: 550px)
-        font-size 12px
+        font-size 10px
 
 #rect1
     fill url(#Gradient1)
@@ -765,6 +861,18 @@ text.lollipop-x-axis-label
     stop-color black
     stop-opacity 0
 
-
-#content
-    overflow-x: hidden
+.mean-line
+    text
+        fill #ad1b64
+        text-anchor middle
+        dominant-baseline text-after-edge
+        alignment-baseline text-after-edge
+        tspan
+          text-transform uppercase
+          font-size 13px
+          font-weight 600
+          letter-spacing 1px
+.rasp
+  color $rasp
+  background rgba(173, 27, 100, 0.1)
+  border-radius 3px

@@ -27,7 +27,7 @@
 
     <div class='chart-container__ace-of-base'>
         <div class='chart-text'>
-            <div class='chart-hed'>{{doc.chart-text-hed-ace-of-base}}</div>
+            <div class='chart-hed'>{{{doc.chart-text-hed-ace-of-base}}}</div>
             <div class='chart-subhed'>{{doc.chart-text-subhed-ace-of-base}}</div>
         </div>
         <svg class='chart__ace-of-base line-chart'></svg>
@@ -42,7 +42,7 @@
     <figure class='mean-recognition'>
         <div class='chart-container__mean-recognition line-chart'>
             <div class='chart-text'>
-                <div class='chart-hed'>{{doc.chart-text-hed-scroll}}</div>
+                <div class='chart-hed'>{{{doc.chart-text-hed-scroll}}}</div>
                 <div class='chart-subhed'>{{doc.chart-text-subhed-scroll}}</div>
             </div>
             <svg class='chart__mean-recognition'></svg>
@@ -93,7 +93,7 @@
         <div class='chart-container__overperforming-songs'>
             <div class='chart-text'>
                 <div class='chart-hed'>{{doc.popular-hed}}</div>
-                <div class='chart-subhed'>{{doc.wild-west-sub}}</div>
+                <div class='chart-subhed'>{{doc.popular-subhed}}</div>
             </div>
 
             <div class='chart-contents overperforming-songs'>
@@ -121,8 +121,8 @@
     <figure class='millennial-only-songs'>
         <div class='chart-container__millennial-only-songs'>
             <div class='chart-text'>
-                <div class='chart-hed'>{{doc.chart-text-hed-scroll}}</div>
-                <div class='chart-subhed'>{{doc.chart-text-subhed-scroll}}</div>
+                <div class='chart-hed'>{{doc.millennial-hed}}</div>
+                <div class='chart-subhed'>{{doc.millennial-subhead}}</div>
             </div>
 
             <div class='chart-contents millennial-only-songs'>
@@ -149,12 +149,12 @@
 </section>
 
 <section class='story lollipop'>
-    {{#each doc.lollipop-intro}}
+    {{#each doc.lollipop}}
     <p class='story-text'>{{{text}}}</p>
     {{/each}}
     <div class='chart-container__lollipop'>
         <div class='chart-text'>
-            <div class='chart-hed'>{{doc.chart-text-hed-lollipop}}</div>
+            <div class='chart-hed'>{{{doc.chart-text-hed-lollipop}}}</div>
             <div class='chart-subhed'>{{doc.chart-text-subhed-lollipop}}</div>
         </div>
         <div class='chart__lollipop-top-axis'>
