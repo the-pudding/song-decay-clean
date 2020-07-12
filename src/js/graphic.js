@@ -154,6 +154,7 @@
  let $svgLollipopG;
  let $svgLollipopSongsG;
  let $lollipopButtons;
+ let $svgLollipopAxisWrapper;
 
  let lollipopOrder = 'btn-millennial-order'
 
@@ -339,6 +340,8 @@
 
    $svgMean = d3.select('svg.chart__mean-recognition')
 
+
+   $svgLollipopAxisWrapper = d3.select('.chart__lollipop-top-axis').select(".axis-wrapper")
    $svgLollipop = d3.select('svg.chart__lollipop')
    $lollipopButtons = d3.selectAll('.btn-lollipop')
 
@@ -2210,6 +2213,9 @@
    scaleLollipopX = d3.scaleLinear()
      .domain([minX, 1])
      .range(scaleXArray)
+
+   $svgLollipopAxisWrapper
+     .style('width', chartWidth + lolliMargin.left + lolliMargin.right+"px");
 
 
 

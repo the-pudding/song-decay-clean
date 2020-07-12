@@ -480,19 +480,22 @@ text.lollipop-song-year
     // transform: translate(0,100%)
     position: -webkit-sticky;
     position: sticky;
-    top: 0rem;
-    &:before
-      content ''
-      width 200px
-      height 40px
-      position absolute
-      top 40px
-      left 50px
-      background #feefd7
-      z-index 100
-      border-bottom-left-radius 3px
-      border-bottom-right-radius 3px
-      box-shadow 0px 3px 4px 0px rgba(41, 14, 5, 0.19)
+    top: 0rem
+    .axis-wrapper
+      margin 0 auto
+      position relative
+      &:before
+        content ''
+        width 200px
+        height 40px
+        position absolute
+        top 40px
+        left 50px
+        background #feefd7
+        z-index 100
+        border-bottom-left-radius 3px
+        border-bottom-right-radius 3px
+        box-shadow 0px 3px 4px 0px rgba(41, 14, 5, 0.19)
 
 .lollipop-g
     .tick
