@@ -611,10 +611,10 @@
 
    let chartWidth = Math.min(width, 800) - margin.left - margin.right;
    let chartHeight = chartWidth * .6 - margin.top - margin.bottom;
-   if(mob || width < 550){
+   if (mob || width < 550) {
      chartHeight = chartWidth - margin.top - margin.bottom;
    }
-   if(mob || width < 390){
+   if (mob || width < 390) {
      chartHeight = chartWidth - margin.top;
    }
 
@@ -836,10 +836,10 @@
 
    let chartWidth = Math.min(width, 800) - margin.left - margin.right;
    let chartHeight = chartWidth * .6 - margin.top - margin.bottom;
-   if(mob || width < 550){
+   if (mob || width < 550) {
      chartHeight = chartWidth - margin.top - margin.bottom;
    }
-   if(mob || width < 390){
+   if (mob || width < 390) {
      chartHeight = chartWidth - margin.top;
    }
 
@@ -870,7 +870,7 @@
      .range([chartHeight, 0])
 
 
-   addBirthBackground($svgAceOfBaseG, scaleAceOfBaseX, scaleAceOfBaseY, scaleObj, chartWidth, chartHeight,"not alive in 1993")
+   addBirthBackground($svgAceOfBaseG, scaleAceOfBaseX, scaleAceOfBaseY, scaleObj, chartWidth, chartHeight, "not alive in 1993")
 
    const line = d3.line()
      .curve(d3.curveCardinal)
@@ -910,25 +910,25 @@
          return 'end'
        } else return
      })
-     .each(function(d, i, n){
+     .each(function (d, i, n) {
        let spacing = "1.2em";
        if (i === 0) {
          d3.select(n[i])
-          .append('tspan')
-          .text('years old')
-          .attr('dy', '1em')
-          .attr('x', '0')
+           .append('tspan')
+           .text('years old')
+           .attr('dy', '1em')
+           .attr('x', '0')
        }
-       if(d3.select(this).text() == "Born"){
+       if (d3.select(this).text() == "Born") {
          d3.select(this)
            .append('tspan')
-           .attr("class","x-axis-tspan")
+           .attr("class", "x-axis-tspan")
            .text('year of song’s')
            .attr('dy', spacing).attr('x', -1)
 
          d3.select(this)
            .append('tspan')
-           .attr("class","x-axis-tspan")
+           .attr("class", "x-axis-tspan")
            .text('debut')
            .attr('dy', spacing).attr('x', -1)
        }
@@ -936,15 +936,15 @@
          d3.select(this)
            .append('tspan')
            .text('years until')
-           .style("text-anchor","end")
+           .style("text-anchor", "end")
            .attr('dy', spacing)
            .attr('x', 5)
 
          d3.select(this)
            .append('tspan')
-           .attr("class","x-axis-tspan")
+           .attr("class", "x-axis-tspan")
            .text('born')
-           .style("text-anchor","end")
+           .style("text-anchor", "end")
            .attr('dy', spacing)
            .attr('x', 5)
        }
@@ -1052,18 +1052,18 @@
  function makeNarrativeChart(data, selectedChart, songsArray) {
 
    let lineColor = "#106bb3"
-   if(selectedChart == "overperforming"){
+   if (selectedChart == "overperforming") {
      lineColor = "#096f6f"
    }
-   if(selectedChart == "millennial-only"){
+   if (selectedChart == "millennial-only") {
      lineColor = "#e84613"
    }
 
-   function rotateAndCenter(d){
+   function rotateAndCenter(d) {
 
      let centerPoint = -1;
 
-     let dataPoint = popularSongsMap.get(d.note.key).values.filter(function(d){
+     let dataPoint = popularSongsMap.get(d.note.key).values.filter(function (d) {
        return d.generation == centerPoint;
      })[0].recognition;
 
@@ -1093,10 +1093,10 @@
 
    const chartWidth = Math.min(width, 800) - margin.left - margin.right;
    let chartHeight = chartWidth * .6 - margin.top - margin.bottom;
-   if(mob || width < 550){
+   if (mob || width < 550) {
      chartHeight = chartWidth - margin.top - margin.bottom;
    }
-   if(mob || width < 390){
+   if (mob || width < 390) {
      chartHeight = chartWidth - margin.top;
    }
 
@@ -1178,7 +1178,7 @@
 
 
 
-   addBirthBackground($svgObjG, scaleXObj, scaleYObj, scaleObj, chartWidth, chartHeight,"not alive when song debuted")
+   addBirthBackground($svgObjG, scaleXObj, scaleYObj, scaleObj, chartWidth, chartHeight, "not alive when song debuted")
 
 
    const line = d3.line()
@@ -1208,26 +1208,26 @@
          return 'end'
        } else return
      })
-     .each(function(d, i, n){
+     .each(function (d, i, n) {
        let spacing = "1.2em";
 
        if (i === 0) {
          d3.select(n[i])
-          .append('tspan')
-          .text('years old')
-          .attr('dy', '1em')
-          .attr('x', '0')
+           .append('tspan')
+           .text('years old')
+           .attr('dy', '1em')
+           .attr('x', '0')
        }
-       if(d3.select(this).text() == "Born"){
+       if (d3.select(this).text() == "Born") {
          d3.select(this)
            .append('tspan')
-           .attr("class","x-axis-tspan")
+           .attr("class", "x-axis-tspan")
            .text('year of song’s')
            .attr('dy', spacing).attr('x', -1)
 
          d3.select(this)
            .append('tspan')
-           .attr("class","x-axis-tspan")
+           .attr("class", "x-axis-tspan")
            .text('debut')
            .attr('dy', spacing).attr('x', -1)
        }
@@ -1235,15 +1235,15 @@
          d3.select(this)
            .append('tspan')
            .text('years until')
-           .style("text-anchor","end")
+           .style("text-anchor", "end")
            .attr('dy', spacing)
            .attr('x', 0)
 
          d3.select(this)
            .append('tspan')
-           .attr("class","x-axis-tspan")
+           .attr("class", "x-axis-tspan")
            .text('born')
-           .style("text-anchor","end")
+           .style("text-anchor", "end")
            .attr('dy', spacing)
            .attr('x', 0)
        }
@@ -1364,8 +1364,8 @@
    const $songExamplesTitles = $songExamples
      .append('p')
      .attr('class', 'song-example__title')
-     .style('opacity', function(d,i){
-        return 1-(i/15);
+     .style('opacity', function (d, i) {
+       return 1 - (i / 15);
      })
      .style('color', d => {
        const color = d.key === 'Popular average' ? '#ad1b64' : lineColor
@@ -1384,17 +1384,17 @@
      .append('span')
      .attr('class', 'sound-icon-span')
      .append("svg")
-     .attr("width",14)
-     .attr("height",10)
-     .attr("viewBox","0 0 14 10")
+     .attr("width", 14)
+     .attr("height", 10)
+     .attr("viewBox", "0 0 14 10")
      .selectAll("path")
-     .data(["M0 3V7H3L6 10H7V0H6L3 3H0Z","M12.25 0L11.4688 0.625C12.4339 1.8248 13 3.3403 13 5C13 6.6597 12.4339 8.1752 11.4688 9.375L12.25 10C13.3483 8.6303 14 6.8922 14 5C14 3.1078 13.3483 1.3697 12.25 0ZM10.6875 1.25L9.875 1.90625C10.5629 2.76275 11 3.8159 11 5C11 6.1841 10.5629 7.23715 9.875 8.09375L10.6875 8.75C11.5106 7.7229 12 6.4186 12 5C12 3.5814 11.5106 2.2771 10.6875 1.25ZM9.125 2.5L8.34375 3.125C8.75502 3.6385 9 4.2909 9 5C9 5.7091 8.75502 6.3615 8.34375 6.875L9.125 7.5C9.67032 6.8164 10 5.9424 10 5C10 4.0576 9.67032 3.1836 9.125 2.5Z"])
+     .data(["M0 3V7H3L6 10H7V0H6L3 3H0Z", "M12.25 0L11.4688 0.625C12.4339 1.8248 13 3.3403 13 5C13 6.6597 12.4339 8.1752 11.4688 9.375L12.25 10C13.3483 8.6303 14 6.8922 14 5C14 3.1078 13.3483 1.3697 12.25 0ZM10.6875 1.25L9.875 1.90625C10.5629 2.76275 11 3.8159 11 5C11 6.1841 10.5629 7.23715 9.875 8.09375L10.6875 8.75C11.5106 7.7229 12 6.4186 12 5C12 3.5814 11.5106 2.2771 10.6875 1.25ZM9.125 2.5L8.34375 3.125C8.75502 3.6385 9 4.2909 9 5C9 5.7091 8.75502 6.3615 8.34375 6.875L9.125 7.5C9.67032 6.8164 10 5.9424 10 5C10 4.0576 9.67032 3.1836 9.125 2.5Z"])
      .enter()
      .append("path")
-     .attr("d",function(d){
+     .attr("d", function (d) {
        return d;
      })
-     .attr("fill","black");
+     .attr("fill", "black");
 
 
 
@@ -1414,8 +1414,8 @@
 
    $svgObjGYLabels
      .append("text")
-     .attr("y", function(d){
-       if(width < 550){
+     .attr("y", function (d) {
+       if (width < 550) {
          return 0;
        }
        return -40
@@ -1439,8 +1439,8 @@
 
    $svgObjGYLabels
      .append("text")
-     .attr("y", function(d){
-       if(width < 550){
+     .attr("y", function (d) {
+       if (width < 550) {
          return 0;
        }
        return -40
@@ -1489,7 +1489,7 @@
      .attr("d", d => (d ? "M" + d.join("L") + "Z" : null)) //this step draws the paths from the voronoi data
      .on('mouseenter', song => {
 
-       if(song.data.artist_song!= "Popular average"){
+       if (song.data.artist_song != "Popular average") {
          const currentSongs = ['Popular average', song.data.artist_song];
 
          $svgObjG.select('.annotation-group-mean-background')
@@ -1623,10 +1623,10 @@
 
  }
 
- function addBirthBackground($svgObjG, scaleX, scaleY, scaleObj, chartWidth, chartHeight,text) {
+ function addBirthBackground($svgObjG, scaleX, scaleY, scaleObj, chartWidth, chartHeight, text) {
 
    let birthText = "born after song debuted";
-   if(scaleX.range()[1]-scaleX(0) < 220){
+   if (scaleX.range()[1] - scaleX(0) < 220) {
      birthText = "born post-debut";
    }
 
@@ -1647,18 +1647,18 @@
      .attr('width', scaleX(0.1) - scaleX(0))
    //  .style('fill', 'url(#Gradient1)')
 
-   if(scaleX.range()[1]-scaleX(0) < 220){
+   if (scaleX.range()[1] - scaleX(0) < 220) {
      $svgObjG.append('text')
        .attr('class', 'birth-background-anno')
-       .attr('x', scaleX((scaleX.domain()[1] - 0)/2))
+       .attr('x', scaleX((scaleX.domain()[1] - 0) / 2))
        .attr('y', chartHeight - 20)
        .selectAll("tspan")
-       .data(["born","post-debut"])
+       .data(["born", "post-debut"])
        .enter()
        .append("tspan")
-       .attr('x', scaleX((scaleX.domain()[1] - 0)/2))
-       .attr("dy",function(d,i){
-         if(i==1){
+       .attr('x', scaleX((scaleX.domain()[1] - 0) / 2))
+       .attr("dy", function (d, i) {
+         if (i == 1) {
            return "1.2em"
          }
          return null;
@@ -1669,14 +1669,13 @@
        //   }
        //   return null;
        // })
-       .text(function(d){
+       .text(function (d) {
          return d;
-       })
-       ;
-   }else {
+       });
+   } else {
      $svgObjG.append('text')
        .attr('class', 'birth-background-anno')
-       .attr('x', scaleX((scaleX.domain()[1] - 0)/2))
+       .attr('x', scaleX((scaleX.domain()[1] - 0) / 2))
        .text(birthText)
        .attr('y', scaleY(.03))
    }
@@ -1692,10 +1691,10 @@
 
    const chartWidth = Math.min(width, 800) - margin.left - margin.right;
    let chartHeight = chartWidth * .6 - margin.top - margin.bottom;
-   if(mob || width < 550){
+   if (mob || width < 550) {
      chartHeight = chartWidth - margin.top - margin.bottom;
    }
-   if(mob || width < 390){
+   if (mob || width < 390) {
      chartHeight = chartWidth - margin.top;
    }
 
@@ -1779,7 +1778,7 @@
      .range([chartHeight, 0])
 
 
-   addBirthBackground($svgMeanG, scaleMeanX, scaleMeanY, scaleObj, chartWidth, chartHeight,"not born at song release")
+   addBirthBackground($svgMeanG, scaleMeanX, scaleMeanY, scaleObj, chartWidth, chartHeight, "not born at song release")
 
    const line = d3.line()
      .curve(d3.curveCardinal)
@@ -1810,26 +1809,26 @@
          return 'end'
        } else return
      })
-     .each(function(d, i, n){
+     .each(function (d, i, n) {
        let spacing = "1.2em";
 
        if (i === 0) {
          d3.select(n[i])
-          .append('tspan')
-          .text('years old')
-          .attr('dy', '1em')
-          .attr('x', '0')
+           .append('tspan')
+           .text('years old')
+           .attr('dy', '1em')
+           .attr('x', '0')
        }
-       if(d3.select(this).text() == "Born"){
+       if (d3.select(this).text() == "Born") {
          d3.select(this)
            .append('tspan')
-           .attr("class","x-axis-tspan")
+           .attr("class", "x-axis-tspan")
            .text('year of song’s')
            .attr('dy', spacing).attr('x', -1)
 
          d3.select(this)
            .append('tspan')
-           .attr("class","x-axis-tspan")
+           .attr("class", "x-axis-tspan")
            .text('debut')
            .attr('dy', spacing).attr('x', -1)
        }
@@ -1837,15 +1836,15 @@
          d3.select(this)
            .append('tspan')
            .text('years until')
-           .style("text-anchor","end")
+           .style("text-anchor", "end")
            .attr('dy', spacing)
            .attr('x', 0)
 
          d3.select(this)
            .append('tspan')
-           .attr("class","x-axis-tspan")
+           .attr("class", "x-axis-tspan")
            .text('born')
-           .style("text-anchor","end")
+           .style("text-anchor", "end")
            .attr('dy', spacing)
            .attr('x', 0)
        }
@@ -1973,7 +1972,7 @@
 
      let centerPoint = -1;
 
-     let dataPoint = popularSongsMap.get(d.note.key).values.filter(function(d){
+     let dataPoint = popularSongsMap.get(d.note.key).values.filter(function (d) {
        return d.generation == centerPoint;
      })[0].recognition;
 
@@ -2079,8 +2078,8 @@
        const currentSong = cleanSongName(d.data.artist_song);
 
        $svgMeanSongLines
-         .style('stroke', function(d){
-           if(d.key == 'Popular average'){
+         .style('stroke', function (d) {
+           if (d.key == 'Popular average') {
              return "#ad1b64"
            }
            return "#383838"
@@ -2177,12 +2176,12 @@
    let minX = 0;
 
 
-   if(width < 550){
-      minX = .1;
+   if (width < 550) {
+     minX = .1;
    }
 
-   lollipopData = lollipopData.filter(function(d){
-     if(width < 550){
+   lollipopData = lollipopData.filter(function (d) {
+     if (width < 550) {
        return d.mean_millennial_recognition > .1 && d.mean_gen_z_recognition > .1;
      }
      return d;
@@ -2190,11 +2189,16 @@
 
 
    //    lollipopData = lollipopData.filter(song => song.song_url !== 'https://p.scdn.co/mp3-preview/87cd92b04f6501ecace9f7f2a6b12802fc2cc437')
-   let lolliMargin = {top:margin.top,bottom:margin.bottom,left:margin.left,right:margin.right};
+   let lolliMargin = {
+     top: margin.top,
+     bottom: margin.bottom,
+     left: margin.left,
+     right: margin.right
+   };
    lolliMargin.right = 30;
    lolliMargin.top = 60;
    lolliMargin.left = 170;
-   if(width < 350){
+   if (width < 350) {
      lolliMargin.left = 160;
    }
 
@@ -2207,7 +2211,7 @@
    let chartWidth = Math.min(width, 800) - lolliMargin.left - lolliMargin.right;
    const scaleWidth = lolliMargin.left
 
-//   const scaleXArray = mob ? [chartWidth + margin.right, chartWidth / 1.7] : [chartWidth, scaleWidth * 4.5]
+   //   const scaleXArray = mob ? [chartWidth + margin.right, chartWidth / 1.7] : [chartWidth, scaleWidth * 4.5]
    const scaleXArray = [chartWidth + lolliMargin.left, lolliMargin.left];
 
    scaleLollipopX = d3.scaleLinear()
@@ -2215,7 +2219,7 @@
      .range(scaleXArray)
 
    $svgLollipopAxisWrapper
-     .style('width', chartWidth + lolliMargin.left + lolliMargin.right+"px");
+     .style('width', chartWidth + lolliMargin.left + lolliMargin.right + "px");
 
 
 
@@ -2253,7 +2257,7 @@
        return `translate(0,${lolliMargin.top + i*songHeight})`
      })
 
-   const $svgLollipopSongsGNameWrapper = $svgLollipopSongsG.append("g").attr("transform","translate(10,0)")
+   const $svgLollipopSongsGNameWrapper = $svgLollipopSongsG.append("g").attr("transform", "translate(10,0)")
 
    $svgLollipopSongsGNameWrapper
      .append('text')
@@ -2275,35 +2279,35 @@
      .attr('class', 'sound-icon-g')
      .attr('transform', 'translate(2, 9)')
      .append("svg")
-     .attr("width",14)
-     .attr("height",10)
-     .attr("viewBox","0 0 14 10")
+     .attr("width", 14)
+     .attr("height", 10)
+     .attr("viewBox", "0 0 14 10")
 
-  $svgLollipopSongsGNameWrapperSound
+   $svgLollipopSongsGNameWrapperSound
      .selectAll("path")
-     .data(["M0 3V7H3L6 10H7V0H6L3 3H0Z","M12.25 0L11.4688 0.625C12.4339 1.8248 13 3.3403 13 5C13 6.6597 12.4339 8.1752 11.4688 9.375L12.25 10C13.3483 8.6303 14 6.8922 14 5C14 3.1078 13.3483 1.3697 12.25 0ZM10.6875 1.25L9.875 1.90625C10.5629 2.76275 11 3.8159 11 5C11 6.1841 10.5629 7.23715 9.875 8.09375L10.6875 8.75C11.5106 7.7229 12 6.4186 12 5C12 3.5814 11.5106 2.2771 10.6875 1.25ZM9.125 2.5L8.34375 3.125C8.75502 3.6385 9 4.2909 9 5C9 5.7091 8.75502 6.3615 8.34375 6.875L9.125 7.5C9.67032 6.8164 10 5.9424 10 5C10 4.0576 9.67032 3.1836 9.125 2.5Z"])
+     .data(["M0 3V7H3L6 10H7V0H6L3 3H0Z", "M12.25 0L11.4688 0.625C12.4339 1.8248 13 3.3403 13 5C13 6.6597 12.4339 8.1752 11.4688 9.375L12.25 10C13.3483 8.6303 14 6.8922 14 5C14 3.1078 13.3483 1.3697 12.25 0ZM10.6875 1.25L9.875 1.90625C10.5629 2.76275 11 3.8159 11 5C11 6.1841 10.5629 7.23715 9.875 8.09375L10.6875 8.75C11.5106 7.7229 12 6.4186 12 5C12 3.5814 11.5106 2.2771 10.6875 1.25ZM9.125 2.5L8.34375 3.125C8.75502 3.6385 9 4.2909 9 5C9 5.7091 8.75502 6.3615 8.34375 6.875L9.125 7.5C9.67032 6.8164 10 5.9424 10 5C10 4.0576 9.67032 3.1836 9.125 2.5Z"])
      .enter()
      .append("path")
-     .attr("d",function(d){
+     .attr("d", function (d) {
        return d;
      })
-     .attr("fill","black");
+     .attr("fill", "black");
 
-   $svgLollipopSongsGNameWrapperSound.append("rect").attr("width","15").attr("height",15).attr("x",0).attr("y",0).attr("fill","none")
+   $svgLollipopSongsGNameWrapperSound.append("rect").attr("width", "15").attr("height", 15).attr("x", 0).attr("y", 0).attr("fill", "none")
 
    $svgLollipopSongsGNameWrapper
      .append('text')
      .attr('x', 24)
      .attr('y', 20)
      .attr('class', 'lollipop-song-year')
-     .html(function(d){
-       return "&rsquo;"+JSON.stringify(d.year).slice(-2)+",";
+     .html(function (d) {
+       return "&rsquo;" + JSON.stringify(d.year).slice(-2) + ",";
      })
 
    $svgLollipopSongsGNameWrapper
      .append('text')
-     .attr('x', function(d){
-       if(width < 390){
+     .attr('x', function (d) {
+       if (width < 390) {
          return 44;
        }
        return 50;
@@ -2357,41 +2361,41 @@
    $svgLollipopSongsG
      .append('text')
      .attr('class', 'circle-gen-z-text')
-     .attr('x', function(d){
-       if(d.mean_gen_z_recognition > d.mean_millennial_recognition){
+     .attr('x', function (d) {
+       if (d.mean_gen_z_recognition > d.mean_millennial_recognition) {
          return scaleLollipopX(d.mean_gen_z_recognition) - CIRCLE_RADIUS - 2;
        }
        return scaleLollipopX(d.mean_gen_z_recognition) + CIRCLE_RADIUS + 2;
      })
-     .style('text-anchor', function(d){
-       if(d.mean_gen_z_recognition > d.mean_millennial_recognition){
+     .style('text-anchor', function (d) {
+       if (d.mean_gen_z_recognition > d.mean_millennial_recognition) {
          return "end";
        }
        return null;
      })
      .attr('y', `${CIRCLE_RADIUS/2 + 1}`)
-     .text(function(d){
-       return (Math.round(d.mean_gen_z_recognition * 100))+"%";
+     .text(function (d) {
+       return (Math.round(d.mean_gen_z_recognition * 100)) + "%";
      })
 
    $svgLollipopSongsG
      .append('text')
      .attr('class', 'circle-mil-text')
-     .attr('x', function(d){
-       if(d.mean_gen_z_recognition > d.mean_millennial_recognition){
+     .attr('x', function (d) {
+       if (d.mean_gen_z_recognition > d.mean_millennial_recognition) {
          return scaleLollipopX(d.mean_millennial_recognition) + CIRCLE_RADIUS + 2;
        }
        return scaleLollipopX(d.mean_millennial_recognition) - CIRCLE_RADIUS - 2;
      })
-     .style('text-anchor', function(d){
-       if(d.mean_gen_z_recognition > d.mean_millennial_recognition){
+     .style('text-anchor', function (d) {
+       if (d.mean_gen_z_recognition > d.mean_millennial_recognition) {
          return "start";
        }
        return null;
      })
      .attr('y', `${CIRCLE_RADIUS/2 + 1}`)
-     .text(function(d){
-       return (Math.round(d.mean_millennial_recognition * 100))+"%";
+     .text(function (d) {
+       return (Math.round(d.mean_millennial_recognition * 100)) + "%";
      })
 
 
@@ -2423,20 +2427,18 @@
      )
 
    $svgLollipopXAxisFixed
-    .append("text")
-    .attr("class","lollipop-annotation-millennials")
-    .attr("x",scaleLollipopX(.99))
-    .attr("y",lolliMargin.top+5)
-    .text("millennials")
-    ;
+     .append("text")
+     .attr("class", "lollipop-annotation-millennials")
+     .attr("x", scaleLollipopX(.99))
+     .attr("y", lolliMargin.top + 5)
+     .text("millennials");
 
-  $svgLollipopXAxisFixed
-   .append("text")
-   .attr("class","lollipop-annotation-gen-z")
-   .attr("x",scaleLollipopX(.96))
-   .attr("y",lolliMargin.top+5)
-   .text("gen z")
-   ;
+   $svgLollipopXAxisFixed
+     .append("text")
+     .attr("class", "lollipop-annotation-gen-z")
+     .attr("x", scaleLollipopX(.96))
+     .attr("y", lolliMargin.top + 5)
+     .text("gen z");
 
  }
 
@@ -2444,7 +2446,8 @@
 
    // Load data
    // old data time_series_90s_d3.csv
-   loadData(['time_series_90s_d3_13_15_averaged.csv', 'lollipop_chart_data.csv', 'song_previews.csv', 'song_years.csv'])
+   //    ['time_series_90s_d3_13_15_averaged.csv', 'lollipop_chart_data.csv', 'song_previews.csv', 'song_years.csv']
+   loadData(['time_series_90s_d3_13_15_averaged_july_13.csv', 'lollipop_chart_data_july_13.csv', 'song_previews_july_13.csv', 'song_years_july_13.csv'])
      .then(results => {
 
        previewData = results[2]
