@@ -777,12 +777,12 @@ function makeNoDiggityChart() {
       note: {
         title: "11-year-olds",
         label: "at moment of No Diggity's release",
-        bgPadding: mob ? 0 : 20
+        bgPadding: 0
       },
       //can use x, y directly instead of data
       data: {
         generation: (-11 + 1996),
-        recognition: 0.8979591836734694
+        recognition: 0.8279591836734694
       },
       className: "show-bg",
       dy: mob ? chartHeight / 3 : chartHeight / 7
@@ -791,12 +791,12 @@ function makeNoDiggityChart() {
       note: {
         title: "5-year-olds",
         label: "at the time of its release",
-        bgPadding: mob ? 2 : 20
+        bgPadding: 0
       },
       //can use x, y directly instead of data
       data: {
         generation: (-5 + 1996),
-        recognition: 0.8679245283
+        recognition: 0.8079245283
       },
       className: "show-bg note-five-yr-old",
       dy: chartHeight / 4,
@@ -806,12 +806,12 @@ function makeNoDiggityChart() {
       note: {
         title: "Born",
         label: "when song was released",
-        bgPadding: mob ? 0 : 20
+        bgPadding: 0
       },
       //can use x, y directly instead of data
       data: {
         generation: 1996,
-        recognition: 0.5526315789
+        recognition: 0.5826315789
       },
       className: "show-bg",
       dy: mob ? 5 : chartHeight / 6,
