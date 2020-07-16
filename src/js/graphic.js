@@ -23,7 +23,9 @@ const howlerObj = {}
 let currentlyPlayingSong;
 
 //const proclaimersDreSongs = ["Sir Mix-A-Lot|||Baby Got Back", "Dr. Dre|||Nuthin' But A G Thang"]
-const proclaimersDreSongs = ["Notorious B.I.G., The|||Hypnotize", "Hanson|||MMMbop"]
+//const proclaimersDreSongs = ["Mr. Big|||To Be With You", "Dr. Dre|||Nuthin' But A G Thang"]
+const proclaimersDreSongs = ["TLC|||No Scrubs", "Spice Girls, The|||Wannabe"]
+const songStartYear = 1998;
 const noDiggitySongs = ["BLACKstreet|||No Diggity"]
 const AceOfBaseSongs = ["Ace Of Base|||The Sign"]
 let colorScale;
@@ -100,6 +102,7 @@ const underperformingSongs = [
   "Paula Abdul|||Opposites Attract",
   "Jennifer Lopez|||If You Had My Love",
   "Backstreet Boys, The|||Quit Playing Games",
+  "Shania Twain|||You're Still The One",
   "Popular average"
 ]
 
@@ -107,8 +110,7 @@ const overperformingSongs = [
   "Coolio|||Gangsta's Paradise",
   "House Of Pain|||Jump Around",
   "Whitney Houston|||I Will Always Love You",
-
-
+  "Spice Girls, The|||Wannabe",
   "Los Del Rio|||Macarena",
   "Popular average"
 ]
@@ -117,9 +119,10 @@ const millennialOnlySongs = [
   "Next|||Too Close",
   "K-Ci and JoJo|||All My Life",
   "Bone Thugs N Harmony|||Tha Crossroads",
-  "Savage Garden|||Truly Madly Deeply",
-  //    "Bryan Adams|||Everything I Do I Do It For You",
-  "Popular average"
+  "Lisa Loeb and Nine Stories|||Stay",
+  "Jewel|||You Were Meant For Me",
+  "TLC|||Creep"
+
 ]
 
 // chart svgs
@@ -235,6 +238,12 @@ function setupHowlerList() {
     }, {
       artist_song: 'all-my-life',
       song_url: 'https://p.scdn.co/mp3-preview/bfbafd334c6f877255ed1b2e4b08cb7f2d48b2b8'
+    }, {
+      artist_song: 'wannabe',
+      song_url: 'https://p.scdn.co/mp3-preview/d9ae5aec748afbd464af3b2b4ef87f00139bc8dd'
+    }, {
+      artist_song: 'no-scrubs',
+      song_url: 'https://p.scdn.co/mp3-preview/69daa711bddd8fe7aa9acf17106ca85cf1ccfa14'
     }
   ]
 
@@ -362,6 +371,7 @@ function removeOldCharts() {
   d3.selectAll('div.chart-contents').select('svg').selectAll('g').remove()
   d3.selectAll('div.song-examples').selectAll('div.song-example').remove()
   d3.select('svg.chart__lollipop').selectAll('g').remove()
+  d3.select('svg.lollipop-x-axis-svg').selectAll('g').remove()
 }
 
 function resize() {
@@ -423,41 +433,18 @@ function setupEnterView() {
 
 function makeProclaimersDreChart(data) {
 
-  const annotations = [{
-      note: {
-        label: "Dr. Dre - Nuthin' But A G Thang",
-        bgPadding: 5
-      },
-      //can use x, y directly instead of data
-      data: {
-        generation: mob ? 1993 + 0 : 1993 + 5,
-        recognition: mob ? 0.5 : 0.35
-      },
-      className: "dre-anno",
-      //   dy: 137,
-      //   dx: 162
-    },
-    {
-      note: {
-        label: "The Proclaimers - I'm Gonna Be",
-        bgPadding: 5
-      },
-      //can use x, y directly instead of data
-      data: {
-        generation: mob ? 1993 + 2 : 1993 + 5,
-        recognition: 0.94137931
-      },
-      className: "proclaimers-anno",
-      //   dy: 137,
-      //   dx: 162
-    }
-  ]
 
   let scaleProclaimersDreX;
   let scaleProclaimersDreY;
 
   let chartWidth = Math.min(width, 800) - margin.left - margin.right;
-  let chartHeight = mob ? chartWidth - margin.top - margin.bottom : chartWidth * .6 - margin.top - margin.bottom
+  let chartHeight = chartWidth * .6 - margin.top - margin.bottom;
+  if(mob || width < 550){
+    chartHeight = chartWidth - margin.top - margin.bottom;
+  }
+  if(mob || width < 390){
+    chartHeight = chartWidth - margin.top;
+  }
 
   $svgProclaimersDre
     .attr('width', chartWidth + margin.left + margin.right)
@@ -475,9 +462,41 @@ function makeProclaimersDreChart(data) {
     ...song,
     values: song.values.map(songYear => ({
       ...songYear,
-      generation: +songYear.generation + 1993
-    }))
+      generation: +songYear.generation + song.year
+    })).filter(function(d){
+      return d.generation > 1986 && d.generation < 2000;
+    })
   }))
+
+  const annotations = [{
+      note: {
+        label: proclaimersDreData[0].key.replace('|||', ' - ').replace("The ",""),
+        bgPadding: 0
+      },
+      //can use x, y directly instead of data
+      data: {
+        generation: 1996,
+        recognition: .9
+      },
+      className: "dre-anno",
+      //   dy: 137,
+      //   dx: 162
+    },
+    {
+      note: {
+        label: proclaimersDreData[1].key.replace('|||', ' - '),
+        bgPadding: 5
+      },
+      //can use x, y directly instead of data
+      data: {
+        generation: 1989,
+        recognition: 0.85
+      },
+      className: "proclaimers-anno",
+      //   dy: 137,
+      //   dx: 162
+    }
+  ]
 
   const scaleObj = getScaleMinMax(proclaimersDreData)
 
@@ -486,7 +505,7 @@ function makeProclaimersDreChart(data) {
     .range([0, chartWidth])
 
   scaleProclaimersDreY = d3.scaleLinear()
-    .domain([0, 1])
+    .domain([.4, 1])
     .range([chartHeight, 0])
 
 
@@ -511,7 +530,6 @@ function makeProclaimersDreChart(data) {
       return 'class'
     })
     .text(d => d)
-
 
   $svgProclaimersDreG
     .append('g')
@@ -539,13 +557,48 @@ function makeProclaimersDreChart(data) {
     .data(proclaimersDreData)
     .join('g')
     .attr('class', d => `song-g ${cleanSongName(d.key)}`)
+    .classed("first-line",function(d,i){
+      if(i==0){
+        return true;
+      }
+      return false;
+    })
 
   $svgProclaimersDreSongGs
     .append('path')
     .attr('class', 'line proclaimers-dre')
     .attr('d', d => line(d.values))
+    .attr("class","bg-line")
+
+  $svgProclaimersDreSongGs
+    .selectAll('circle.song-year')
+    .data(d => d.values)
+    .join('circle')
+    .attr('class', d => `${cleanSongName(d.artist_song)} song-year-circles`)
+    .attr('cx', d => scaleProclaimersDreX(d.generation))
+    .attr('cy', d => scaleProclaimersDreY(d.recognition))
+    .attr('r', 5)
+
+  $svgProclaimersDreSongGs
+    .append('path')
+    .attr('class', 'line proclaimers-dre')
+    .attr('d', d => line(d.values))
+    // .style("stroke",function(d,i){
+    //   if(i==0){
+    //     return "blue";
+    //   }
+    //   return "red";
+    // })
+    ;
 
   const makeAnnotations = setupAnnotations(scaleProclaimersDreX, scaleProclaimersDreY, annotations)
+  const makeAnnotationsBackground = setupAnnotations(scaleProclaimersDreX, scaleProclaimersDreY, annotations)
+
+
+  $svgProclaimersDreG
+    .append("g")
+    .attr("class", "annotation-group-mean-background")
+    .call(makeAnnotationsBackground)
 
   $svgProclaimersDreG
     .append("g")
@@ -703,7 +756,6 @@ function makeNoDiggityChart() {
     .data(noDiggityData)
     .join('g')
     .attr('class', d => `song-g ${cleanSongName(d.key)}`)
-
 
   //adding circles to each song path
   $svgNoDiggitySongGs
@@ -1280,7 +1332,7 @@ function makeNarrativeChart(data, selectedChart, songsArray) {
     .append('path')
     .attr('class', `background-line ${songChart}-recognition`) //TODO change variable
     .attr('d', d => line(d.values))
-    .style("opacity", .7)
+    .style("opacity", .8)
 
   $svgObjSongLines = $svgObjSongGs
     .append('path')
@@ -1290,7 +1342,7 @@ function makeNarrativeChart(data, selectedChart, songsArray) {
       if (d.key === 'Popular average') {
         return 1;
       } else {
-        return 1 - (i / 5);
+        return 1 - (i / 8);
       }
     })
     .style('stroke', d => {
@@ -1554,12 +1606,12 @@ function makeNarrativeChart(data, selectedChart, songsArray) {
           if (d.key === 'Popular average') {
             return 1;
           } else {
-            return 1 - (i / 5);
+            return 1 - (i / 8);
           }
         })
 
       $svgObjSongBackgroundLines
-        .style('opacity', .7);
+        .style('opacity', .8);
 
       $songExamples
         .classed('selected-songs', false)
@@ -2442,7 +2494,7 @@ function makeAllCharts() {
 
   // Load data
   // old data time_series_90s_d3.csv
-  loadData(['time_series_90s_d3_13_15_averaged.csv', 'lollipop_chart_data.csv', 'song_previews.csv', 'song_years.csv'])
+  loadData(['time_series_90s_d3_13_15_averaged_july_13.csv', 'lollipop_chart_data_july_13.csv', 'song_previews_july_13.csv', 'song_years_july_13.csv'])
     .then(results => {
 
       previewData = results[2]
