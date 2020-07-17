@@ -302,7 +302,7 @@ function setupHowlerPlayback() {
   })
 
   d3.selectAll('.howler-icon').on('click', (d, i, n) => {
-    console.log("clicking icon");
+    console.log("clicking icon 2");
     const howlIcon = n[i]
     const howlSong = howlIcon.getAttribute('data-attribute')
 
