@@ -219,9 +219,11 @@ function setupHowlerList() {
 
   for (let i = 0; i < previewData.length; i++) {
     howlerList[previewData[i].artist_song] = new Howl({
-      src: [`${previewData[i].song_url}.mp3`],
-      volume: .5,
-      preload: false
+      src: [`${previewData[i].song_url}`],
+      format:['mpeg'],
+      preload: false,
+      autoUnlock:true,
+      volume: 0
     });
   }
 
@@ -271,8 +273,8 @@ function setupHowlerPlayback() {
     }
 
     howlerList[d.key].once('load', function () {
+      howlerList[d.key].fade(0,.5,2000);
       howlerList[d.key].play();
-      currentlyPlayingSong = d.key
     });
     howlerList[d.key].load()
 
@@ -289,6 +291,7 @@ function setupHowlerPlayback() {
     }
 
     howlerList[d.artist_song].once('load', function () {
+      howlerList[d.artist_song].fade(0,.5,2000);
       howlerList[d.artist_song].play()
       currentlyPlayingSong = d.artist_song
     });
@@ -312,6 +315,7 @@ function setupHowlerPlayback() {
     }
 
     howlerList[howlSong].once('load', function () {
+      howlerList[howlSong].fade(0,.5,2000);
       howlerList[howlSong].play();
       currentlyPlayingSong = howlSong
     });
