@@ -265,18 +265,23 @@ function setupHowlerPlayback() {
 
   d3.selectAll(".song-examples").selectAll('.sound-icon-span').on('click', d => {
 
+    console.log(d.key, currentlyPlayingSong);
+
     Object.keys(howlerList).forEach(key => howlerList[key].stop());
     if (d.key === currentlyPlayingSong) {
       howlerList[d.key].stop()
       currentlyPlayingSong = null
       return
     }
+    else {
+      howlerList[d.key].once('load', function () {
+        howlerList[d.key].fade(0, .5, 2000);
+        howlerList[d.key].play();
+      });
+      howlerList[d.key].load()
+      currentlyPlayingSong = d.key;
+    }
 
-    howlerList[d.key].once('load', function () {
-      howlerList[d.key].fade(0, .5, 2000);
-      howlerList[d.key].play();
-    });
-    howlerList[d.key].load()
 
 
   })
