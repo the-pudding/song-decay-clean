@@ -261,6 +261,8 @@ function setupHowlerList() {
 
 }
 
+
+
 function setupHowlerPlayback() {
 
   d3.selectAll(".song-examples").selectAll('.sound-icon-span').on('click', d => {
@@ -306,14 +308,17 @@ function setupHowlerPlayback() {
 
   })
 
-  d3.selectAll('.howler-icon').on('click', (d, i, n) => {
-    console.log("clicking icon 2");
+  d3.selectAll('.howler-icon').on('click', function(d,i,n) {
+
+    d3.selectAll('.howler-icon').classed("icon-play",false);
+    const el = d3.select(this);
     const howlIcon = n[i]
     const howlSong = howlIcon.getAttribute('data-attribute')
 
     Object.keys(howlerList).forEach(key => howlerList[key].stop());
 
     if (howlSong === currentlyPlayingSong) {
+
       howlerList[howlSong].stop()
       currentlyPlayingSong = null
       return
@@ -323,6 +328,8 @@ function setupHowlerPlayback() {
       howlerList[howlSong].fade(0, .5, 2000);
       howlerList[howlSong].play();
       currentlyPlayingSong = howlSong
+      console.log(el.node());
+      el.classed("icon-play",true)
     });
     howlerList[howlSong].load()
 
@@ -1674,12 +1681,12 @@ function makeNarrativeChart(data, selectedChart, songsArray) {
           if (d.key === 'Popular average') {
             return 1;
           } else {
-            return 1 - (i / 5);
+            return 1 - (i / 8);
           }
         })
 
       $svgObjSongBackgroundLines
-        .style('opacity', .7);
+        .style('opacity', .8);
     })
 
 }
