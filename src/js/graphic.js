@@ -984,14 +984,14 @@ function makeAceOfBace(data) {
         d3.select(this)
           .append('tspan')
           .attr("class", "x-axis-tspan")
-          .text('year of song’s')
+          .text('in 1993')
           .attr('dy', spacing).attr('x', -1)
 
-        d3.select(this)
-          .append('tspan')
-          .attr("class", "x-axis-tspan")
-          .text('debut')
-          .attr('dy', spacing).attr('x', -1)
+        // d3.select(this)
+        //   .append('tspan')
+        //   .attr("class", "x-axis-tspan")
+        //   .text('debut')
+        //   .attr('dy', spacing).attr('x', -1)
       }
       if (d == 6) {
         d3.select(this)
@@ -1265,7 +1265,7 @@ function makeNarrativeChart(data, selectedChart, songsArray) {
       if (i === 0) {
         return 'middle'
       }
-      if (d == 10) {
+      if (d == scaleObj.xMax) {
         return 'end'
       } else return
     })
@@ -1292,7 +1292,7 @@ function makeNarrativeChart(data, selectedChart, songsArray) {
           .text('debut')
           .attr('dy', spacing).attr('x', -1)
       }
-      if (d == 10) {
+      if (d == scaleObj.xMax) {
         d3.select(this)
           .append('tspan')
           .text('years until')
@@ -1866,7 +1866,7 @@ function makeMeanChart(data) {
       if (i === 0) {
         return 'middle'
       }
-      if (i === 11) {
+      if (d === scaleObj.xMax) {
         return 'end'
       } else return
     })
@@ -1893,7 +1893,7 @@ function makeMeanChart(data) {
           .text('debut')
           .attr('dy', spacing).attr('x', -1)
       }
-      if (d == 10) {
+      if (d == scaleObj.xMax) {
         d3.select(this)
           .append('tspan')
           .text('years until')
@@ -2323,14 +2323,14 @@ function makeLollipopChart(data) {
     .attr('x', 0)
     .attr('y', 0)
     .attr('class', 'lollipop-song-title')
-    .text(d => {
+    .html(d => {
       const truncated = truncate({
         text: d.artist_song.split('|||')[1],
         chars: 25,
         ellipses: true
       })
       //  console.log(truncated)
-      return truncated
+      return truncated;
     })
 
   const $svgLollipopSongsGNameWrapperSound = $svgLollipopSongsGNameWrapper
@@ -2375,8 +2375,8 @@ function makeLollipopChart(data) {
     .attr('class', 'lollipop-song-artist')
     .text(d => {
       const truncated = truncate({
-        text: d.artist_song.split('|||')[0],
-        chars: 13,
+        text: d.artist_song.replace(", The","").split('|||')[0],
+        chars: 20,
         ellipses: true
       })
       //  console.log(truncated)
