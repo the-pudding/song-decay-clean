@@ -2485,6 +2485,9 @@ function makeLollipopChart(data) {
       .ticks(5)
     )
 
+  $svgLollipopXAxisFixed.selectAll(".lollipop-annotation-millennials").remove();
+  $svgLollipopXAxisFixed.selectAll(".lollipop-annotation-gen-z").remove();
+
   $svgLollipopXAxisFixed
     .append("text")
     .attr("class", "lollipop-annotation-millennials")
@@ -2505,7 +2508,7 @@ function makeAllCharts() {
 
   // Load data
   // old data time_series_90s_d3.csv
-  loadData(['time_series_90s_d3_13_15_averaged_july_17.csv', 'lollipop_chart_data_july_13.csv', 'song_previews_july_13.csv', 'song_years_july_13.csv'])
+  loadData(['time_series_90s_d3_13_15_averaged_july_22.csv', 'lollipop_chart_data_july_13.csv', 'song_previews_july_13.csv', 'song_years_july_13.csv'])
     .then(results => {
 
       previewData = results[2]
